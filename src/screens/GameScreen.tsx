@@ -5,45 +5,68 @@ import { GameButton } from "../components/GameButton";
 import { DECK } from "../constants/data";
 import { BG_COLORS, THEME, LAYOUT, SCREEN_DIMS } from "../constants/theme";
 
+const shuffleArray = (array: number[]) => {
+  const newArr = [...array];
+  for (let i = newArr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+  }
+  return newArr;
+};
+
 export const GameScreen = () => {
   const { playerList } = useLocalSearchParams();
   
-  // Parse players if they exist
+  // Parse players
   const players = useMemo(() => {
     if (typeof playerList === 'string') {
-      try {
-        return JSON.parse(playerList);
-      } catch (e) {
-        return [];
-      }
+      try { return JSON.parse(playerList); } catch (e) { return []; }
     }
     return [];
   }, [playerList]);
 
   const hasPlayers = players.length > 0;
+
+  // --- Deck Logic State ---
+  // 1. We track the order of card INDICES (e.g. [4, 0, 9, 2...])
+  const [deckOrder, setDeckOrder] = useState<number[]>([]);
+  // 2. We track our current position in that order
+  const [dealIndex, setDealIndex] = useState(0);
   
-  const [index, setIndex] = useState(0);
+  // Initialize Deck on Mount
+  useEffect(() => {
+    const indices = Array.from({ length: DECK.length }, (_, i) => i);
+    setDeckOrder(shuffleArray(indices));
+  }, []);
+
+  // Determine the current visible card index
+  // If deck is not yet ready (first render), default to 0
+  const activeCardIndex = deckOrder.length > 0 ? deckOrder[dealIndex] : 0;
+
+  // --- Visual State ---
   const [bg, setBg] = useState(BG_COLORS[4]);
   const [isFlipped, setIsFlipped] = useState(false);
   const [turnIndex, setTurnIndex] = useState(0);
 
-  // Current Card Emoji
-  const currentEmoji = useMemo(() => DECK[index].emoji, [index]);
-  const [bgEmoji, setBgEmoji] = useState(currentEmoji);
+  // Current Card Data
+  const currentCard = useMemo(() => DECK[activeCardIndex], [activeCardIndex]);
+  
+  // Background Emoji State (Persists during fade out)
+  const [bgEmoji, setBgEmoji] = useState(currentCard.emoji);
 
-  // Animations & Refs
+  // Animations
   const bgAnim = useRef(new Animated.Value(0)).current;
   const flipAnim = useRef(new Animated.Value(0)).current;
   const entryAnim = useRef(new Animated.Value(-90)).current;
   const patternAnim = useRef(new Animated.Value(0)).current;
   const prevBgRef = useRef(bg);
 
-  // This ensures the old emoji persists during the fade-out animation
+  // Update Background Emoji only when revealing
   useEffect(() => {
     if (isFlipped) {
-      setBgEmoji(currentEmoji);
+      setBgEmoji(currentCard.emoji);
     }
-  }, [isFlipped, currentEmoji]);
+  }, [isFlipped, currentCard]);
 
   // Entry Animation
   useEffect(() => {
@@ -59,14 +82,10 @@ export const GameScreen = () => {
     outputRange: ["-90deg", "0deg"],
   });
 
-  // Handle Background Transition
+  // Background Transition
   useEffect(() => {
     bgAnim.setValue(0);
-    Animated.timing(bgAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: false,
-    }).start(() => {
+    Animated.timing(bgAnim, { toValue: 1, duration: 600, useNativeDriver: false }).start(() => {
       prevBgRef.current = bg;
     });
   }, [bg, bgAnim]);
@@ -76,7 +95,7 @@ export const GameScreen = () => {
     outputRange: [prevBgRef.current, bg],
   });
 
-  // Handle Pattern Opacity
+  // Pattern Opacity
   useEffect(() => {
     Animated.timing(patternAnim, {
       toValue: isFlipped ? 1 : 0,
@@ -85,27 +104,22 @@ export const GameScreen = () => {
     }).start();
   }, [isFlipped, patternAnim]);
 
-  // Flip Animations
+  // Flip Interpolations
   const frontInterpolate = flipAnim.interpolate({ inputRange: [0, 180], outputRange: ["0deg", "180deg"] });
   const backInterpolate = flipAnim.interpolate({ inputRange: [0, 180], outputRange: ["180deg", "360deg"] });
   const frontOpacity = flipAnim.interpolate({ inputRange: [89, 90], outputRange: [1, 0] });
   const backOpacity = flipAnim.interpolate({ inputRange: [89, 90], outputRange: [0, 1] });
 
-  // Optimized Grid Generation - Uses bgEmoji instead of currentEmoji
   const emojiGrid = useMemo(() => {
     const cellSize = LAYOUT.emojiSize + LAYOUT.emojiMargin * 2;
     const numRows = Math.ceil(SCREEN_DIMS.height / cellSize) + 1;
     const numCols = Math.ceil(SCREEN_DIMS.width / cellSize) + 1;
-
     return Array.from({ length: numRows }).map((_, row) => (
       <View key={`row-${row}`} style={{ flexDirection: "row" }}>
         {Array.from({ length: numCols }).map((_, col) => {
           const rotate = (row + col) % 2 === 0 ? "-15deg" : "15deg";
           return (
-            <View
-              key={`c-${row}-${col}`}
-              style={{ margin: LAYOUT.emojiMargin, transform: [{ rotate }] }}
-            >
+            <View key={`c-${row}-${col}`} style={{ margin: LAYOUT.emojiMargin, transform: [{ rotate }] }}>
               <Text style={{ fontSize: LAYOUT.emojiSize }}>{bgEmoji}</Text>
             </View>
           );
@@ -117,124 +131,82 @@ export const GameScreen = () => {
   const flipCard = useCallback(() => {
     if (isFlipped) return;
     setIsFlipped(true);
-    Animated.spring(flipAnim, {
-      toValue: 180,
-      friction: 8,
-      tension: 10,
-      useNativeDriver: true,
-    }).start();
+    Animated.spring(flipAnim, { toValue: 180, friction: 8, tension: 10, useNativeDriver: true }).start();
   }, [isFlipped, flipAnim]);
 
   const handleNext = useCallback(() => {
     // 1. Flip back
     setIsFlipped(false);
-    Animated.spring(flipAnim, {
-      toValue: 0,
-      friction: 8,
-      tension: 10,
-      useNativeDriver: true,
-    }).start();
+    Animated.spring(flipAnim, { toValue: 0, friction: 8, tension: 10, useNativeDriver: true }).start();
 
-    // 2. Change content after flip starts (invisible state)
     setTimeout(() => {
-      let nextIndex = index;
-      if (DECK.length > 1) {
-        do {
-          nextIndex = Math.floor(Math.random() * DECK.length);
-        } while (nextIndex === index);
+      // --- Deck Logic: Move to next card in shuffled order ---
+      let nextDealIndex = dealIndex + 1;
+      let currentDeckOrder = deckOrder;
+
+      // If we reached the end of the deck, reshuffle!
+      if (nextDealIndex >= deckOrder.length) {
+        const lastCard = deckOrder[deckOrder.length - 1];
+        let newOrder = shuffleArray([...deckOrder]);
+        
+        // Prevent immediate repeat across shuffle boundary
+        if (newOrder[0] === lastCard) {
+          // Swap first card with random other card to avoid repeat
+          const swapIdx = Math.floor(Math.random() * (newOrder.length - 1)) + 1;
+          [newOrder[0], newOrder[swapIdx]] = [newOrder[swapIdx], newOrder[0]];
+        }
+        
+        setDeckOrder(newOrder);
+        nextDealIndex = 0; // Reset pointer
       }
+
+      // Apply new state
+      setDealIndex(nextDealIndex);
+
+      // Randomize background color (ensure contrast/change)
       let nextBg = bg;
       if (BG_COLORS.length > 1) {
-        do {
-          nextBg = BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)];
-        } while (nextBg === bg);
+        do { nextBg = BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)]; } while (nextBg === bg);
       }
-      setIndex(nextIndex);
       setBg(nextBg);
       
       if (hasPlayers) {
         setTurnIndex(prev => (prev + 1) % players.length);
       }
     }, 100);
-  }, [index, bg, flipAnim, hasPlayers, players]);
+  }, [dealIndex, deckOrder, bg, flipAnim, hasPlayers, players]);
 
   return (
     <Animated.View style={[styles.centerContainer, { backgroundColor }]}>
-      {/* Background Pattern */}
       <View style={[StyleSheet.absoluteFillObject, styles.patternContainer]}>
-        <Animated.View
-          style={{
-            opacity: patternAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, 0.3],
-            }),
-            transform: [{ scale: 1.1 }],
-          }}
-        >
+        <Animated.View style={{ opacity: patternAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 0.3] }), transform: [{ scale: 1.1 }] }}>
           {emojiGrid}
         </Animated.View>
       </View>
 
-      {/* Tap Overlay */}
-      {!isFlipped && (
-        <TouchableOpacity
-          style={styles.touchOverlay}
-          onPress={flipCard}
-          activeOpacity={1}
-        />
-      )}
+      {!isFlipped && <TouchableOpacity style={styles.touchOverlay} onPress={flipCard} activeOpacity={1} />}
 
-      {/* Card Wrapper with Entry Animation */}
-      <Animated.View
-        style={[
-          styles.cardContainer,
-          {
-            transform: [
-              { perspective: 1000 },
-              { rotateY: entryInterpolate }, // Animate from -90 to 0 on mount
-            ],
-          },
-        ]}
-      >
-        {/* Front Face */}
-        <Animated.View
-          style={[
-            styles.cardBase,
-            styles.cardFace,
-            { transform: [{ rotateY: frontInterpolate }], opacity: frontOpacity },
-          ]}
-        >
-          {/* Player Name Minimal - Front */}
-          {hasPlayers && (
-            <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>
-          )}
-          
-          <Text style={styles.cardEmoji}>{currentEmoji}</Text>
+      <Animated.View style={[styles.cardContainer, { transform: [{ perspective: 1000 }, { rotateY: entryInterpolate }] }]}>
+        
+        {/* FRONT FACE */}
+        <Animated.View style={[styles.cardBase, styles.cardFace, { transform: [{ rotateY: frontInterpolate }], opacity: frontOpacity }]}>
+          {hasPlayers && <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>}
+          <Text style={styles.cardEmoji}>{currentCard.emoji}</Text>
           <Text style={styles.tapToReveal}>Tap to reveal</Text>
         </Animated.View>
 
-        {/* Back Face */}
-        <Animated.View
-          style={[
-            styles.cardBase,
-            styles.cardFace,
-            { transform: [{ rotateY: backInterpolate }], opacity: backOpacity },
-          ]}
-        >
-          {/* Player Name Minimal - Back */}
-          {hasPlayers && (
-            <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>
-          )}
-
-          <Text style={styles.cardEmojiSmall}>{currentEmoji}</Text>
+        {/* BACK FACE */}
+        <Animated.View style={[styles.cardBase, styles.cardFace, { transform: [{ rotateY: backInterpolate }], opacity: backOpacity }]}>
+          {hasPlayers && <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>}
+          <Text style={styles.cardEmojiSmall}>{currentCard.emoji}</Text>
           <View style={[styles.typeBadge, { backgroundColor: bg }]}>
-            <Text style={styles.typeText}>{DECK[index].type}</Text>
+            <Text style={styles.typeText}>{currentCard.type}</Text>
           </View>
-          <Text style={styles.cardPrompt}>{DECK[index].prompt}</Text>
+          <Text style={styles.cardPrompt}>{currentCard.prompt}</Text>
         </Animated.View>
+
       </Animated.View>
 
-      {/* Controls */}
       <View style={styles.buttonContainer}>
         {isFlipped && <GameButton onPress={handleNext} text="Next Card" />}
       </View>
