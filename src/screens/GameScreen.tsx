@@ -1,17 +1,5 @@
-import React, {
-  useState,
-  useRef,
-  useMemo,
-  useCallback,
-  useEffect,
-} from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Animated,
-  StyleSheet,
-} from "react-native";
+import React, { useState, useRef, useMemo, useCallback, useEffect } from "react";
+import { View, Text, TouchableOpacity, Animated, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { GameButton } from "../components/GameButton";
 import { DECK } from "../constants/data";
@@ -19,10 +7,10 @@ import { BG_COLORS, THEME, LAYOUT, SCREEN_DIMS } from "../constants/theme";
 
 export const GameScreen = () => {
   const { playerList } = useLocalSearchParams();
-
+  
   // Parse players if they exist
   const players = useMemo(() => {
-    if (typeof playerList === "string") {
+    if (typeof playerList === 'string') {
       try {
         return JSON.parse(playerList);
       } catch (e) {
@@ -33,12 +21,13 @@ export const GameScreen = () => {
   }, [playerList]);
 
   const hasPlayers = players.length > 0;
-
+  
   const [index, setIndex] = useState(0);
   const [bg, setBg] = useState(BG_COLORS[4]);
   const [isFlipped, setIsFlipped] = useState(false);
   const [turnIndex, setTurnIndex] = useState(0);
 
+  // Current Card Emoji
   const currentEmoji = useMemo(() => DECK[index].emoji, [index]);
   const [bgEmoji, setBgEmoji] = useState(currentEmoji);
 
@@ -49,6 +38,7 @@ export const GameScreen = () => {
   const patternAnim = useRef(new Animated.Value(0)).current;
   const prevBgRef = useRef(bg);
 
+  // This ensures the old emoji persists during the fade-out animation
   useEffect(() => {
     if (isFlipped) {
       setBgEmoji(currentEmoji);
@@ -96,22 +86,10 @@ export const GameScreen = () => {
   }, [isFlipped, patternAnim]);
 
   // Flip Animations
-  const frontInterpolate = flipAnim.interpolate({
-    inputRange: [0, 180],
-    outputRange: ["0deg", "180deg"],
-  });
-  const backInterpolate = flipAnim.interpolate({
-    inputRange: [0, 180],
-    outputRange: ["180deg", "360deg"],
-  });
-  const frontOpacity = flipAnim.interpolate({
-    inputRange: [89, 90],
-    outputRange: [1, 0],
-  });
-  const backOpacity = flipAnim.interpolate({
-    inputRange: [89, 90],
-    outputRange: [0, 1],
-  });
+  const frontInterpolate = flipAnim.interpolate({ inputRange: [0, 180], outputRange: ["0deg", "180deg"] });
+  const backInterpolate = flipAnim.interpolate({ inputRange: [0, 180], outputRange: ["180deg", "360deg"] });
+  const frontOpacity = flipAnim.interpolate({ inputRange: [89, 90], outputRange: [1, 0] });
+  const backOpacity = flipAnim.interpolate({ inputRange: [89, 90], outputRange: [0, 1] });
 
   // Optimized Grid Generation - Uses bgEmoji instead of currentEmoji
   const emojiGrid = useMemo(() => {
@@ -173,9 +151,9 @@ export const GameScreen = () => {
       }
       setIndex(nextIndex);
       setBg(nextBg);
-
+      
       if (hasPlayers) {
-        setTurnIndex((prev) => (prev + 1) % players.length);
+        setTurnIndex(prev => (prev + 1) % players.length);
       }
     }, 100);
   }, [index, bg, flipAnim, hasPlayers, players]);
@@ -196,14 +174,6 @@ export const GameScreen = () => {
           {emojiGrid}
         </Animated.View>
       </View>
-
-      {/* PLAYER TURN BANNER */}
-      {hasPlayers && (
-        <View style={styles.turnBanner}>
-          <Text style={styles.turnLabel}>It&apos;s your turn:</Text>
-          <Text style={styles.turnName}>{players[turnIndex]}</Text>
-        </View>
-      )}
 
       {/* Tap Overlay */}
       {!isFlipped && (
@@ -231,12 +201,14 @@ export const GameScreen = () => {
           style={[
             styles.cardBase,
             styles.cardFace,
-            {
-              transform: [{ rotateY: frontInterpolate }],
-              opacity: frontOpacity,
-            },
+            { transform: [{ rotateY: frontInterpolate }], opacity: frontOpacity },
           ]}
         >
+          {/* Player Name Minimal - Front */}
+          {hasPlayers && (
+            <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>
+          )}
+          
           <Text style={styles.cardEmoji}>{currentEmoji}</Text>
           <Text style={styles.tapToReveal}>Tap to reveal</Text>
         </Animated.View>
@@ -249,6 +221,11 @@ export const GameScreen = () => {
             { transform: [{ rotateY: backInterpolate }], opacity: backOpacity },
           ]}
         >
+          {/* Player Name Minimal - Back */}
+          {hasPlayers && (
+            <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>
+          )}
+
           <Text style={styles.cardEmojiSmall}>{currentEmoji}</Text>
           <View style={[styles.typeBadge, { backgroundColor: bg }]}>
             <Text style={styles.typeText}>{DECK[index].type}</Text>
@@ -348,33 +325,14 @@ const styles = StyleSheet.create({
     fontSize: 40,
     marginBottom: 16,
   },
-  turnBanner: {
-    position: "absolute",
-    top: 60,
-    zIndex: 50,
-    backgroundColor: "white",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 999,
-    borderWidth: 4,
-    borderColor: THEME.border,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 0,
-    elevation: 4,
-  },
-  turnLabel: {
-    fontSize: 14,
+  cardPlayerName: {
+    position: 'absolute',
+    top: 32,
+    fontSize: 16,
+    fontWeight: 'bold',
     color: THEME.textMain,
-    fontWeight: "600",
-    opacity: 0.7,
-    textTransform: "uppercase",
-  },
-  turnName: {
-    fontSize: 24,
-    color: THEME.textMain,
-    fontWeight: "900",
+    opacity: 0.5,
+    textTransform: 'uppercase',
+    letterSpacing: 2,
   },
 });
