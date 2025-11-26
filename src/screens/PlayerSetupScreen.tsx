@@ -1,0 +1,242 @@
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { useRouter } from "expo-router";
+import { GameButton } from "../components/GameButton";
+import { THEME, BG_COLORS } from "../constants/theme";
+
+export const PlayerSetupScreen = () => {
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [players, setPlayers] = useState<string[]>([]);
+
+  const handleAddPlayer = () => {
+    if (name.trim().length > 0) {
+      setPlayers([...players, name.trim()]);
+      setName("");
+    }
+  };
+
+  const handleRemovePlayer = (indexToRemove: number) => {
+    setPlayers(players.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleStartGame = () => {
+    if (players.length > 0) {
+      router.push({
+        pathname: "/game",
+        params: { playerList: JSON.stringify(players) },
+      });
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <View style={styles.contentContainer}>
+        <Text style={styles.titleText}>Add Players</Text>
+        <Text style={styles.subtitleText}>
+          Who are we drinking with today?
+        </Text>
+
+        {/* Input Area */}
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Name"
+            placeholderTextColor="rgba(24, 24, 27, 0.4)"
+            value={name}
+            onChangeText={setName}
+            onSubmitEditing={handleAddPlayer}
+            returnKeyType="done"
+          />
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={handleAddPlayer}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.addButtonText}>+</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Player List */}
+        <View style={styles.listContainer}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {players.length === 0 ? (
+              <Text style={styles.emptyText}>No players added yet.</Text>
+            ) : (
+              <View style={styles.chipContainer}>
+                {players.map((player, index) => (
+                  <TouchableOpacity
+                    key={`${player}-${index}`}
+                    style={styles.playerChip}
+                    onPress={() => handleRemovePlayer(index)}
+                  >
+                    <Text style={styles.playerText}>{player}</Text>
+                    <View style={styles.removeIcon}>
+                      <Text style={styles.removeIconText}>×</Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </ScrollView>
+        </View>
+
+        {/* Footer Action */}
+        <View style={styles.footer}>
+          <GameButton
+            onPress={handleStartGame}
+            text={players.length < 2 ? "Need 2+ Players" : "Let's Play!"}
+            style={{
+              opacity: players.length < 2 ? 0.5 : 1,
+              width: "100%",
+            }}
+          />
+        </View>
+      </View>
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: BG_COLORS[4], // Orange theme
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 24,
+    paddingTop: 60,
+    // Width constraints for larger screens
+    width: '100%',
+    maxWidth: 600,
+    alignSelf: 'center',
+  },
+  titleText: {
+    fontSize: 42,
+    fontWeight: "900",
+    color: THEME.textMain,
+    textAlign: "center",
+    letterSpacing: -1,
+    marginBottom: 8,
+  },
+  subtitleText: {
+    fontSize: 18,
+    color: THEME.textMain,
+    textAlign: "center",
+    fontWeight: "500",
+    opacity: 0.8,
+    marginBottom: 32,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    marginBottom: 24,
+  },
+  input: {
+    flex: 1,
+    backgroundColor: "white",
+    height: 60,
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    fontSize: 20,
+    fontWeight: "600",
+    color: THEME.textMain,
+    borderWidth: 4,
+    borderColor: THEME.border,
+    marginRight: 12,
+  },
+  addButton: {
+    width: 60,
+    height: 60,
+    backgroundColor: THEME.textMain,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 4,
+    borderColor: THEME.border,
+  },
+  addButtonText: {
+    color: "white",
+    fontSize: 32,
+    fontWeight: "bold",
+    marginTop: -4, // Optical adjustment
+  },
+  listContainer: {
+    flex: 1,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    borderRadius: 24,
+    marginBottom: 24,
+    padding: 16,
+    borderWidth: 4,
+    borderColor: "rgba(24, 24, 27, 0.1)",
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  emptyText: {
+    textAlign: "center",
+    color: THEME.textMain,
+    fontSize: 18,
+    opacity: 0.5,
+    marginTop: 40,
+  },
+  chipContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  playerChip: {
+    backgroundColor: "white",
+    paddingVertical: 10,
+    paddingLeft: 16,
+    paddingRight: 12,
+    borderRadius: 999,
+    borderWidth: 3,
+    borderColor: THEME.border,
+    flexDirection: "row",
+    alignItems: "center",
+    margin: 6,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 0,
+    elevation: 2,
+  },
+  playerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: THEME.textMain,
+    marginRight: 8,
+  },
+  removeIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: "#F43F5E", // Red for remove
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  removeIconText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: -2,
+  },
+  footer: {
+    marginBottom: 20,
+  },
+});
