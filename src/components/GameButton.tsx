@@ -50,19 +50,14 @@ const styles = StyleSheet.create({
     borderWidth: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 0,
-    elevation: 4,
   },
   primaryButton: {
-    backgroundColor: THEME.cardBg, // White
-    borderColor: THEME.border,     // Black
+    backgroundColor: THEME.cardBg,
+    borderColor: THEME.border,
   },
   secondaryButton: {
-    backgroundColor: THEME.textMain, // Black
-    borderColor: THEME.cardBg,       // White (to pop against background)
+    backgroundColor: THEME.textMain,
+    borderColor: THEME.cardBg,
   },
   baseText: {
     fontSize: 18,
