@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { View, Text, Animated, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { GameButton } from "../components/GameButton";
 import { THEME, BG_COLORS, LAYOUT } from "../constants/theme";
 
@@ -9,6 +9,13 @@ export const WelcomeScreen = () => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const flipOutAnim = useRef(new Animated.Value(0)).current; 
   const circleAnim = useRef(new Animated.Value(1)).current; 
+
+  useFocusEffect(
+    useCallback(() => {
+      flipOutAnim.setValue(0);
+      circleAnim.setValue(1);
+    }, [flipOutAnim, circleAnim])
+  );
 
   useEffect(() => {
     Animated.loop(
@@ -84,6 +91,7 @@ export const WelcomeScreen = () => {
             onPress={handleSetup} 
             text="Add Players" 
             variant="secondary"
+            // Using StyleSheet.flatten to satisfy strict type checking
             style={StyleSheet.flatten([
               styles.menuButton, 
               { 
