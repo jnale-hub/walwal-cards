@@ -19,7 +19,6 @@ export const GameScreen = () => {
   const router = useRouter();
   const { playerList } = useLocalSearchParams();
   
-  // Parse players
   const players = useMemo(() => {
     if (typeof playerList === 'string') {
       try { return JSON.parse(playerList); } catch (e) { return []; }
@@ -29,14 +28,11 @@ export const GameScreen = () => {
 
   const hasPlayers = players.length > 0;
 
-  // --- Deck Logic State ---
   const [deckOrder, setDeckOrder] = useState<number[]>([]);
   const [dealIndex, setDealIndex] = useState(0);
   
-  // --- UI State ---
-  const [showExitModal, setShowExitModal] = useState(false); // Modal State
+  const [showExitModal, setShowExitModal] = useState(false);
 
-  // Initialize Deck on Mount
   useEffect(() => {
     const indices = Array.from({ length: DECK.length }, (_, i) => i);
     setDeckOrder(shuffleArray(indices));
@@ -44,18 +40,13 @@ export const GameScreen = () => {
 
   const activeCardIndex = deckOrder.length > 0 ? deckOrder[dealIndex] : 0;
 
-  // --- Visual State ---
   const [bg, setBg] = useState(BG_COLORS[4]);
   const [isFlipped, setIsFlipped] = useState(false);
   const [turnIndex, setTurnIndex] = useState(0);
 
-  // Current Card Data
   const currentCard = useMemo(() => DECK[activeCardIndex], [activeCardIndex]);
-  
-  // Background Emoji State
   const [bgEmoji, setBgEmoji] = useState(currentCard.emoji);
 
-  // Animations
   const bgAnim = useRef(new Animated.Value(0)).current;
   const flipAnim = useRef(new Animated.Value(0)).current;
   const entryAnim = useRef(new Animated.Value(-90)).current;
@@ -68,7 +59,6 @@ export const GameScreen = () => {
     }
   }, [isFlipped, currentCard]);
 
-  // Entry Animation
   useEffect(() => {
     Animated.timing(entryAnim, {
       toValue: 0,
@@ -82,7 +72,6 @@ export const GameScreen = () => {
     outputRange: ["-90deg", "0deg"],
   });
 
-  // Background Transition
   useEffect(() => {
     bgAnim.setValue(0);
     Animated.timing(bgAnim, { toValue: 1, duration: 600, useNativeDriver: false }).start(() => {
@@ -95,7 +84,6 @@ export const GameScreen = () => {
     outputRange: [prevBgRef.current, bg],
   });
 
-  // Pattern Opacity
   useEffect(() => {
     Animated.timing(patternAnim, {
       toValue: isFlipped ? 1 : 0,
@@ -104,7 +92,6 @@ export const GameScreen = () => {
     }).start();
   }, [isFlipped, patternAnim]);
 
-  // Flip Interpolations
   const frontInterpolate = flipAnim.interpolate({ inputRange: [0, 180], outputRange: ["0deg", "180deg"] });
   const backInterpolate = flipAnim.interpolate({ inputRange: [0, 180], outputRange: ["180deg", "360deg"] });
   const frontOpacity = flipAnim.interpolate({ inputRange: [89, 90], outputRange: [1, 0] });
@@ -140,20 +127,16 @@ export const GameScreen = () => {
 
     setTimeout(() => {
       let nextDealIndex = dealIndex + 1;
-      
       if (nextDealIndex >= deckOrder.length) {
         const lastCard = deckOrder[deckOrder.length - 1];
         let newOrder = shuffleArray([...deckOrder]);
-        
         if (newOrder[0] === lastCard) {
           const swapIdx = Math.floor(Math.random() * (newOrder.length - 1)) + 1;
           [newOrder[0], newOrder[swapIdx]] = [newOrder[swapIdx], newOrder[0]];
         }
-        
         setDeckOrder(newOrder);
         nextDealIndex = 0;
       }
-
       setDealIndex(nextDealIndex);
 
       let nextBg = bg;
@@ -176,16 +159,16 @@ export const GameScreen = () => {
         </Animated.View>
       </View>
 
-      {/* --- EXIT BUTTON --- */}
+      {/* --- MINIMAL EXIT BUTTON --- */}
       <TouchableOpacity 
         style={styles.exitButton} 
         onPress={() => setShowExitModal(true)} 
-        activeOpacity={0.7}
+        activeOpacity={0.6}
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
       >
         <Text style={styles.exitButtonText}>✕</Text>
       </TouchableOpacity>
 
-      {/* --- CUSTOM CONFIRM MODAL --- */}
       <ConfirmModal
         visible={showExitModal}
         title="End Game?"
@@ -202,15 +185,12 @@ export const GameScreen = () => {
       {!isFlipped && <TouchableOpacity style={styles.touchOverlay} onPress={flipCard} activeOpacity={1} />}
 
       <Animated.View style={[styles.cardContainer, { transform: [{ perspective: 1000 }, { rotateY: entryInterpolate }] }]}>
-        
-        {/* FRONT FACE */}
         <Animated.View style={[styles.cardBase, styles.cardFace, { transform: [{ rotateY: frontInterpolate }], opacity: frontOpacity }]}>
           {hasPlayers && <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>}
           <Text style={styles.cardEmoji}>{currentCard.emoji}</Text>
           <Text style={styles.tapToReveal}>Tap to reveal</Text>
         </Animated.View>
 
-        {/* BACK FACE */}
         <Animated.View style={[styles.cardBase, styles.cardFace, { transform: [{ rotateY: backInterpolate }], opacity: backOpacity }]}>
           {hasPlayers && <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>}
           <Text style={styles.cardEmojiSmall}>{currentCard.emoji}</Text>
@@ -219,7 +199,6 @@ export const GameScreen = () => {
           </View>
           <Text style={styles.cardPrompt}>{currentCard.prompt}</Text>
         </Animated.View>
-
       </Animated.View>
 
       <View style={styles.buttonContainer}>
@@ -322,59 +301,16 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 2,
   },
-  turnBanner: {
-    position: 'absolute',
-    top: 60,
-    zIndex: 50,
-    backgroundColor: 'white',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 999,
-    borderWidth: 4,
-    borderColor: THEME.border,
-    alignItems: 'center',
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 0,
-    elevation: 4,
-  },
-  turnLabel: {
-    fontSize: 14,
-    color: THEME.textMain,
-    fontWeight: '600',
-    opacity: 0.7,
-    textTransform: 'uppercase',
-  },
-  turnName: {
-    fontSize: 24,
-    color: THEME.textMain,
-    fontWeight: '900',
-  },
-  // Exit Button Styles
   exitButton: {
     position: 'absolute',
-    top: 50,
-    left: 20,
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'white',
-    borderWidth: 3,
-    borderColor: THEME.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 100,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 4,
+    top: 54,
+    left: 24,
+    zIndex: 200,
   },
   exitButtonText: {
-    fontSize: 24,
-    fontWeight: '900',
+    fontSize: 28,
     color: THEME.textMain,
-    lineHeight: 28,
+    includeFontPadding: false,
+    lineHeight: 32,
   },
 });
