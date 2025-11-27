@@ -8,6 +8,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { GameButton } from "../components/GameButton";
@@ -20,11 +21,30 @@ export const PlayerSetupScreen = () => {
   const [players, setPlayers] = useState<string[]>([]);
   const [showBackModal, setShowBackModal] = useState(false);
 
+  const MAX_NAME_LENGTH = 20;
+  const MAX_PLAYERS = 20;
+
   const handleAddPlayer = () => {
-    if (name.trim().length > 0) {
-      setPlayers([...players, name.trim()]);
-      setName("");
+    const trimmedName = name.trim();
+
+    if (trimmedName.length === 0) return;
+
+    if (players.length >= MAX_PLAYERS) {
+      Alert.alert("Limit Reached", "You can only add up to 20 players.");
+      return;
     }
+
+    const isDuplicate = players.some(
+      (p) => p.toLowerCase() === trimmedName.toLowerCase()
+    );
+
+    if (isDuplicate) {
+      Alert.alert("Duplicate Name", "This player is already in the list.");
+      return;
+    }
+
+    setPlayers([...players, trimmedName]);
+    setName("");
   };
 
   const handleRemovePlayer = (indexToRemove: number) => {
@@ -53,12 +73,11 @@ export const PlayerSetupScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      {/* --- MINIMAL BACK BUTTON --- */}
-      <TouchableOpacity 
-        style={styles.backButton} 
-        onPress={handleBack} 
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={handleBack}
         activeOpacity={0.6}
-        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }} // Increase touch area
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
       >
         <Text style={styles.backButtonText}>←</Text>
       </TouchableOpacity>
@@ -78,29 +97,41 @@ export const PlayerSetupScreen = () => {
 
       <View style={styles.contentContainer}>
         <Text style={styles.titleText}>Add Players</Text>
-        <Text style={styles.subtitleText}>
-          Who are we drinking with today?
-        </Text>
+        <Text style={styles.subtitleText}>Who are we drinking with today?</Text>
 
+        {/* Input Area */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Enter Name"
+            placeholder={`Enter Name`}
             placeholderTextColor="rgba(24, 24, 27, 0.4)"
             value={name}
             onChangeText={setName}
             onSubmitEditing={handleAddPlayer}
             returnKeyType="done"
+            maxLength={MAX_NAME_LENGTH}
+            autoCorrect={false} 
           />
           <TouchableOpacity
-            style={styles.addButton}
+            style={[
+              styles.addButton,
+              // Visual feedback if input is invalid
+              { opacity: name.trim().length === 0 ? 0.5 : 1 },
+            ]}
             onPress={handleAddPlayer}
             activeOpacity={0.8}
+            disabled={name.trim().length === 0}
           >
             <Text style={styles.addButtonText}>+</Text>
           </TouchableOpacity>
         </View>
 
+        {/* Player Count Indicator (Optional UX improvement) */}
+        <Text style={styles.counterText}>
+          {players.length} / {MAX_PLAYERS} Players
+        </Text>
+
+        {/* Player List */}
         <View style={styles.listContainer}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
@@ -151,18 +182,19 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 24,
     paddingTop: 100,
-    width: '100%',
+    width: "100%",
     maxWidth: 600,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   backButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 54,
     left: 24,
     zIndex: 100,
   },
   backButtonText: {
     fontSize: 36,
+    fontWeight: "900",
     color: THEME.textMain,
     includeFontPadding: false,
     lineHeight: 36,
@@ -181,11 +213,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "500",
     opacity: 0.8,
-    marginBottom: 32,
+    marginBottom: 24,
   },
   inputContainer: {
     flexDirection: "row",
-    marginBottom: 24,
+    marginBottom: 8,
   },
   input: {
     flex: 1,
@@ -215,6 +247,15 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "bold",
     marginTop: -4,
+  },
+  counterText: {
+    textAlign: "right",
+    color: THEME.textMain,
+    opacity: 0.6,
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 16,
+    marginRight: 4,
   },
   listContainer: {
     flex: 1,
