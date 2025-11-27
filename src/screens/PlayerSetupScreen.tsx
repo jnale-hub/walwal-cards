@@ -18,7 +18,7 @@ export const PlayerSetupScreen = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const [players, setPlayers] = useState<string[]>([]);
-  const [showBackModal, setShowBackModal] = useState(false); 
+  const [showBackModal, setShowBackModal] = useState(false);
 
   const handleAddPlayer = () => {
     if (name.trim().length > 0) {
@@ -53,16 +53,16 @@ export const PlayerSetupScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      {/* --- BACK BUTTON --- */}
+      {/* --- MINIMAL BACK BUTTON --- */}
       <TouchableOpacity 
         style={styles.backButton} 
         onPress={handleBack} 
-        activeOpacity={0.7}
+        activeOpacity={0.6}
+        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }} // Increase touch area
       >
         <Text style={styles.backButtonText}>←</Text>
       </TouchableOpacity>
 
-      {/* --- CONFIRM MODAL --- */}
       <ConfirmModal
         visible={showBackModal}
         title="Go Back?"
@@ -82,7 +82,6 @@ export const PlayerSetupScreen = () => {
           Who are we drinking with today?
         </Text>
 
-        {/* Input Area */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -102,7 +101,6 @@ export const PlayerSetupScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Player List */}
         <View style={styles.listContainer}>
           <ScrollView
             contentContainerStyle={styles.scrollContent}
@@ -129,7 +127,6 @@ export const PlayerSetupScreen = () => {
           </ScrollView>
         </View>
 
-        {/* Footer Action */}
         <View style={styles.footer}>
           <GameButton
             onPress={handleStartGame}
@@ -148,7 +145,7 @@ export const PlayerSetupScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: BG_COLORS[4], // Orange theme
+    backgroundColor: BG_COLORS[4],
   },
   contentContainer: {
     flex: 1,
@@ -160,28 +157,15 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 50, 
-    left: 20,
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'white',
-    borderWidth: 3,
-    borderColor: THEME.border,
-    alignItems: 'center',
-    justifyContent: 'center',
+    top: 54,
+    left: 24,
     zIndex: 100,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 4,
   },
   backButtonText: {
-    fontSize: 28,
-    fontWeight: '900',
+    fontSize: 36,
     color: THEME.textMain,
-    marginTop: -4, 
+    includeFontPadding: false,
+    lineHeight: 36,
   },
   titleText: {
     fontSize: 42,
@@ -230,7 +214,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 32,
     fontWeight: "bold",
-    marginTop: -4, // Optical adjustment
+    marginTop: -4,
   },
   listContainer: {
     flex: 1,
@@ -283,7 +267,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#F43F5E", // Red for remove
+    backgroundColor: "#F43F5E",
     alignItems: "center",
     justifyContent: "center",
   },
