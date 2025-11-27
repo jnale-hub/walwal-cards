@@ -1,7 +1,8 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import { View, Text, TouchableOpacity, Animated, StyleSheet } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { GameButton } from "../components/GameButton";
+import { ConfirmModal } from "../components/ConfirmModal";
 import { DECK } from "../constants/data";
 import { BG_COLORS, THEME, LAYOUT, SCREEN_DIMS } from "../constants/theme";
 
@@ -15,6 +16,7 @@ const shuffleArray = (array: number[]) => {
 };
 
 export const GameScreen = () => {
+  const router = useRouter();
   const { playerList } = useLocalSearchParams();
   
   // Parse players
@@ -28,19 +30,18 @@ export const GameScreen = () => {
   const hasPlayers = players.length > 0;
 
   // --- Deck Logic State ---
-  // 1. We track the order of card INDICES (e.g. [4, 0, 9, 2...])
   const [deckOrder, setDeckOrder] = useState<number[]>([]);
-  // 2. We track our current position in that order
   const [dealIndex, setDealIndex] = useState(0);
   
+  // --- UI State ---
+  const [showExitModal, setShowExitModal] = useState(false); // Modal State
+
   // Initialize Deck on Mount
   useEffect(() => {
     const indices = Array.from({ length: DECK.length }, (_, i) => i);
     setDeckOrder(shuffleArray(indices));
   }, []);
 
-  // Determine the current visible card index
-  // If deck is not yet ready (first render), default to 0
   const activeCardIndex = deckOrder.length > 0 ? deckOrder[dealIndex] : 0;
 
   // --- Visual State ---
@@ -51,7 +52,7 @@ export const GameScreen = () => {
   // Current Card Data
   const currentCard = useMemo(() => DECK[activeCardIndex], [activeCardIndex]);
   
-  // Background Emoji State (Persists during fade out)
+  // Background Emoji State
   const [bgEmoji, setBgEmoji] = useState(currentCard.emoji);
 
   // Animations
@@ -61,7 +62,6 @@ export const GameScreen = () => {
   const patternAnim = useRef(new Animated.Value(0)).current;
   const prevBgRef = useRef(bg);
 
-  // Update Background Emoji only when revealing
   useEffect(() => {
     if (isFlipped) {
       setBgEmoji(currentCard.emoji);
@@ -135,35 +135,27 @@ export const GameScreen = () => {
   }, [isFlipped, flipAnim]);
 
   const handleNext = useCallback(() => {
-    // 1. Flip back
     setIsFlipped(false);
     Animated.spring(flipAnim, { toValue: 0, friction: 8, tension: 10, useNativeDriver: true }).start();
 
     setTimeout(() => {
-      // --- Deck Logic: Move to next card in shuffled order ---
       let nextDealIndex = dealIndex + 1;
-      let currentDeckOrder = deckOrder;
-
-      // If we reached the end of the deck, reshuffle!
+      
       if (nextDealIndex >= deckOrder.length) {
         const lastCard = deckOrder[deckOrder.length - 1];
         let newOrder = shuffleArray([...deckOrder]);
         
-        // Prevent immediate repeat across shuffle boundary
         if (newOrder[0] === lastCard) {
-          // Swap first card with random other card to avoid repeat
           const swapIdx = Math.floor(Math.random() * (newOrder.length - 1)) + 1;
           [newOrder[0], newOrder[swapIdx]] = [newOrder[swapIdx], newOrder[0]];
         }
         
         setDeckOrder(newOrder);
-        nextDealIndex = 0; // Reset pointer
+        nextDealIndex = 0;
       }
 
-      // Apply new state
       setDealIndex(nextDealIndex);
 
-      // Randomize background color (ensure contrast/change)
       let nextBg = bg;
       if (BG_COLORS.length > 1) {
         do { nextBg = BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)]; } while (nextBg === bg);
@@ -183,6 +175,29 @@ export const GameScreen = () => {
           {emojiGrid}
         </Animated.View>
       </View>
+
+      {/* --- EXIT BUTTON --- */}
+      <TouchableOpacity 
+        style={styles.exitButton} 
+        onPress={() => setShowExitModal(true)} 
+        activeOpacity={0.7}
+      >
+        <Text style={styles.exitButtonText}>✕</Text>
+      </TouchableOpacity>
+
+      {/* --- CUSTOM CONFIRM MODAL --- */}
+      <ConfirmModal
+        visible={showExitModal}
+        title="End Game?"
+        message="Are you sure you want to quit? Current progress will be lost."
+        confirmText="End Game"
+        cancelText="Resume"
+        onCancel={() => setShowExitModal(false)}
+        onConfirm={() => {
+          setShowExitModal(false);
+          router.replace("/");
+        }}
+      />
 
       {!isFlipped && <TouchableOpacity style={styles.touchOverlay} onPress={flipCard} activeOpacity={1} />}
 
@@ -306,5 +321,60 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     textTransform: 'uppercase',
     letterSpacing: 2,
+  },
+  turnBanner: {
+    position: 'absolute',
+    top: 60,
+    zIndex: 50,
+    backgroundColor: 'white',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 999,
+    borderWidth: 4,
+    borderColor: THEME.border,
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 0,
+    elevation: 4,
+  },
+  turnLabel: {
+    fontSize: 14,
+    color: THEME.textMain,
+    fontWeight: '600',
+    opacity: 0.7,
+    textTransform: 'uppercase',
+  },
+  turnName: {
+    fontSize: 24,
+    color: THEME.textMain,
+    fontWeight: '900',
+  },
+  // Exit Button Styles
+  exitButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'white',
+    borderWidth: 3,
+    borderColor: THEME.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 100,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  exitButtonText: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: THEME.textMain,
+    lineHeight: 28,
   },
 });

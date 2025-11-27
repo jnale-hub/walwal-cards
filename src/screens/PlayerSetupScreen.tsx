@@ -11,12 +11,14 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { GameButton } from "../components/GameButton";
+import { ConfirmModal } from "../components/ConfirmModal";
 import { THEME, BG_COLORS } from "../constants/theme";
 
 export const PlayerSetupScreen = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const [players, setPlayers] = useState<string[]>([]);
+  const [showBackModal, setShowBackModal] = useState(false); 
 
   const handleAddPlayer = () => {
     if (name.trim().length > 0) {
@@ -38,11 +40,42 @@ export const PlayerSetupScreen = () => {
     }
   };
 
+  const handleBack = () => {
+    if (players.length > 0 || name.trim().length > 0) {
+      setShowBackModal(true);
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
+      {/* --- BACK BUTTON --- */}
+      <TouchableOpacity 
+        style={styles.backButton} 
+        onPress={handleBack} 
+        activeOpacity={0.7}
+      >
+        <Text style={styles.backButtonText}>←</Text>
+      </TouchableOpacity>
+
+      {/* --- CONFIRM MODAL --- */}
+      <ConfirmModal
+        visible={showBackModal}
+        title="Go Back?"
+        message="You have unsaved players. Going back will clear this list."
+        confirmText="Go Back"
+        cancelText="Stay"
+        onCancel={() => setShowBackModal(false)}
+        onConfirm={() => {
+          setShowBackModal(false);
+          router.back();
+        }}
+      />
+
       <View style={styles.contentContainer}>
         <Text style={styles.titleText}>Add Players</Text>
         <Text style={styles.subtitleText}>
@@ -120,11 +153,35 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     padding: 24,
-    paddingTop: 60,
-    // Width constraints for larger screens
+    paddingTop: 100,
     width: '100%',
     maxWidth: 600,
     alignSelf: 'center',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 50, 
+    left: 20,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'white',
+    borderWidth: 3,
+    borderColor: THEME.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 100,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  backButtonText: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: THEME.textMain,
+    marginTop: -4, 
   },
   titleText: {
     fontSize: 42,
