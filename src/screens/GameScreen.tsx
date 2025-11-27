@@ -21,7 +21,7 @@ export const GameScreen = () => {
   
   const players = useMemo(() => {
     if (typeof playerList === 'string') {
-      try { return JSON.parse(playerList); } catch (e) { return []; }
+      try { return JSON.parse(playerList); } catch { return []; }
     }
     return [];
   }, [playerList]);
