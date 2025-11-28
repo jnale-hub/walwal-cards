@@ -5,6 +5,8 @@ import { GameButton } from "../components/GameButton";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { DECK } from "../constants/data";
 import { BG_COLORS, THEME, LAYOUT, SCREEN_DIMS } from "../constants/theme";
+import { isSmallDevice } from "../constants/util";
+
 
 const shuffleArray = (array: number[]) => {
   const newArr = [...array];
@@ -313,11 +315,10 @@ const styles = StyleSheet.create({
   },
   cardPrompt: {
     color: THEME.textMain,
-    fontSize: 24,
+    fontSize: isSmallDevice ? 22 : 24,
     textAlign: "center",
-    lineHeight: 34,
+    lineHeight: isSmallDevice ? 28 : 34,
     fontWeight: "600",
-    paddingHorizontal: 8,
   },
   tapToReveal: {
     color: THEME.textMain,
