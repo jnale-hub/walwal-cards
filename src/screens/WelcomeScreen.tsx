@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { View, Text, Animated, StyleSheet, Platform, StatusBar as RNStatusBar } from "react-native";
+import { View, Text, Animated, StyleSheet, Platform, StatusBar as RNStatusBar, Dimensions } from "react-native";
 import { useRouter, useFocusEffect } from "expo-router";
 import { GameButton } from "../components/GameButton";
 import { THEME, BG_COLORS, LAYOUT } from "../constants/theme";
+
+const { width } = Dimensions.get('window');
+const isSmallDevice = width < 380;
 
 export const WelcomeScreen = () => {
   const router = useRouter();
@@ -164,7 +167,7 @@ const styles = StyleSheet.create({
     marginBottom: 20, 
   },
   titleText: {
-    fontSize: 40,
+    fontSize: isSmallDevice ? 36 : 40,
     fontWeight: "900",
     color: THEME.textMain,
     marginBottom: 12,
@@ -172,7 +175,7 @@ const styles = StyleSheet.create({
     letterSpacing: -1,
   },
   subtitleText: {
-    fontSize: 16,
+    fontSize: isSmallDevice ? 14 : 16,
     color: THEME.textMain,
     textAlign: "center",
     fontWeight: "500",
@@ -220,7 +223,7 @@ const styles = StyleSheet.create({
     overflow: "visible",
   },
   emojiHero: {
-    fontSize: 72,
+    fontSize: isSmallDevice ? 60 : 72,
     marginBottom: 16,
     textAlign: "center",
   },
