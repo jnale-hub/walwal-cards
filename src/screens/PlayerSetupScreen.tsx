@@ -22,7 +22,7 @@ export const PlayerSetupScreen = () => {
   const [players, setPlayers] = useState<string[]>([]);
   const [showBackModal, setShowBackModal] = useState(false);
 
-  const MAX_NAME_LENGTH = 12;
+  const MAX_NAME_LENGTH = 20;
   const MAX_PLAYERS = 20;
 
   const handleAddPlayer = () => {
@@ -108,7 +108,7 @@ export const PlayerSetupScreen = () => {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder={`Enter Name (Max ${MAX_NAME_LENGTH})`}
+            placeholder={`Enter Name`}
             placeholderTextColor="rgba(24, 24, 27, 0.4)"
             value={name}
             onChangeText={setName}
@@ -116,6 +116,7 @@ export const PlayerSetupScreen = () => {
             returnKeyType="done"
             maxLength={MAX_NAME_LENGTH}
             autoCorrect={false} 
+            id="playerInput"
           />
           <TouchableOpacity
             style={[styles.addButton, { opacity: name.trim().length === 0 ? 0.5 : 1 }]}
