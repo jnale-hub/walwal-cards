@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  StatusBar as RNStatusBar,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { GameButton } from "../components/GameButton";
@@ -21,28 +22,21 @@ export const PlayerSetupScreen = () => {
   const [players, setPlayers] = useState<string[]>([]);
   const [showBackModal, setShowBackModal] = useState(false);
 
-  const MAX_NAME_LENGTH = 20;
+  const MAX_NAME_LENGTH = 12;
   const MAX_PLAYERS = 20;
 
   const handleAddPlayer = () => {
     const trimmedName = name.trim();
-
     if (trimmedName.length === 0) return;
-
     if (players.length >= MAX_PLAYERS) {
       Alert.alert("Limit Reached", "You can only add up to 20 players.");
       return;
     }
-
-    const isDuplicate = players.some(
-      (p) => p.toLowerCase() === trimmedName.toLowerCase()
-    );
-
+    const isDuplicate = players.some((p) => p.toLowerCase() === trimmedName.toLowerCase());
     if (isDuplicate) {
       Alert.alert("Duplicate Name", "This player is already in the list.");
       return;
     }
-
     setPlayers([...players, trimmedName]);
     setName("");
   };
@@ -52,7 +46,7 @@ export const PlayerSetupScreen = () => {
   };
 
   const handleStartGame = () => {
-    if (players.length > 0) {
+    if (players.length >= 2) {
       router.push({
         pathname: "/game",
         params: { playerList: JSON.stringify(players) },
@@ -73,15 +67,6 @@ export const PlayerSetupScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={handleBack}
-        activeOpacity={0.6}
-        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-      >
-        <Text style={styles.backButtonText}>←</Text>
-      </TouchableOpacity>
-
       <ConfirmModal
         visible={showBackModal}
         title="Go Back?"
@@ -95,15 +80,35 @@ export const PlayerSetupScreen = () => {
         }}
       />
 
-      <View style={styles.contentContainer}>
-        <Text style={styles.titleText}>Add Players</Text>
+      {/* --- HEADER BAR (Inline Back Button & Title) --- */}
+      <View style={styles.headerBar}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={handleBack} 
+          activeOpacity={0.6}
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+        >
+          <Text style={styles.backButtonText}>←</Text>
+        </TouchableOpacity>
+        
+        <Text style={styles.headerTitle}>Add Players</Text>
+        
+        {/* Invisible spacer to balance the title center */}
+        <View style={styles.headerSpacer} />
+      </View>
+
+      <ScrollView 
+        style={styles.scrollContainer} 
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
+        bounces={true} 
+      >
         <Text style={styles.subtitleText}>Who are we drinking with today?</Text>
 
-        {/* Input Area */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder={`Enter Name`}
+            placeholder={`Enter Name (Max ${MAX_NAME_LENGTH})`}
             placeholderTextColor="rgba(24, 24, 27, 0.4)"
             value={name}
             onChangeText={setName}
@@ -113,11 +118,7 @@ export const PlayerSetupScreen = () => {
             autoCorrect={false} 
           />
           <TouchableOpacity
-            style={[
-              styles.addButton,
-              // Visual feedback if input is invalid
-              { opacity: name.trim().length === 0 ? 0.5 : 1 },
-            ]}
+            style={[styles.addButton, { opacity: name.trim().length === 0 ? 0.5 : 1 }]}
             onPress={handleAddPlayer}
             activeOpacity={0.8}
             disabled={name.trim().length === 0}
@@ -126,48 +127,39 @@ export const PlayerSetupScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Player Count Indicator (Optional UX improvement) */}
-        <Text style={styles.counterText}>
-          {players.length} / {MAX_PLAYERS} Players
-        </Text>
+        <Text style={styles.counterText}>{players.length} / {MAX_PLAYERS} Players</Text>
 
-        {/* Player List */}
         <View style={styles.listContainer}>
-          <ScrollView
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
-            {players.length === 0 ? (
-              <Text style={styles.emptyText}>No players added yet.</Text>
-            ) : (
-              <View style={styles.chipContainer}>
-                {players.map((player, index) => (
-                  <TouchableOpacity
-                    key={`${player}-${index}`}
-                    style={styles.playerChip}
-                    onPress={() => handleRemovePlayer(index)}
-                  >
-                    <Text style={styles.playerText}>{player}</Text>
-                    <View style={styles.removeIcon}>
-                      <Text style={styles.removeIconText}>×</Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-          </ScrollView>
+          {players.length === 0 ? (
+            <Text style={styles.emptyText}>No players added yet.</Text>
+          ) : (
+            <View style={styles.chipContainer}>
+              {players.map((player, index) => (
+                <TouchableOpacity
+                  key={`${player}-${index}`}
+                  style={styles.playerChip}
+                  onPress={() => handleRemovePlayer(index)}
+                >
+                  <Text style={styles.playerText}>{player}</Text>
+                  <View style={styles.removeIcon}>
+                    <Text style={styles.removeIconText}>×</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
+      </ScrollView>
 
-        <View style={styles.footer}>
-          <GameButton
-            onPress={handleStartGame}
-            text={players.length < 2 ? "Need 2+ Players" : "Let's Play!"}
-            style={{
-              opacity: players.length < 2 ? 0.5 : 1,
-              width: "100%",
-            }}
-          />
-        </View>
+      <View style={styles.footer}>
+        <GameButton
+          onPress={players.length < 2 ? () => {} : handleStartGame}
+          text={players.length < 2 ? "Need 2+ Players" : "Let's Play!"}
+          style={{
+            opacity: players.length < 2 ? 0.5 : 1,
+            width: "100%",
+          }}
+        />
       </View>
     </KeyboardAvoidingView>
   );
@@ -177,35 +169,55 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: BG_COLORS[4],
+    paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 60,
   },
-  contentContainer: {
-    flex: 1,
-    padding: 24,
-    paddingTop: 100,
-    width: "100%",
+  // --- HEADER STYLES ---
+  headerBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    marginBottom: 20,
+    height: 50,
+    width: '100%',
     maxWidth: 600,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   backButton: {
-    position: "absolute",
-    top: 54,
-    left: 24,
-    zIndex: 100,
+    width: 44, 
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
   backButtonText: {
     fontSize: 36,
     fontWeight: "900",
     color: THEME.textMain,
     includeFontPadding: false,
-    lineHeight: 36,
+    lineHeight: 40,
   },
-  titleText: {
-    fontSize: 42,
+  headerTitle: {
+    fontSize: 32,
     fontWeight: "900",
     color: THEME.textMain,
     textAlign: "center",
     letterSpacing: -1,
-    marginBottom: 8,
+    flex: 1, 
+  },
+  headerSpacer: {
+    width: 44,
+  },
+
+  scrollContainer: {
+    flex: 1,
+    backgroundColor: BG_COLORS[4],
+  },
+  scrollContentContainer: {
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+    width: '100%',
+    maxWidth: 600,
+    alignSelf: 'center',
   },
   subtitleText: {
     fontSize: 18,
@@ -258,16 +270,12 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   listContainer: {
-    flex: 1,
     backgroundColor: "rgba(255,255,255,0.2)",
     borderRadius: 24,
-    marginBottom: 24,
     padding: 16,
     borderWidth: 4,
     borderColor: "rgba(24, 24, 27, 0.1)",
-  },
-  scrollContent: {
-    flexGrow: 1,
+    minHeight: 150, 
   },
   emptyText: {
     textAlign: "center",
@@ -319,6 +327,10 @@ const styles = StyleSheet.create({
     marginTop: -2,
   },
   footer: {
-    marginBottom: 20,
+    padding: 24,
+    paddingBottom: 34, 
+    width: '100%',
+    maxWidth: 600,
+    alignSelf: 'center',
   },
 });
