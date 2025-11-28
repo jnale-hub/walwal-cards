@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { View, Text, Animated, StyleSheet } from "react-native";
+import { View, Text, Animated, StyleSheet, Platform, StatusBar as RNStatusBar } from "react-native";
 import { useRouter, useFocusEffect } from "expo-router";
 import { GameButton } from "../components/GameButton";
 import { THEME, BG_COLORS, LAYOUT } from "../constants/theme";
@@ -26,7 +26,6 @@ export const WelcomeScreen = () => {
     ).start();
   }, [scaleAnim]);
 
-  // Helper to trigger exit animation then navigate
   const animateAndNavigate = (path: string) => {
     Animated.parallel([
       Animated.timing(flipOutAnim, { toValue: 90, duration: 300, useNativeDriver: true }),
@@ -57,7 +56,6 @@ export const WelcomeScreen = () => {
       <Animated.View style={[styles.decorativeCircle2, { opacity: circleAnim, transform: [{ scale: circleScale }] }]} />
 
       <View style={styles.contentContainer}>
-        {/* Welcome Card */}
         <Animated.View
           style={[
             styles.cardBase,
@@ -65,21 +63,39 @@ export const WelcomeScreen = () => {
             { transform: [{ perspective: 1000 }, { rotateY: flipInterpolate }] },
           ]}
         >
-          <Text style={styles.titleText}>Walwal Cards</Text>
+          <Text 
+            style={styles.titleText} 
+            adjustsFontSizeToFit 
+            minimumFontScale={0.5}
+          >
+            Walwal Cards
+          </Text>
+
           <View style={styles.heroEmojiContainer}>
             <Animated.Text style={[styles.emojiHero, { transform: [{ scale: scaleAnim }] }]}>🥴</Animated.Text>
             <Animated.Text style={[styles.emojiHero, { transform: [{ scale: scaleAnim }], marginLeft: -24 }]}>🍻</Animated.Text>
           </View>
-          <View>
-            <Text style={[styles.subtitleText, { fontSize: 22, fontWeight: "bold", marginBottom: 8 }]}>Warning!</Text>
-            <Text style={styles.subtitleText}>
+          
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text 
+              style={[styles.subtitleText, { fontSize: 22, fontWeight: "bold", marginBottom: 4 }]}
+              adjustsFontSizeToFit
+              numberOfLines={1}
+            >
+              Warning!
+            </Text>
+            <Text 
+              style={styles.subtitleText}
+              adjustsFontSizeToFit
+              minimumFontScale={0.7}
+            >
               Ang larong ito ay nagdudulot ng <Text style={{ letterSpacing: 1 }}>tawa, hiya</Text> at <Text style={{ letterSpacing: 1, textDecorationLine: "underline" }}>hangover</Text>!
             </Text>
           </View>
+          
           <Text style={styles.disclaimerText}>Drink responsibly.</Text>
         </Animated.View>
 
-        {/* Action Buttons */}
         <View style={styles.buttonContainer}>
           <GameButton 
             onPress={handleQuickPlay} 
@@ -91,7 +107,6 @@ export const WelcomeScreen = () => {
             onPress={handleSetup} 
             text="Add Players" 
             variant="secondary"
-            // Using StyleSheet.flatten to satisfy strict type checking
             style={StyleSheet.flatten([
               styles.menuButton, 
               { 
@@ -115,10 +130,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
     backgroundColor: BG_COLORS[4],
+    paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 20,
+    paddingBottom: 20,
   },
   contentContainer: {
+    flex: 1, 
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center", 
     zIndex: 10,
     width: "100%",
     paddingHorizontal: 24,
@@ -140,42 +158,44 @@ const styles = StyleSheet.create({
   welcomeCard: {
     width: LAYOUT.cardWidth,
     height: LAYOUT.cardHeight,
-    marginBottom: 0,
+    aspectRatio: LAYOUT.cardWidth / LAYOUT.cardHeight, 
+    maxWidth: '90%', 
+    maxHeight: '55%',
+    marginBottom: 20, 
   },
   titleText: {
-    fontSize: 42,
+    fontSize: 40,
     fontWeight: "900",
     color: THEME.textMain,
-    marginBottom: 24,
+    marginBottom: 12,
     textAlign: "center",
     letterSpacing: -1,
   },
   subtitleText: {
-    fontSize: 18,
+    fontSize: 16,
     color: THEME.textMain,
     textAlign: "center",
     fontWeight: "500",
     opacity: 0.8,
   },
   disclaimerText: {
-    fontSize: 14,
+    fontSize: 12,
     color: THEME.textMain,
     opacity: 0.5,
     fontWeight: "600",
     letterSpacing: 0.5,
-    marginTop: 16,
+    marginTop: 12,
   },
   buttonContainer: {
-    marginTop: 32,
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 20,
     width: '100%',
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 20,
   },
-  // Unified style for both buttons
   menuButton: {
-    width: 260, // Fixed width ensures they are identical size
-    marginBottom: 16,
+    width: 260,
+    maxWidth: '100%',
+    marginBottom: 12,
   },
   decorativeCircle1: {
     position: "absolute",
@@ -200,8 +220,8 @@ const styles = StyleSheet.create({
     overflow: "visible",
   },
   emojiHero: {
-    fontSize: 90,
-    marginBottom: 32,
+    fontSize: 72,
+    marginBottom: 16,
     textAlign: "center",
   },
 });

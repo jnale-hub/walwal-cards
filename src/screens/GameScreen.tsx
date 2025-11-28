@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from "react";
-import { View, Text, TouchableOpacity, Animated, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, StatusBar as RNStatusBar } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { GameButton } from "../components/GameButton";
 import { ConfirmModal } from "../components/ConfirmModal";
@@ -30,7 +30,6 @@ export const GameScreen = () => {
 
   const [deckOrder, setDeckOrder] = useState<number[]>([]);
   const [dealIndex, setDealIndex] = useState(0);
-  
   const [showExitModal, setShowExitModal] = useState(false);
 
   useEffect(() => {
@@ -152,22 +151,14 @@ export const GameScreen = () => {
   }, [dealIndex, deckOrder, bg, flipAnim, hasPlayers, players]);
 
   return (
-    <Animated.View style={[styles.centerContainer, { backgroundColor }]}>
+    <Animated.View style={[styles.mainContainer, { backgroundColor }]}>
+      
+      {/* Background Pattern - Absolute, behind everything */}
       <View style={[StyleSheet.absoluteFillObject, styles.patternContainer]}>
         <Animated.View style={{ opacity: patternAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 0.3] }), transform: [{ scale: 1.1 }] }}>
           {emojiGrid}
         </Animated.View>
       </View>
-
-      {/* --- MINIMAL EXIT BUTTON --- */}
-      <TouchableOpacity 
-        style={styles.exitButton} 
-        onPress={() => setShowExitModal(true)} 
-        activeOpacity={0.6}
-        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-      >
-        <Text style={styles.exitButtonText}>✕</Text>
-      </TouchableOpacity>
 
       <ConfirmModal
         visible={showExitModal}
@@ -182,38 +173,56 @@ export const GameScreen = () => {
         }}
       />
 
-      {!isFlipped && <TouchableOpacity style={styles.touchOverlay} onPress={flipCard} activeOpacity={1} />}
+      {/* HEADER ROW: Contains Exit Button */}
+      <View style={styles.headerRow}>
+        <TouchableOpacity 
+          style={styles.exitButton} 
+          onPress={() => setShowExitModal(true)} 
+          activeOpacity={0.6}
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+        >
+          <Text style={styles.exitButtonText}>✕</Text>
+        </TouchableOpacity>
+      </View>
 
-      <Animated.View style={[styles.cardContainer, { transform: [{ perspective: 1000 }, { rotateY: entryInterpolate }] }]}>
-        <Animated.View style={[styles.cardBase, styles.cardFace, { transform: [{ rotateY: frontInterpolate }], opacity: frontOpacity }]}>
-          {hasPlayers && <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>}
-          <Text style={styles.cardEmoji}>{currentCard.emoji}</Text>
-          <Text style={styles.tapToReveal}>Tap to reveal</Text>
+      {/* GAME AREA: Centered Card */}
+      <View style={styles.gameArea}>
+        {!isFlipped && <TouchableOpacity style={styles.touchOverlay} onPress={flipCard} activeOpacity={1} />}
+
+        <Animated.View style={[styles.cardContainer, { transform: [{ perspective: 1000 }, { rotateY: entryInterpolate }] }]}>
+          {/* FRONT */}
+          <Animated.View style={[styles.cardBase, styles.cardFace, { transform: [{ rotateY: frontInterpolate }], opacity: frontOpacity }]}>
+            {hasPlayers && <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>}
+            <Text style={styles.cardEmoji}>{currentCard.emoji}</Text>
+            <Text style={styles.tapToReveal}>Tap to reveal</Text>
+          </Animated.View>
+
+          {/* BACK */}
+          <Animated.View style={[styles.cardBase, styles.cardFace, { transform: [{ rotateY: backInterpolate }], opacity: backOpacity }]}>
+            {hasPlayers && <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>}
+            <Text style={styles.cardEmojiSmall}>{currentCard.emoji}</Text>
+            <View style={[styles.typeBadge, { backgroundColor: bg }]}>
+              <Text style={styles.typeText}>{currentCard.type}</Text>
+            </View>
+            <Text style={styles.cardPrompt}>{currentCard.prompt}</Text>
+          </Animated.View>
         </Animated.View>
+      </View>
 
-        <Animated.View style={[styles.cardBase, styles.cardFace, { transform: [{ rotateY: backInterpolate }], opacity: backOpacity }]}>
-          {hasPlayers && <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>}
-          <Text style={styles.cardEmojiSmall}>{currentCard.emoji}</Text>
-          <View style={[styles.typeBadge, { backgroundColor: bg }]}>
-            <Text style={styles.typeText}>{currentCard.type}</Text>
-          </View>
-          <Text style={styles.cardPrompt}>{currentCard.prompt}</Text>
-        </Animated.View>
-      </Animated.View>
-
-      <View style={styles.buttonContainer}>
+      {/* FOOTER: Controls */}
+      <View style={styles.footerRow}>
         {isFlipped && <GameButton onPress={handleNext} text="Next Card" />}
       </View>
+
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  centerContainer: {
+  mainContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
+    paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 60,
+    paddingBottom: 30,
   },
   patternContainer: {
     zIndex: 0,
@@ -221,20 +230,60 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
   },
+  
+  // --- Header Layout ---
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 24,
+    height: 50,
+    zIndex: 200,
+    width: '100%',
+    maxWidth: 600,
+    alignSelf: 'center',
+  },
+  exitButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  exitButtonText: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: THEME.textMain,
+    includeFontPadding: false,
+  },
+
+  // --- Game Layout ---
+  gameArea: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  footerRow: {
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 20,
+    width: '100%',
+    maxWidth: 600,
+    alignSelf: 'center',
+  },
   touchOverlay: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 100,
   },
-  buttonContainer: {
-    height: 80,
-    marginTop: 40,
-    justifyContent: "center",
-    zIndex: 20,
-  },
+
+  // --- Card Styles ---
   cardContainer: {
     width: LAYOUT.cardWidth,
     height: LAYOUT.cardHeight,
-    zIndex: 10,
+    aspectRatio: LAYOUT.cardWidth / LAYOUT.cardHeight,
+    maxWidth: '85%',
+    maxHeight: '82%', 
   },
   cardBase: {
     backgroundColor: THEME.cardBg,
@@ -300,17 +349,5 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     textTransform: 'uppercase',
     letterSpacing: 2,
-  },
-  exitButton: {
-    position: 'absolute',
-    top: 54,
-    left: 24,
-    zIndex: 200,
-  },
-  exitButtonText: {
-    fontSize: 28,
-    color: THEME.textMain,
-    includeFontPadding: false,
-    lineHeight: 32,
   },
 });
