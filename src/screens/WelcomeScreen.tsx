@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useCallback } from "react";
-import { View, Text, Animated, StyleSheet, Platform, StatusBar as RNStatusBar, Dimensions } from "react-native";
+import { View, Text, Animated, StyleSheet, Platform, StatusBar as RNStatusBar } from "react-native";
 import { useRouter, useFocusEffect } from "expo-router";
 import { GameButton } from "../components/GameButton";
 import { THEME, BG_COLORS, LAYOUT } from "../constants/theme";
-
-const { width } = Dimensions.get('window');
-const isSmallDevice = width < 380;
+import { isSmallDevice } from "../constants/util";
 
 export const WelcomeScreen = () => {
   const router = useRouter();
