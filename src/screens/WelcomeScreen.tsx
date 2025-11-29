@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useCallback } from "react";
-import { View, Text, Animated, StyleSheet, Platform, StatusBar as RNStatusBar } from "react-native";
-import { useRouter, useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useRef } from "react";
+import { Animated, Platform, StatusBar as RNStatusBar, StyleSheet, Text, View } from "react-native";
 import { GameButton } from "../components/GameButton";
-import { THEME, BG_COLORS, LAYOUT } from "../constants/theme";
+import { SHARED_STYLES } from "../constants/styles";
+import { BG_COLORS, LAYOUT, THEME } from "../constants/theme";
 import { isSmallDevice } from "../constants/util";
 
 export const WelcomeScreen = () => {
@@ -59,7 +60,7 @@ export const WelcomeScreen = () => {
       <View style={styles.contentContainer}>
         <Animated.View
           style={[
-            styles.cardBase,
+            SHARED_STYLES.cardBase,
             styles.welcomeCard,
             { transform: [{ perspective: 1000 }, { rotateY: flipInterpolate }] },
           ]}
@@ -141,20 +142,6 @@ const styles = StyleSheet.create({
     zIndex: 10,
     width: "100%",
     paddingHorizontal: 24,
-  },
-  cardBase: {
-    backgroundColor: THEME.cardBg,
-    borderRadius: 32,
-    borderWidth: 6,
-    borderColor: THEME.border,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 10,
   },
   welcomeCard: {
     width: LAYOUT.cardWidth,

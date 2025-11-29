@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
+import { StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 import { THEME } from "../constants/theme";
 
 interface GameButtonProps {
@@ -8,6 +8,7 @@ interface GameButtonProps {
   variant?: 'primary' | 'secondary';
   style?: ViewStyle;
   textStyle?: TextStyle;
+  accessibilityLabel?: string;
 }
 
 export const GameButton: React.FC<GameButtonProps> = ({ 
@@ -15,7 +16,8 @@ export const GameButton: React.FC<GameButtonProps> = ({
   text, 
   variant = 'primary',
   style, 
-  textStyle 
+  textStyle,
+  accessibilityLabel
 }) => {
   const isSecondary = variant === 'secondary';
 
@@ -28,6 +30,8 @@ export const GameButton: React.FC<GameButtonProps> = ({
       ]}
       onPress={onPress}
       activeOpacity={0.8}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel || text}
     >
       <Text 
         style={[

@@ -1,12 +1,11 @@
-import React, { useState, useRef, useMemo, useCallback, useEffect } from "react";
-import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, StatusBar as RNStatusBar } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { GameButton } from "../components/GameButton";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Animated, Platform, StatusBar as RNStatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ConfirmModal } from "../components/ConfirmModal";
+import { GameButton } from "../components/GameButton";
+import { GameCard } from "../components/GameCard";
 import { DECK } from "../constants/data";
-import { BG_COLORS, THEME, LAYOUT, SCREEN_DIMS } from "../constants/theme";
-import { isSmallDevice } from "../constants/util";
-
+import { BG_COLORS, LAYOUT, SCREEN_DIMS, THEME } from "../constants/theme";
 
 const shuffleArray = (array: number[]) => {
   const newArr = [...array];
@@ -192,22 +191,15 @@ export const GameScreen = () => {
         {!isFlipped && <TouchableOpacity style={styles.touchOverlay} onPress={flipCard} activeOpacity={1} />}
 
         <Animated.View style={[styles.cardContainer, { transform: [{ perspective: 1000 }, { rotateY: entryInterpolate }] }]}>
-          {/* FRONT */}
-          <Animated.View style={[styles.cardBase, styles.cardFace, { transform: [{ rotateY: frontInterpolate }], opacity: frontOpacity }]}>
-            {hasPlayers && <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>}
-            <Text style={styles.cardEmoji}>{currentCard.emoji}</Text>
-            <Text style={styles.tapToReveal}>Tap to reveal</Text>
-          </Animated.View>
-
-          {/* BACK */}
-          <Animated.View style={[styles.cardBase, styles.cardFace, { transform: [{ rotateY: backInterpolate }], opacity: backOpacity }]}>
-            {hasPlayers && <Text style={styles.cardPlayerName}>{players[turnIndex]}</Text>}
-            <Text style={styles.cardEmojiSmall}>{currentCard.emoji}</Text>
-            <View style={[styles.typeBadge, { backgroundColor: bg }]}>
-              <Text style={styles.typeText}>{currentCard.type}</Text>
-            </View>
-            <Text style={styles.cardPrompt}>{currentCard.prompt}</Text>
-          </Animated.View>
+          <GameCard
+            frontInterpolate={frontInterpolate}
+            backInterpolate={backInterpolate}
+            frontOpacity={frontOpacity}
+            backOpacity={backOpacity}
+            currentCard={currentCard}
+            bg={bg}
+            playerName={hasPlayers ? players[turnIndex] : undefined}
+          />
         </Animated.View>
       </View>
 
@@ -286,69 +278,5 @@ const styles = StyleSheet.create({
     aspectRatio: LAYOUT.cardWidth / LAYOUT.cardHeight,
     maxWidth: '85%',
     maxHeight: '82%', 
-  },
-  cardBase: {
-    backgroundColor: THEME.cardBg,
-    borderRadius: 32,
-    borderWidth: 6,
-    borderColor: THEME.border,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  cardFace: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-    backfaceVisibility: "hidden",
-  },
-  typeBadge: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    marginBottom: 24,
-  },
-  cardPrompt: {
-    color: THEME.textMain,
-    fontSize: isSmallDevice ? 22 : 24,
-    textAlign: "center",
-    lineHeight: isSmallDevice ? 28 : 34,
-    fontWeight: "600",
-  },
-  tapToReveal: {
-    color: THEME.textMain,
-    fontSize: 18,
-    fontWeight: "500",
-    letterSpacing: 1,
-  },
-  typeText: {
-    fontSize: 18,
-    fontWeight: "800",
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    color: THEME.textMain,
-  },
-  cardEmoji: {
-    fontSize: 100,
-    marginBottom: 16,
-  },
-  cardEmojiSmall: {
-    fontSize: 40,
-    marginBottom: 16,
-  },
-  cardPlayerName: {
-    position: 'absolute',
-    top: 32,
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: THEME.textMain,
-    opacity: 0.5,
-    textTransform: 'uppercase',
-    letterSpacing: 2,
   },
 });

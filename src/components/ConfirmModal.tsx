@@ -1,7 +1,8 @@
 import React from "react";
-import { Modal, View, Text, StyleSheet } from "react-native";
-import { GameButton } from "./GameButton";
+import { Modal, StyleSheet, Text, View } from "react-native";
+import { SHARED_STYLES } from "../constants/styles";
 import { THEME } from "../constants/theme";
+import { GameButton } from "./GameButton";
 
 interface ConfirmModalProps {
   visible: boolean;
@@ -30,7 +31,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
       onRequestClose={onCancel}
     >
       <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
+        <View style={[SHARED_STYLES.cardBase, styles.modalContainer]}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
           
@@ -67,19 +68,12 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   modalContainer: {
-    backgroundColor: THEME.cardBg,
-    borderRadius: 32,
-    borderWidth: 6,
-    borderColor: THEME.border,
-    padding: 24,
     width: '100%',
     maxWidth: 360,
     alignItems: 'center',
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 10,
+    // Overriding justifyContent from cardBase if needed, though cardBase has center which is fine.
+    // cardBase has elevation 0 for android, but modal might want it.
+    elevation: 10, 
   },
   title: {
     fontSize: 28,
