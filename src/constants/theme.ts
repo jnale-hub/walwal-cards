@@ -20,6 +20,6 @@ export const SCREEN_DIMS = Dimensions.get("window");
 export const LAYOUT = {
   emojiSize: 48,
   emojiMargin: 16,
-  cardWidth: 320,
+  cardWidth: 360,
   cardHeight: 440,
 };
