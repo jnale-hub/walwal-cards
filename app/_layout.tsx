@@ -51,7 +51,7 @@ export default function Layout() {
       <Head>
         {/* --- Primary SEO --- */}
         <title>Walwal Cards: Inuman Na! 🍻</title>
-        <meta name="description" content="Ang pambansang laro ng mga barkada! Truth, Dare, at Laglagan na. Perfect for inuman sessions. Play it for free!" />
+        <meta name="description" content="Ang pambansang laro ng barkada! Truth, Dare, Laglagan at iba pa. Perfect for inuman sessions. Play it for free!" />
         <meta name="keywords" content="walwal, drinking game, pinoy, tagalog truth or dare, inuman, barkada, card game, philippines, shot, walwalan" />
 
         <meta name="theme-color" content={THEME_COLOR} />
