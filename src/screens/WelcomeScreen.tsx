@@ -2,6 +2,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef } from "react";
 import { Animated, Platform, StatusBar as RNStatusBar, StyleSheet, Text, View } from "react-native";
 import { GameButton } from "../components/GameButton";
+import { FONT_FAMILY } from "../constants/fonts";
 import { SHARED_STYLES } from "../constants/styles";
 import { BG_COLORS, LAYOUT, THEME } from "../constants/theme";
 import { isSmallDevice } from "../constants/util";
@@ -70,7 +71,7 @@ export const WelcomeScreen = () => {
             adjustsFontSizeToFit 
             minimumFontScale={0.5}
           >
-            Walwal Cards
+            WALWAL CARDS
           </Text>
 
           <View style={styles.heroEmojiContainer}>
@@ -79,8 +80,8 @@ export const WelcomeScreen = () => {
           </View>
           
           <View style={{ flex: 1, justifyContent: 'center' }}>
-            <Text 
-              style={[styles.subtitleText, { fontSize: 22, fontWeight: "bold", marginBottom: 4 }]}
+            <Text
+              style={[styles.subtitleText, { fontSize: 22, fontFamily: FONT_FAMILY.bodyBold, marginBottom: 4 }]}
               adjustsFontSizeToFit
               numberOfLines={1}
             >
@@ -89,7 +90,7 @@ export const WelcomeScreen = () => {
             <Text 
               style={styles.subtitleText}
               adjustsFontSizeToFit
-              minimumFontScale={0.7}
+              minimumFontScale={0.8}
             >
               Ang larong ito ay nagdudulot ng <Text style={{ letterSpacing: 1 }}>tawa, hiya</Text> at <Text style={{ letterSpacing: 1, textDecorationLine: "underline" }}>hangover</Text>!
             </Text>
@@ -147,13 +148,13 @@ const styles = StyleSheet.create({
     width: LAYOUT.cardWidth,
     height: LAYOUT.cardHeight,
     aspectRatio: LAYOUT.cardWidth / LAYOUT.cardHeight, 
-    maxWidth: '90%', 
+    maxWidth: '95%', 
     maxHeight: '55%',
     marginBottom: 20, 
   },
   titleText: {
     fontSize: isSmallDevice ? 36 : 40,
-    fontWeight: "900",
+    fontFamily: FONT_FAMILY.logo,
     color: THEME.textMain,
     marginBottom: 12,
     textAlign: "center",
@@ -163,14 +164,13 @@ const styles = StyleSheet.create({
     fontSize: isSmallDevice ? 14 : 16,
     color: THEME.textMain,
     textAlign: "center",
-    fontWeight: "500",
-    opacity: 0.8,
+    fontFamily: FONT_FAMILY.body,
   },
   disclaimerText: {
     fontSize: 12,
     color: THEME.textMain,
     opacity: 0.5,
-    fontWeight: "600",
+    fontFamily: FONT_FAMILY.bodyBold,
     letterSpacing: 0.5,
     marginTop: 12,
   },
