@@ -5,6 +5,7 @@ import { ConfirmModal } from "../components/ConfirmModal";
 import { GameButton } from "../components/GameButton";
 import { GameCard } from "../components/GameCard";
 import { DECK } from "../constants/data";
+import { FONT_FAMILY } from "../constants/fonts";
 import { BG_COLORS, LAYOUT, SCREEN_DIMS, THEME } from "../constants/theme";
 
 const shuffleArray = (array: number[]) => {
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
   },
   exitButtonText: {
     fontSize: 28,
-    fontWeight: '900',
+    fontFamily: FONT_FAMILY.logo,
     color: THEME.textMain,
     includeFontPadding: false,
   },

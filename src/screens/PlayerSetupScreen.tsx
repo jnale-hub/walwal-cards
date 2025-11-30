@@ -1,20 +1,21 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-  StatusBar as RNStatusBar,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    StatusBar as RNStatusBar,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { GameButton } from "../components/GameButton";
 import { ConfirmModal } from "../components/ConfirmModal";
-import { THEME, BG_COLORS } from "../constants/theme";
+import { GameButton } from "../components/GameButton";
+import { FONT_FAMILY } from "../constants/fonts";
+import { BG_COLORS, THEME } from "../constants/theme";
 
 export const PlayerSetupScreen = () => {
   const router = useRouter();
@@ -91,7 +92,7 @@ export const PlayerSetupScreen = () => {
           <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
         
-        <Text style={styles.headerTitle}>Add Players</Text>
+        <Text style={styles.headerTitle}>ADD PLAYERS</Text>
         
         {/* Invisible spacer to balance the title center */}
         <View style={styles.headerSpacer} />
@@ -192,17 +193,16 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 36,
-    fontWeight: "900",
+    fontFamily: FONT_FAMILY.logo,
     color: THEME.textMain,
     includeFontPadding: false,
     lineHeight: 40,
   },
   headerTitle: {
     fontSize: 32,
-    fontWeight: "900",
+    fontFamily: FONT_FAMILY.logo,
     color: THEME.textMain,
     textAlign: "center",
-    letterSpacing: -1,
     flex: 1, 
   },
   headerSpacer: {
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: THEME.textMain,
     textAlign: "center",
-    fontWeight: "500",
+    fontFamily: FONT_FAMILY.body,
     opacity: 0.8,
     marginBottom: 24,
   },
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 20,
     fontSize: 20,
-    fontWeight: "600",
+    fontFamily: FONT_FAMILY.bodyBold,
     color: THEME.textMain,
     borderWidth: 4,
     borderColor: THEME.border,
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: "white",
     fontSize: 32,
-    fontWeight: "bold",
+    fontFamily: FONT_FAMILY.bodyBold,
     marginTop: -4,
   },
   counterText: {
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     color: THEME.textMain,
     opacity: 0.6,
     fontSize: 14,
-    fontWeight: "600",
+    fontFamily: FONT_FAMILY.bodyBold,
     marginBottom: 16,
     marginRight: 4,
   },
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   },
   playerText: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: FONT_FAMILY.bodyBold,
     color: THEME.textMain,
     marginRight: 8,
   },
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
   removeIconText: {
     color: "white",
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: FONT_FAMILY.bodyBold,
     marginTop: -2,
   },
   footer: {
