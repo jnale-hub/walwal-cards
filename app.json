@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "walwal-cards",
-    "slug": "walwal-cards",
+    "name": "walwalcards",
+    "slug": "walwalcards",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -29,7 +29,12 @@
       "favicon": "./assets/images/favicon-32x32.png"
     },
     "plugins": [
-      "expo-router",
+      [
+        "expo-router",
+        {
+          "origin": "https://walwal.expo.app"
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -48,11 +53,13 @@
       "reactCompiler": true
     },
     "extra": {
-      "router": {},
+      "router": {
+        "origin": "https://walwal.expo.app"
+      },
       "eas": {
-        "projectId": "bd23c2ca-7540-46fe-bcbc-2bda3f14426c"
+        "projectId": "116eb078-c01d-47ce-b30e-b05ba4d5bba6"
       }
     },
-    "owner": "delimajohnmarks-organization"
+    "owner": "delimajohnmark"
   }
 }
