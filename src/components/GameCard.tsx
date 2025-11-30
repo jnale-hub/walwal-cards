@@ -1,5 +1,6 @@
 import React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
+import { FONT_FAMILY } from "../constants/fonts";
 import { SHARED_STYLES } from "../constants/styles";
 import { THEME } from "../constants/theme";
 import { isSmallDevice } from "../constants/util";
@@ -75,17 +76,17 @@ const styles = StyleSheet.create({
     fontSize: isSmallDevice ? 22 : 24,
     textAlign: "center",
     lineHeight: isSmallDevice ? 28 : 34,
-    fontWeight: "600",
+    fontFamily: FONT_FAMILY.bodyBold,
   },
   tapToReveal: {
     color: THEME.textMain,
     fontSize: 18,
-    fontWeight: "500",
+    fontFamily: FONT_FAMILY.bodyBold,
     letterSpacing: 1,
   },
   typeText: {
     fontSize: 18,
-    fontWeight: "800",
+    fontFamily: FONT_FAMILY.bodyBold,
     textTransform: "uppercase",
     letterSpacing: 1,
     color: THEME.textMain,
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 32,
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: FONT_FAMILY.bodyBold,
     color: THEME.textMain,
     opacity: 0.5,
     textTransform: "uppercase",

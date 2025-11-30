@@ -1,5 +1,6 @@
 import React from "react";
 import { Modal, StyleSheet, Text, View } from "react-native";
+import { FONT_FAMILY } from "../constants/fonts";
 import { SHARED_STYLES } from "../constants/styles";
 import { THEME } from "../constants/theme";
 import { GameButton } from "./GameButton";
@@ -69,15 +70,13 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: '100%',
-    maxWidth: 360,
+    maxWidth: 400,
     alignItems: 'center',
-    // Overriding justifyContent from cardBase if needed, though cardBase has center which is fine.
-    // cardBase has elevation 0 for android, but modal might want it.
     elevation: 10, 
   },
   title: {
     fontSize: 28,
-    fontWeight: "900",
+    fontFamily: FONT_FAMILY.logo,
     color: THEME.textMain,
     textAlign: "center",
     marginBottom: 12,
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 32,
     lineHeight: 26,
-    fontWeight: "500",
+    fontFamily: FONT_FAMILY.body,
     opacity: 0.8,
   },
   buttonRow: {
