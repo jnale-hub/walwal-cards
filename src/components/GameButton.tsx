@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
+import { FONT_FAMILY } from "../constants/fonts";
 import { THEME } from "../constants/theme";
 
 interface GameButtonProps {
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
   },
   baseText: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: FONT_FAMILY.bodyBold,
     textAlign: "center",
   },
   primaryText: {
