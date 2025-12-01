@@ -74,6 +74,13 @@ export default function Layout() {
         <meta property="twitter:title" content="Walwal Cards: Inuman Na! 🍻" />
         <meta property="twitter:description" content="Ready to get wasted? Play the ultimate drinking game with your friends now." />
         <meta property="twitter:image" content={`${SITE_URL}/og-image.png`} />
+
+        {/* --- Favicons --- */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
       </Head>
 
       <StatusBar style="light" backgroundColor={THEME_COLOR} />
