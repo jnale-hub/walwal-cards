@@ -25,14 +25,14 @@
       "package": "com.delimajohnmark.walwalcards"
     },
     "web": {
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/favicon-32x32.png"
     },
     "plugins": [
       [
         "expo-router",
         {
-          "origin": "https://walwal.expo.app"
+          "origin": "https://walwalcards.xyz"
         }
       ],
       [
@@ -58,7 +58,7 @@
     },
     "extra": {
       "router": {
-        "origin": "https://walwal.expo.app"
+        "origin": "https://walwalcards.xyz"
       },
       "eas": {
         "projectId": "116eb078-c01d-47ce-b30e-b05ba4d5bba6"
