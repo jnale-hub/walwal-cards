@@ -11,7 +11,7 @@ import { FONT_FAMILY } from "../src/constants/fonts";
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function Layout() {
-  const SITE_URL = "https://walwal.expo.app";
+  const SITE_URL = "https://walwalcards.xyz";
   const THEME_COLOR = "#FB923C";
 
   const [isReady, setIsReady] = useState(false);
