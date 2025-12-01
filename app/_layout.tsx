@@ -81,6 +81,19 @@ export default function Layout() {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
+
+        {/* --- Google Analytics --- */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z3WC7M0E5Z" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-Z3WC7M0E5Z');
+            `,
+          }}
+        />
       </Head>
 
       <StatusBar style="light" backgroundColor={THEME_COLOR} />
