@@ -1,21 +1,12 @@
 import React from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import { Animated, Text, View, StyleSheet } from "react-native";
 import { FONT_FAMILY } from "../constants/fonts";
 import { SHARED_STYLES } from "../constants/styles";
 import { THEME } from "../constants/theme";
-import { isSmallDevice } from "../constants/util";
 
-interface GameCardProps {
-  frontInterpolate: Animated.AnimatedInterpolation<string | number>;
-  backInterpolate: Animated.AnimatedInterpolation<string | number>;
-  frontOpacity: Animated.AnimatedInterpolation<string | number>;
-  backOpacity: Animated.AnimatedInterpolation<string | number>;
-  currentCard: { emoji: string; type: string; prompt: string };
-  bg: string;
-  playerName?: string;
-}
+const AnimatedView = Animated.createAnimatedComponent(View);
 
-export const GameCard: React.FC<GameCardProps> = ({
+export const GameCard: React.FC<any> = ({
   frontInterpolate,
   backInterpolate,
   frontOpacity,
@@ -24,89 +15,76 @@ export const GameCard: React.FC<GameCardProps> = ({
   bg,
   playerName,
 }) => {
-  return (
-    <>
-      {/* FRONT */}
-      <Animated.View
-        style={[
-          SHARED_STYLES.cardBase,
-          styles.cardFace,
-          { transform: [{ rotateY: frontInterpolate }], opacity: frontOpacity },
-        ]}
-      >
-        {playerName && <Text style={styles.cardPlayerName}>{playerName}</Text>}
-        <Text style={styles.cardEmoji}>{currentCard.emoji}</Text>
-        <Text style={styles.tapToReveal}>Tap to reveal</Text>
-      </Animated.View>
+  const faceClasses = "items-center justify-center backface-hidden";
 
-      {/* BACK */}
-      <Animated.View
+  return (
+    <View className="w-full h-full relative">
+      {/* FRONT FACE */}
+      <AnimatedView
         style={[
           SHARED_STYLES.cardBase,
-          styles.cardFace,
-          { transform: [{ rotateY: backInterpolate }], opacity: backOpacity },
+          StyleSheet.absoluteFillObject,
+          {
+            transform: [{ rotateY: frontInterpolate }],
+            opacity: frontOpacity,
+            zIndex: frontOpacity === 0 ? 0 : 1,
+          },
         ]}
+        className={faceClasses}
       >
-        {playerName && <Text style={styles.cardPlayerName}>{playerName}</Text>}
-        <Text style={styles.cardEmojiSmall}>{currentCard.emoji}</Text>
-        <View style={[styles.typeBadge, { backgroundColor: bg }]}>
-          <Text style={styles.typeText}>{currentCard.type}</Text>
+        {playerName && (
+          <Text
+            style={{ fontFamily: FONT_FAMILY.bodyBold, color: THEME.textMain }}
+            className="absolute top-8 text-sm opacity-80 uppercase tracking-[4px]"
+          >
+            {playerName}
+          </Text>
+        )}
+        <Text className="text-8xl mb-4">{currentCard.emoji}</Text>
+        <Text
+          style={{ fontFamily: FONT_FAMILY.bodyBold, color: THEME.textMain }}
+          className="text-xs opacity-50 uppercase tracking-[1px] mt-2"
+        >
+          Tap to reveal
+        </Text>
+      </AnimatedView>
+
+      {/* BACK FACE */}
+      <AnimatedView
+        style={[
+          SHARED_STYLES.cardBase,
+          StyleSheet.absoluteFillObject,
+          {
+            transform: [{ rotateY: backInterpolate }],
+            opacity: backOpacity,
+            zIndex: backOpacity === 0 ? 0 : 1,
+          },
+        ]}
+        className={faceClasses}
+      >
+        <Text className="text-5xl sm:text-6xl mb-4">{currentCard.emoji}</Text>
+
+        <View
+          style={{ backgroundColor: bg }}
+          className="px-4 py-1.5 rounded-full mb-6 border-2 border-black/5"
+        >
+          <Text
+            style={{ fontFamily: FONT_FAMILY.bodyBold, color: THEME.textMain }}
+            className="text-lg sm:text-xl uppercase tracking-widest"
+          >
+            {currentCard.type}
+          </Text>
         </View>
-        <Text style={styles.cardPrompt}>{currentCard.prompt}</Text>
-      </Animated.View>
-    </>
+
+        <Text
+          style={{ fontFamily: FONT_FAMILY.bodyBold, color: THEME.textMain }}
+          className="text-2xl text-center leading-7"
+          numberOfLines={6}
+          adjustsFontSizeToFit
+        >
+          {currentCard.prompt}
+        </Text>
+      </AnimatedView>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  cardFace: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-    backfaceVisibility: "hidden",
-  },
-  typeBadge: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    marginBottom: 24,
-  },
-  cardPrompt: {
-    color: THEME.textMain,
-    fontSize: isSmallDevice ? 22 : 24,
-    textAlign: "center",
-    lineHeight: isSmallDevice ? 28 : 34,
-    fontFamily: FONT_FAMILY.bodyBold,
-  },
-  tapToReveal: {
-    color: THEME.textMain,
-    fontSize: 18,
-    fontFamily: FONT_FAMILY.bodyBold,
-    letterSpacing: 1,
-  },
-  typeText: {
-    fontSize: 18,
-    fontFamily: FONT_FAMILY.bodyBold,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    color: THEME.textMain,
-  },
-  cardEmoji: {
-    fontSize: 100,
-    marginBottom: 16,
-  },
-  cardEmojiSmall: {
-    fontSize: 40,
-    marginBottom: 16,
-  },
-  cardPlayerName: {
-    position: "absolute",
-    top: 32,
-    fontSize: 16,
-    fontFamily: FONT_FAMILY.bodyBold,
-    color: THEME.textMain,
-    opacity: 0.5,
-    textTransform: "uppercase",
-    letterSpacing: 2,
-  },
-});
