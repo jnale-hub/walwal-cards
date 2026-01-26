@@ -1,21 +1,11 @@
 import React from "react";
-import { Modal, StyleSheet, Text, View } from "react-native";
+import { Modal, Text, View } from "react-native";
 import { FONT_FAMILY } from "../constants/fonts";
 import { SHARED_STYLES } from "../constants/styles";
 import { THEME } from "../constants/theme";
 import { GameButton } from "./GameButton";
 
-interface ConfirmModalProps {
-  visible: boolean;
-  title: string;
-  message: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-  confirmText?: string;
-  cancelText?: string;
-}
-
-export const ConfirmModal: React.FC<ConfirmModalProps> = ({
+export const ConfirmModal: React.FC<any> = ({
   visible,
   title,
   message,
@@ -25,88 +15,41 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   cancelText = "Cancel",
 }) => {
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onCancel}
-    >
-      <View style={styles.overlay}>
-        <View style={[SHARED_STYLES.cardBase, styles.modalContainer]}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.message}>{message}</Text>
+    <Modal visible={visible} transparent animationType="fade">
+      <View className="flex-1 bg-black/70 justify-center items-center px-4">
+        <View 
+          style={SHARED_STYLES.cardBase} 
+          className="w-full max-w-lg items-center shadow-200"
+        >
+          <Text 
+            style={{ fontFamily: FONT_FAMILY.logo, color: THEME.textMain }}
+            className="text-3xl text-center mb-2 uppercase tracking-tighter"
+          >
+            {title}
+          </Text>
           
-          <View style={styles.buttonRow}>
-            <View style={styles.buttonWrapper}>
-              <GameButton 
-                onPress={onCancel} 
-                text={cancelText} 
-                variant="primary"
-                style={styles.cancelButton}
-              />
-            </View>
-            <View style={styles.buttonWrapper}>
-              <GameButton 
-                onPress={onConfirm} 
-                text={confirmText} 
-                variant="secondary"
-                style={styles.confirmButton}
-              />
-            </View>
+          <Text 
+            style={{ fontFamily: FONT_FAMILY.body, color: THEME.textMain }}
+            className="text-base text-center mb-8 opacity-70 leading-5 text-pretty"
+          >
+            {message}
+          </Text>
+          
+          <View className="flex-row w-full gap-x-3">
+            <GameButton 
+              onPress={onCancel} 
+              text={cancelText} 
+              className="flex-1 border-transparent px-2"
+            />
+            <GameButton 
+              onPress={onConfirm} 
+              text={confirmText} 
+              variant="secondary"
+              className="flex-1 px-2"
+            />
           </View>
         </View>
       </View>
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)', 
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-  modalContainer: {
-    width: '100%',
-    maxWidth: 400,
-    alignItems: 'center',
-    elevation: 10, 
-  },
-  title: {
-    fontSize: 28,
-    fontFamily: FONT_FAMILY.logo,
-    color: THEME.textMain,
-    textAlign: "center",
-    marginBottom: 12,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-  },
-  message: {
-    fontSize: 18,
-    color: THEME.textMain,
-    textAlign: "center",
-    marginBottom: 32,
-    lineHeight: 26,
-    fontFamily: FONT_FAMILY.body,
-    opacity: 0.8,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    gap: 12,
-  },
-  buttonWrapper: {
-    flex: 1,
-  },
-  cancelButton: {
-    paddingHorizontal: 8,
-    backgroundColor: 'transparent', 
-  },
-  confirmButton: {
-    paddingHorizontal: 8,
-    borderColor: THEME.border,
-  }
-});

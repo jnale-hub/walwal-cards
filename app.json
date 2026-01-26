@@ -26,7 +26,8 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon-32x32.png"
+      "favicon": "/favicon-32x32.png",
+      "bundler": "metro"
     },
     "plugins": [
       [
@@ -48,10 +49,7 @@
         }
       ]
     ],
-    "assetBundlePatterns": [
-      "assets/images/*",
-      "assets/fonts/*"
-    ],
+    "assetBundlePatterns": ["assets/images/*", "assets/fonts/*"],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true

@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
+import "../global.css";
 
 import { FONT_FAMILY } from "../src/constants/fonts";
 
