@@ -1,16 +1,15 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    StatusBar as RNStatusBar,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  StatusBar as RNStatusBar,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { GameButton } from "../components/GameButton";
@@ -21,6 +20,10 @@ export const PlayerSetupScreen = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const [players, setPlayers] = useState<string[]>([]);
+  
+  // New State for Randomizing Turns
+  const [isRandomTurn, setIsRandomTurn] = useState(false);
+  
   const [showBackModal, setShowBackModal] = useState(false);
 
   const MAX_NAME_LENGTH = 20;
@@ -33,7 +36,9 @@ export const PlayerSetupScreen = () => {
       Alert.alert("Limit Reached", "You can only add up to 20 players.");
       return;
     }
-    const isDuplicate = players.some((p) => p.toLowerCase() === trimmedName.toLowerCase());
+    const isDuplicate = players.some(
+      (p) => p.toLowerCase() === trimmedName.toLowerCase(),
+    );
     if (isDuplicate) {
       Alert.alert("Duplicate Name", "This player is already in the list.");
       return;
@@ -50,7 +55,11 @@ export const PlayerSetupScreen = () => {
     if (players.length >= 2) {
       router.push({
         pathname: "/game",
-        params: { playerList: JSON.stringify(players) },
+        params: { 
+          playerList: JSON.stringify(players),
+          // Pass the random preference to the next screen
+          isRandomTurn: isRandomTurn ? "true" : "false" 
+        },
       });
     }
   };
@@ -66,7 +75,11 @@ export const PlayerSetupScreen = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
+      className="flex-1"
+      style={{
+        backgroundColor: BG_COLORS[4],
+        paddingTop: Platform.OS === "android" ? RNStatusBar.currentHeight : 60,
+      }}
     >
       <ConfirmModal
         visible={showBackModal}
@@ -81,34 +94,60 @@ export const PlayerSetupScreen = () => {
         }}
       />
 
-      {/* --- HEADER BAR (Inline Back Button & Title) --- */}
-      <View style={styles.headerBar}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={handleBack} 
+      {/* --- HEADER BAR --- */}
+      <View className="flex-row items-center justify-between px-6 mb-5 h-[50px] w-full max-w-[600px] self-center">
+        <TouchableOpacity
+          className="w-11 h-11 justify-center items-start"
+          onPress={handleBack}
           activeOpacity={0.6}
           hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <Text
+            style={{ fontFamily: FONT_FAMILY.logo, color: THEME.textMain }}
+            className="text-[36px] leading-[40px]"
+          >
+            ←
+          </Text>
         </TouchableOpacity>
-        
-        <Text style={styles.headerTitle}>ADD PLAYERS</Text>
-        
-        {/* Invisible spacer to balance the title center */}
-        <View style={styles.headerSpacer} />
+
+        <Text
+          style={{ fontFamily: FONT_FAMILY.logo, color: THEME.textMain }}
+          className="text-3xl text-center flex-1"
+        >
+          ADD PLAYERS
+        </Text>
+
+        <View className="w-11" />
       </View>
 
-      <ScrollView 
-        style={styles.scrollContainer} 
-        contentContainerStyle={styles.scrollContentContainer}
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{
+          paddingHorizontal: 24,
+          paddingBottom: 24,
+          width: "100%",
+          maxWidth: 600,
+          alignSelf: "center",
+        }}
         showsVerticalScrollIndicator={false}
-        bounces={true} 
+        bounces={true}
       >
-        <Text style={styles.subtitleText}>Who are we drinking with today?</Text>
+        <Text
+          style={{ fontFamily: FONT_FAMILY.body, color: THEME.textMain }}
+          className="text-lg text-center opacity-80 mb-6"
+        >
+          Who are we drinking with today?
+        </Text>
 
-        <View style={styles.inputContainer}>
+        {/* INPUT ROW */}
+        <View className="flex-row mb-4">
           <TextInput
-            style={styles.input}
+            style={{
+              fontFamily: FONT_FAMILY.bodyBold,
+              color: THEME.textMain,
+              borderColor: THEME.border,
+            }}
+            className="flex-1 bg-white h-[60px] rounded-2xl px-5 text-xl border-4 mr-3"
             placeholder={`Enter Name`}
             placeholderTextColor="rgba(24, 24, 27, 0.4)"
             value={name}
@@ -116,35 +155,94 @@ export const PlayerSetupScreen = () => {
             onSubmitEditing={handleAddPlayer}
             returnKeyType="done"
             maxLength={MAX_NAME_LENGTH}
-            autoCorrect={false} 
-            id="playerInput"
+            autoCorrect={false}
           />
           <TouchableOpacity
-            style={[styles.addButton, { opacity: name.trim().length === 0 ? 0.5 : 1 }]}
+            style={{
+              backgroundColor: THEME.textMain,
+              borderColor: THEME.border,
+              opacity: name.trim().length === 0 ? 0.5 : 1,
+            }}
+            className="w-[60px] h-[60px] rounded-2xl items-center justify-center border-4"
             onPress={handleAddPlayer}
             activeOpacity={0.8}
             disabled={name.trim().length === 0}
           >
-            <Text style={styles.addButtonText}>+</Text>
+            <Text
+              style={{ fontFamily: FONT_FAMILY.bodyBold }}
+              className="color-white text-3xl mt-[-4px]"
+            >
+              +
+            </Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.counterText}>{players.length} / {MAX_PLAYERS} Players</Text>
+        {/* CONTROLS ROW: Random Toggle (Left) & Count (Right) */}
+        <View className="flex-row justify-between items-center mb-4 pl-1">
+          {/* Custom Checkbox */}
+          <TouchableOpacity 
+            className="flex-row items-center" 
+            onPress={() => setIsRandomTurn(!isRandomTurn)}
+            activeOpacity={0.7}
+          >
+            <View 
+              style={{ borderColor: THEME.border, backgroundColor: isRandomTurn ? THEME.textMain : 'white' }}
+              className="w-6 h-6 border-4 rounded-md mr-3 items-center justify-center"
+            >
+              {isRandomTurn && (
+                <Text className="text-white font-bold text-xs">✓</Text>
+              )}
+            </View>
+            <Text 
+              style={{ fontFamily: FONT_FAMILY.bodyBold, color: THEME.textMain }}
+              className="text-sm opacity-80"
+            >
+              Randomize Turns
+            </Text>
+          </TouchableOpacity>
 
-        <View style={styles.listContainer}>
+          <Text
+            style={{ fontFamily: FONT_FAMILY.bodyBold, color: THEME.textMain }}
+            className="opacity-60 text-sm mr-1"
+          >
+            {players.length} / {MAX_PLAYERS} Players
+          </Text>
+        </View>
+
+        {/* PLAYER LIST */}
+        <View className="bg-white/20 rounded-[24px] p-4 border-4 border-black/10 min-h-[150px]">
           {players.length === 0 ? (
-            <Text style={styles.emptyText}>No players added yet.</Text>
+            <Text
+              style={{ color: THEME.textMain }}
+              className="text-center text-lg opacity-50 mt-10"
+            >
+              No players added yet.
+            </Text>
           ) : (
-            <View style={styles.chipContainer}>
+            <View className="flex-row flex-wrap justify-center">
               {players.map((player, index) => (
                 <TouchableOpacity
                   key={`${player}-${index}`}
-                  style={styles.playerChip}
+                  style={{ borderColor: THEME.border }}
+                  className="bg-white py-2.5 pl-4 pr-3 rounded-full border-[3px] flex-row items-center m-1.5 shadow-sm"
                   onPress={() => handleRemovePlayer(index)}
                 >
-                  <Text style={styles.playerText}>{player}</Text>
-                  <View style={styles.removeIcon}>
-                    <Text style={styles.removeIconText}>×</Text>
+                  <Text
+                    style={{
+                      fontFamily: FONT_FAMILY.bodyBold,
+                      color: THEME.textMain,
+                    }}
+                    className="text-lg mr-2"
+                  >
+                    {player}
+                  </Text>
+                  <View className="w-6 h-6 rounded-full bg-[#F43F5E] items-center justify-center">
+                    <Text
+                      style={{ fontFamily: FONT_FAMILY.bodyBold }}
+                      className="text-white text-base mt-[-2px]"
+                    >
+                      ×
+                    </Text>
                   </View>
                 </TouchableOpacity>
               ))}
@@ -153,7 +251,7 @@ export const PlayerSetupScreen = () => {
         </View>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View className="p-6 pb-16 w-full max-w-[600px] self-center">
         <GameButton
           onPress={players.length < 2 ? () => {} : handleStartGame}
           text={players.length < 2 ? "Need 2+ Players" : "Let's Play!"}
@@ -161,177 +259,9 @@ export const PlayerSetupScreen = () => {
             opacity: players.length < 2 ? 0.5 : 1,
             width: "100%",
           }}
+          className="shadow-200"
         />
       </View>
     </KeyboardAvoidingView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLORS[4],
-    paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 60,
-  },
-  // --- HEADER STYLES ---
-  headerBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 24,
-    marginBottom: 20,
-    height: 50,
-    width: '100%',
-    maxWidth: 600,
-    alignSelf: 'center',
-  },
-  backButton: {
-    width: 44, 
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-  },
-  backButtonText: {
-    fontSize: 36,
-    fontFamily: FONT_FAMILY.logo,
-    color: THEME.textMain,
-    includeFontPadding: false,
-    lineHeight: 40,
-  },
-  headerTitle: {
-    fontSize: 32,
-    fontFamily: FONT_FAMILY.logo,
-    color: THEME.textMain,
-    textAlign: "center",
-    flex: 1, 
-  },
-  headerSpacer: {
-    width: 44,
-  },
-
-  scrollContainer: {
-    flex: 1,
-    backgroundColor: BG_COLORS[4],
-  },
-  scrollContentContainer: {
-    paddingHorizontal: 24,
-    paddingBottom: 24,
-    width: '100%',
-    maxWidth: 600,
-    alignSelf: 'center',
-  },
-  subtitleText: {
-    fontSize: 18,
-    color: THEME.textMain,
-    textAlign: "center",
-    fontFamily: FONT_FAMILY.body,
-    opacity: 0.8,
-    marginBottom: 24,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    marginBottom: 8,
-  },
-  input: {
-    flex: 1,
-    backgroundColor: "white",
-    height: 60,
-    borderRadius: 16,
-    paddingHorizontal: 20,
-    fontSize: 20,
-    fontFamily: FONT_FAMILY.bodyBold,
-    color: THEME.textMain,
-    borderWidth: 4,
-    borderColor: THEME.border,
-    marginRight: 12,
-  },
-  addButton: {
-    width: 60,
-    height: 60,
-    backgroundColor: THEME.textMain,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 4,
-    borderColor: THEME.border,
-  },
-  addButtonText: {
-    color: "white",
-    fontSize: 32,
-    fontFamily: FONT_FAMILY.bodyBold,
-    marginTop: -4,
-  },
-  counterText: {
-    textAlign: "right",
-    color: THEME.textMain,
-    opacity: 0.6,
-    fontSize: 14,
-    fontFamily: FONT_FAMILY.bodyBold,
-    marginBottom: 16,
-    marginRight: 4,
-  },
-  listContainer: {
-    backgroundColor: "rgba(255,255,255,0.2)",
-    borderRadius: 24,
-    padding: 16,
-    borderWidth: 4,
-    borderColor: "rgba(24, 24, 27, 0.1)",
-    minHeight: 150, 
-  },
-  emptyText: {
-    textAlign: "center",
-    color: THEME.textMain,
-    fontSize: 18,
-    opacity: 0.5,
-    marginTop: 40,
-  },
-  chipContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-  },
-  playerChip: {
-    backgroundColor: "white",
-    paddingVertical: 10,
-    paddingLeft: 16,
-    paddingRight: 12,
-    borderRadius: 999,
-    borderWidth: 3,
-    borderColor: THEME.border,
-    flexDirection: "row",
-    alignItems: "center",
-    margin: 6,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 0,
-    elevation: 2,
-  },
-  playerText: {
-    fontSize: 18,
-    fontFamily: FONT_FAMILY.bodyBold,
-    color: THEME.textMain,
-    marginRight: 8,
-  },
-  removeIcon: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#F43F5E",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  removeIconText: {
-    color: "white",
-    fontSize: 16,
-    fontFamily: FONT_FAMILY.bodyBold,
-    marginTop: -2,
-  },
-  footer: {
-    padding: 24,
-    paddingBottom: 34, 
-    width: '100%',
-    maxWidth: 600,
-    alignSelf: 'center',
-  },
-});
