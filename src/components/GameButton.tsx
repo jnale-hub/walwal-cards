@@ -1,78 +1,47 @@
 import React from "react";
-import { StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
+import { Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 import { FONT_FAMILY } from "../constants/fonts";
-import { THEME } from "../constants/theme";
 
 interface GameButtonProps {
   onPress: () => void;
   text: string;
-  variant?: 'primary' | 'secondary';
+  variant?: "primary" | "secondary";
+  className?: string; // Support for parent NativeWind classes
   style?: ViewStyle;
   textStyle?: TextStyle;
-  accessibilityLabel?: string;
+  disabled?: boolean;
 }
 
-export const GameButton: React.FC<GameButtonProps> = ({ 
-  onPress, 
-  text, 
-  variant = 'primary',
-  style, 
+export const GameButton: React.FC<GameButtonProps> = ({
+  onPress,
+  text,
+  variant = "primary",
+  className = "",
+  style,
   textStyle,
-  accessibilityLabel
+  disabled,
 }) => {
-  const isSecondary = variant === 'secondary';
+  const isSecondary = variant === "secondary";
 
   return (
     <TouchableOpacity
-      style={[
-        styles.baseButton, 
-        isSecondary ? styles.secondaryButton : styles.primaryButton,
-        style
-      ]}
+      activeOpacity={0.7}
+      disabled={disabled}
       onPress={onPress}
-      activeOpacity={0.8}
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel || text}
+      className={`
+        py-4 px-10 rounded-full border-[6px] items-center justify-center
+        ${isSecondary ? "bg-[#18181b] border-white" : "bg-white border-[#18181b]"}
+        ${disabled ? "opacity-50" : "opacity-100"}
+        ${className}
+      `}
+      style={style}
     >
-      <Text 
-        style={[
-          styles.baseText, 
-          isSecondary ? styles.secondaryText : styles.primaryText,
-          textStyle
-        ]}
+      <Text
+        className={`text-md sm:text-lg uppercase ${isSecondary ? "text-white" : "text-[#18181b]"}`}
+        style={[{ fontFamily: FONT_FAMILY.bodyBold }, textStyle]}
       >
         {text}
       </Text>
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  baseButton: {
-    paddingVertical: 16,
-    paddingHorizontal: 48,
-    borderRadius: 999,
-    borderWidth: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  primaryButton: {
-    backgroundColor: THEME.cardBg,
-    borderColor: THEME.border,
-  },
-  secondaryButton: {
-    backgroundColor: THEME.textMain,
-    borderColor: THEME.cardBg,
-  },
-  baseText: {
-    fontSize: 18,
-    fontFamily: FONT_FAMILY.bodyBold,
-    textAlign: "center",
-  },
-  primaryText: {
-    color: THEME.textMain,
-  },
-  secondaryText: {
-    color: THEME.cardBg,
-  },
-});
