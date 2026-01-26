@@ -34,7 +34,7 @@ const InfiniteColumn = ({
           <View key={i} className="p-2">
             <Text 
               style={{ 
-                transform: [{ rotate: `${(i * 15 + columnIndex * 10) % 360}deg` }] 
+                transform: [{ rotate: i % 2 === 0 ? '-5deg' : '5deg' }] 
               }}
               className="text-5xl opacity-50"
             >
@@ -44,7 +44,7 @@ const InfiniteColumn = ({
         ))}
       </View>
     );
-  }, [columnIndex, chunkHeight]);
+  }, [chunkHeight]);
 
   // Interpolation Logic
   const translateY = animValue.interpolate({
