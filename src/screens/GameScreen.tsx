@@ -247,15 +247,6 @@ export const GameScreen = () => {
     ));
   }, [bgEmoji]);
 
-  const driftRotate = driftAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['-2deg', '2deg']
-  });
-  const driftScale = driftAnim.interpolate({
-    inputRange: [0, .2],
-    outputRange: [1, 1]
-  });
-
   return (
     <View className="flex-1 bg-black">
       <StatusBar
@@ -278,10 +269,6 @@ export const GameScreen = () => {
                 inputRange: [0, 1],
                 outputRange: [0.0, 0.45],
               }),
-              transform: [
-                { scale: driftScale }, 
-                { rotate: driftRotate }
-              ],
             }}
           >
             {emojiGrid}
