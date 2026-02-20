@@ -17,10 +17,11 @@ import {
   View,
 } from "react-native";
 import { ConfirmModal } from "../components/ConfirmModal";
+import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
 import { GameCard } from "../components/GameCard";
 import { DECK } from "../constants/data";
-import { BG_COLORS, SCREEN_DIMS } from "../constants/theme";
+import { BG_COLORS } from "../constants/theme";
 
 // Generic Fisher-Yates shuffle
 const shuffleArray = (array: number[]) => {
@@ -36,7 +37,7 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 
 export const GameScreen = () => {
   const router = useRouter();
-  
+
   // --- PARAMS & SETUP ---
   const { playerList, isRandomTurn } = useLocalSearchParams();
   const randomTurnEnabled = isRandomTurn === "true";
@@ -59,7 +60,7 @@ export const GameScreen = () => {
   const [dealIndex, setDealIndex] = useState(0);
   const [showExitModal, setShowExitModal] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  
+
   // Turn Management
   const [turnIndex, setTurnIndex] = useState(0);
   // "Bag" system: Keep a queue of upcoming turns to ensure fairness
@@ -94,7 +95,7 @@ export const GameScreen = () => {
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start();
   }, [driftAnim]);
 
@@ -117,7 +118,13 @@ export const GameScreen = () => {
 
     // 4. Start Background Drift (Subtle rotation loop)
     startDriftAnimation();
-  }, [entryAnim, hasPlayers, players.length, randomTurnEnabled, startDriftAnimation]);
+  }, [
+    entryAnim,
+    hasPlayers,
+    players.length,
+    randomTurnEnabled,
+    startDriftAnimation,
+  ]);
 
   // Helper to generate a shuffled list of player indices
   const generateNewTurnQueue = (count: number) => {
@@ -156,7 +163,6 @@ export const GameScreen = () => {
     }).start();
   }, [isFlipped, patternAnim]);
 
-
   // --- FLIP LOGIC ---
   const flipCard = useCallback(() => {
     if (isFlipped) return;
@@ -182,7 +188,7 @@ export const GameScreen = () => {
     // 2. Delay logic until card is closed
     setTimeout(() => {
       setIsFlipped(false);
-      
+
       // Advance Deck
       const nextIdx = (dealIndex + 1) % deckOrder.length;
       setDealIndex(nextIdx);
@@ -199,10 +205,10 @@ export const GameScreen = () => {
       if (hasPlayers) {
         if (randomTurnEnabled) {
           let currentQueue = [...turnQueue];
-          
+
           if (currentQueue.length === 0) {
             currentQueue = generateNewTurnQueue(players.length);
-            
+
             if (players.length > 1 && currentQueue[0] === turnIndex) {
               const first = currentQueue.shift()!;
               currentQueue.push(first);
@@ -210,42 +216,29 @@ export const GameScreen = () => {
           }
 
           const nextPlayer = currentQueue.shift();
-          
+
           if (nextPlayer !== undefined) {
-             setTurnIndex(nextPlayer);
-             setTurnQueue(currentQueue);
+            setTurnIndex(nextPlayer);
+            setTurnQueue(currentQueue);
           }
         } else {
           setTurnIndex((prev) => (prev + 1) % players.length);
         }
       }
     }, 150);
-  }, [dealIndex, deckOrder, bg, hasPlayers, players, flipAnim, randomTurnEnabled, turnQueue, turnIndex]);
+  }, [
+    dealIndex,
+    deckOrder,
+    bg,
+    hasPlayers,
+    players,
+    flipAnim,
+    randomTurnEnabled,
+    turnQueue,
+    turnIndex,
+  ]);
 
-
-  const emojiGrid = useMemo(() => {
-    const cellSize = 100;
-    const numRows = Math.ceil(SCREEN_DIMS.height / cellSize) + 4;
-    const numCols = Math.ceil(SCREEN_DIMS.width / cellSize) + 4;
-    
-    return Array.from({ length: numRows }).map((_, row) => (
-      <View key={`r-${row}`} className="flex-row">
-        {Array.from({ length: numCols }).map((_, col) => (
-          <View
-            key={`c-${row}-${col}`}
-            className="m-5"
-            style={{
-              transform: [
-                { rotate: (row + col) % 2 === 0 ? "-15deg" : "15deg" },
-              ],
-            }}
-          >
-            <Text className="text-5xl opacity-90">{bgEmoji}</Text>
-          </View>
-        ))}
-      </View>
-    ));
-  }, [bgEmoji]);
+  // Emoji grid moved to a reusable component `EmojiGrid`.
 
   return (
     <View className="flex-1 bg-black">
@@ -271,7 +264,7 @@ export const GameScreen = () => {
               }),
             }}
           >
-            {emojiGrid}
+            <EmojiGrid emoji={bgEmoji} />
           </AnimatedView>
         </View>
 
