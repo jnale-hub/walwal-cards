@@ -39,5 +39,8 @@
     "netlify-cli": "^23.12.2",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": ">=18 <21"
+  }
 }
