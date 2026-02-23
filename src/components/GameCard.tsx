@@ -1,9 +1,5 @@
 import React from "react";
-import { Animated, Text, View, StyleSheet } from "react-native";
-import { FONT_FAMILY } from "../constants/fonts";
-import { SHARED_STYLES } from "../constants/styles";
-import { THEME } from "../constants/theme";
-
+import { Animated, StyleSheet, Text, View } from "react-native";
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 export const GameCard: React.FC<any> = ({
@@ -22,7 +18,6 @@ export const GameCard: React.FC<any> = ({
       {/* FRONT FACE */}
       <AnimatedView
         style={[
-          SHARED_STYLES.cardBase,
           StyleSheet.absoluteFillObject,
           {
             transform: [{ rotateY: frontInterpolate }],
@@ -30,29 +25,24 @@ export const GameCard: React.FC<any> = ({
             zIndex: frontOpacity === 0 ? 0 : 1,
           },
         ]}
-        className={faceClasses}
+        className={`${faceClasses}`}
       >
-        {playerName && (
-          <Text
-            style={{ fontFamily: FONT_FAMILY.bodyBold, color: THEME.textMain }}
-            className="absolute top-8 text-sm opacity-80 uppercase tracking-[4px]"
-          >
-            {playerName}
+        <View className="card-base h-full">
+          {playerName && (
+            <Text className="text-textMain font-bodyBold absolute top-8 text-sm opacity-80 uppercase tracking-[4px]">
+              {playerName}
+            </Text>
+          )}
+          <Text className="text-8xl mb-4">{currentCard.emoji}</Text>
+          <Text className="text-textMain font-bodyBold text-xs opacity-50 uppercase tracking-[1px] mt-2">
+            Tap to reveal
           </Text>
-        )}
-        <Text className="text-8xl mb-4">{currentCard.emoji}</Text>
-        <Text
-          style={{ fontFamily: FONT_FAMILY.bodyBold, color: THEME.textMain }}
-          className="text-xs opacity-50 uppercase tracking-[1px] mt-2"
-        >
-          Tap to reveal
-        </Text>
+        </View>
       </AnimatedView>
 
       {/* BACK FACE */}
       <AnimatedView
         style={[
-          SHARED_STYLES.cardBase,
           StyleSheet.absoluteFillObject,
           {
             transform: [{ rotateY: backInterpolate }],
@@ -60,30 +50,28 @@ export const GameCard: React.FC<any> = ({
             zIndex: backOpacity === 0 ? 0 : 1,
           },
         ]}
-        className={faceClasses}
+        className={`${faceClasses}`}
       >
-        <Text className="text-5xl sm:text-6xl mb-4">{currentCard.emoji}</Text>
+        <View className="card-base h-full">
+          <Text className="text-5xl sm:text-6xl mb-4">{currentCard.emoji}</Text>
 
-        <View
-          style={{ backgroundColor: bg }}
-          className="px-4 py-1.5 rounded-full mb-6 border-2 border-black/5"
-        >
-          <Text
-            style={{ fontFamily: FONT_FAMILY.bodyBold, color: THEME.textMain }}
-            className="text-lg sm:text-xl uppercase tracking-widest"
+          <View
+            style={{ backgroundColor: bg }}
+            className="px-4 py-1.5 rounded-full mb-6 border-2 border-black/5"
           >
-            {currentCard.type}
+            <Text className="text-textMain font-bodyBold text-lg sm:text-xl uppercase tracking-widest">
+              {currentCard.type}
+            </Text>
+          </View>
+
+          <Text
+            className="text-textMain font-bodyBold text-2xl text-center leading-7"
+            numberOfLines={6}
+            adjustsFontSizeToFit
+          >
+            {currentCard.prompt}
           </Text>
         </View>
-
-        <Text
-          style={{ fontFamily: FONT_FAMILY.bodyBold, color: THEME.textMain }}
-          className="text-2xl text-center leading-7"
-          numberOfLines={6}
-          adjustsFontSizeToFit
-        >
-          {currentCard.prompt}
-        </Text>
       </AnimatedView>
     </View>
   );
