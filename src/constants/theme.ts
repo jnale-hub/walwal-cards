@@ -9,17 +9,5 @@ export const BG_COLORS = [
   "#4ADE80", // Green
 ];
 
-export const THEME = {
-  cardBg: "#FFFFFF",
-  textMain: "#18181B",
-  border: "#18181B",
-};
-
 export const SCREEN_DIMS = Dimensions.get("window");
 
-export const LAYOUT = {
-  emojiSize: 48,
-  emojiMargin: 16,
-  cardWidth: 360,
-  cardHeight: 440,
-};
