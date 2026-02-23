@@ -3,9 +3,7 @@ import React, { useCallback, useRef } from "react";
 import { Animated, Platform, StatusBar, Text, View } from "react-native";
 import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
-import { FONT_FAMILY } from "../constants/fonts";
-import { SHARED_STYLES } from "../constants/styles";
-import { BG_COLORS, THEME } from "../constants/theme";
+import { BG_COLORS } from "../constants/theme";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -93,7 +91,6 @@ export default function WelcomeScreen() {
       >
         <AnimatedView
           style={[
-            SHARED_STYLES.cardBase,
             {
               width: "100%",
               maxWidth: 420,
@@ -102,23 +99,14 @@ export default function WelcomeScreen() {
               transform: [{ perspective: 1000 }, { rotateY: flipInterpolate }],
             },
           ]}
-          className="items-center justify-center p-6 shrink shadow-xl mb-8"
+          className="items-center justify-center shrink shadow-xl mb-8"
         >
-          <View className="flex-1 items-center justify-center w-full ">
-            <Text
-              style={{ fontFamily: FONT_FAMILY.logo, color: THEME.textMain }}
-              className="text-6xl text-center tracking-tighter leading-tight"
-            >
+          <View className="flex-1 items-center justify-center w-full card-base p-6">
+            <Text className="text-textMain font-logo text-6xl text-center tracking-tighter leading-tight">
               WALWAL{"\n"}CARDS
             </Text>
 
-            <Text
-              style={{
-                fontFamily: FONT_FAMILY.bodyBold,
-                color: THEME.textMain,
-              }}
-              className="text-[10px] opacity-40 tracking-[3px] uppercase absolute bottom-0"
-            >
+            <Text className="text-textMain font-bodyBold text-[10px] opacity-40 tracking-[3px] uppercase absolute bottom-8">
               Drink responsibly
             </Text>
           </View>

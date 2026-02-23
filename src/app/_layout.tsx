@@ -7,8 +7,6 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import "../global.css";
 
-import { FONT_FAMILY } from "../constants/fonts";
-
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function Layout() {
@@ -23,9 +21,9 @@ export default function Layout() {
     async function load() {
       try {
         await Font.loadAsync({
-          [FONT_FAMILY.logo]: require("../../assets/fonts/LilitaOne-Regular.ttf"),
-          [FONT_FAMILY.body]: require("../../assets/fonts/Nunito-Regular.ttf"),
-          [FONT_FAMILY.bodyBold]: require("../../assets/fonts/Nunito-Bold.ttf"),
+          LilitaOne: require("../../assets/fonts/LilitaOne-Regular.ttf"),
+          "Nunito-Regular": require("../../assets/fonts/Nunito-Regular.ttf"),
+          "Nunito-Bold": require("../../assets/fonts/Nunito-Bold.ttf"),
         });
       } catch (err) {
         console.warn("Error loading fonts:", err);
