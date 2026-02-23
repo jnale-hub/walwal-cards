@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
+import { DeckProvider } from "../context/DeckContext";
 import "../global.css";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -169,17 +170,20 @@ export default function Layout() {
 
       <StatusBar style="light" backgroundColor={THEME_COLOR} />
 
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: "fade",
-          contentStyle: { backgroundColor: THEME_COLOR },
-        }}
-      >
-        <Stack.Screen name="index" />
-        <Stack.Screen name="game" />
-        <Stack.Screen name="setup" />
-      </Stack>
+      <DeckProvider>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "fade",
+            contentStyle: { backgroundColor: THEME_COLOR },
+          }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="game" />
+          <Stack.Screen name="setup" />
+          <Stack.Screen name="cards" />
+        </Stack>
+      </DeckProvider>
     </>
   );
 }

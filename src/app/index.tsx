@@ -1,6 +1,14 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useRef } from "react";
-import { Animated, Platform, StatusBar, Text, View } from "react-native";
+import {
+  Animated,
+  Platform,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
 import { BG_COLORS } from "../constants/theme";
@@ -61,6 +69,25 @@ export default function WelcomeScreen() {
       style={{ backgroundColor: BG_COLORS[4] }}
     >
       <StatusBar barStyle="light-content" />
+
+      {/* Top Right Navigation */}
+      <View
+        className="absolute top-0 right-0 z-50 px-6"
+        style={{
+          paddingTop:
+            Platform.OS === "android"
+              ? (StatusBar.currentHeight || 0) + 10
+              : 60,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => animateAndNavigate("/cards" as any)}
+          className="w-12 h-12 bg-black/20 rounded-full items-center justify-center"
+          activeOpacity={0.7}
+        >
+          <Ionicons name="albums-outline" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
 
       <View
         pointerEvents="none"

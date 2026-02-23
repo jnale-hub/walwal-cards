@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, {
   useCallback,
@@ -12,7 +13,6 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -20,8 +20,8 @@ import { ConfirmModal } from "../components/ConfirmModal";
 import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
 import { GameCard } from "../components/GameCard";
-import { DECK } from "../constants/data";
 import { BG_COLORS } from "../constants/theme";
+import { useDeck } from "../context/DeckContext";
 
 // Generic Fisher-Yates shuffle
 const shuffleArray = (array: number[]) => {
@@ -37,6 +37,7 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 
 export default function GameScreen() {
   const router = useRouter();
+  const { deck } = useDeck();
 
   // --- PARAMS & SETUP ---
   const { playerList, isRandomTurn } = useLocalSearchParams();
@@ -69,8 +70,13 @@ export default function GameScreen() {
   // Background State
   const [bg, setBg] = useState(BG_COLORS[4]);
   const activeCardIndex = deckOrder.length > 0 ? deckOrder[dealIndex] : 0;
-  const currentCard = useMemo(() => DECK[activeCardIndex], [activeCardIndex]);
-  const [bgEmoji, setBgEmoji] = useState(currentCard.emoji);
+  const currentCard = useMemo(
+    () =>
+      deck[activeCardIndex] ||
+      deck[0] || { emoji: "🃏", type: "Empty", prompt: "No cards available" },
+    [activeCardIndex, deck],
+  );
+  const [bgEmoji, setBgEmoji] = useState(currentCard?.emoji || "🍻");
 
   // --- ANIMATION REFS ---
   const bgAnim = useRef(new Animated.Value(0)).current;
@@ -100,8 +106,9 @@ export default function GameScreen() {
   }, [driftAnim]);
 
   useEffect(() => {
+    if (deck.length === 0) return;
     // 1. Shuffle Deck
-    const indices = Array.from({ length: DECK.length }, (_, i) => i);
+    const indices = Array.from({ length: deck.length }, (_, i) => i);
     setDeckOrder(shuffleArray(indices));
 
     // 2. Initialize Turn Queue if Random
@@ -124,6 +131,7 @@ export default function GameScreen() {
     players.length,
     randomTurnEnabled,
     startDriftAnimation,
+    deck.length,
   ]);
 
   // Helper to generate a shuffled list of player indices
@@ -280,11 +288,11 @@ export default function GameScreen() {
             className="w-full px-6 flex-row justify-between items-center z-50 pb-2"
           >
             <TouchableOpacity
-              className="w-10 h-10 items-center justify-center bg-black/20 rounded-full"
+              className="w-11 h-11 items-center justify-center bg-black/20 rounded-full"
               onPress={() => setShowExitModal(true)}
-              hitSlop={20}
+              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
             >
-              <Text className="text-white text-sm font-bold">✕</Text>
+              <Ionicons name="close" size={24} color="white" />
             </TouchableOpacity>
           </View>
 
@@ -362,4 +370,4 @@ export default function GameScreen() {
       />
     </View>
   );
-};
+}
