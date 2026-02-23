@@ -1,6 +1,5 @@
 import React from "react";
 import { Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
-import { FONT_FAMILY } from "../constants/fonts";
 
 interface GameButtonProps {
   onPress: () => void;
@@ -37,8 +36,8 @@ export const GameButton: React.FC<GameButtonProps> = ({
       style={style}
     >
       <Text
-        className={`text-md sm:text-lg uppercase ${isSecondary ? "text-white" : "text-[#18181b]"}`}
-        style={[{ fontFamily: FONT_FAMILY.bodyBold }, textStyle]}
+        className={`font-bodyBold text-md sm:text-lg uppercase ${isSecondary ? "text-white" : "text-[#18181b]"}`}
+        style={textStyle}
       >
         {text}
       </Text>

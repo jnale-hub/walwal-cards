@@ -35,7 +35,7 @@ const shuffleArray = (array: number[]) => {
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
-export const GameScreen = () => {
+export default function GameScreen() {
   const router = useRouter();
 
   // --- PARAMS & SETUP ---

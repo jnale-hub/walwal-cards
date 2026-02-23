@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .card-base {
+    @apply bg-cardBg rounded-3xl border-6 border-textMain items-center justify-center p-6 shadow-card;
+  }
+}
