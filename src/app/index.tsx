@@ -12,11 +12,13 @@ import {
 import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
 import { BG_COLORS } from "../constants/theme";
+import { useDeck } from "../context/DeckContext";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const { currentEdition } = useDeck();
 
   // Animation Refs
   const flipOutAnim = useRef(new Animated.Value(0)).current;
@@ -62,7 +64,6 @@ export default function WelcomeScreen() {
     outputRange: ["0deg", "90deg"],
   });
 
-  // The background is now a simple emoji grid rendered via `EmojiGrid`.
   return (
     <View
       className="flex-1 items-center justify-center overflow-hidden"
@@ -70,25 +71,7 @@ export default function WelcomeScreen() {
     >
       <StatusBar barStyle="light-content" />
 
-      {/* Top Right Navigation */}
-      <View
-        className="absolute top-0 right-0 z-50 px-6"
-        style={{
-          paddingTop:
-            Platform.OS === "android"
-              ? (StatusBar.currentHeight || 0) + 10
-              : 60,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => animateAndNavigate("/cards" as any)}
-          className="w-12 h-12 bg-black/20 rounded-full items-center justify-center"
-          activeOpacity={0.7}
-        >
-          <Ionicons name="albums-outline" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-
+      {/* Background Pattern */}
       <View
         pointerEvents="none"
         className="absolute inset-0 items-center justify-center overflow-hidden z-0"
@@ -101,7 +84,7 @@ export default function WelcomeScreen() {
             }),
           }}
         >
-          <EmojiGrid emoji="🥴" />
+          <EmojiGrid emoji={currentEdition.emoji} />
         </AnimatedView>
       </View>
 
@@ -111,25 +94,29 @@ export default function WelcomeScreen() {
         style={{
           paddingTop:
             Platform.OS === "android"
-              ? (StatusBar.currentHeight || 0) + 10
-              : 20,
-          paddingBottom: 20,
+              ? (StatusBar.currentHeight || 0) + 20
+              : 60,
+          paddingBottom: 30,
         }}
       >
+        {/* Main Card */}
         <AnimatedView
           style={[
             {
               width: "100%",
               maxWidth: 420,
               aspectRatio: 2.5 / 3,
-              maxHeight: "65%",
+              maxHeight: "55%",
               transform: [{ perspective: 1000 }, { rotateY: flipInterpolate }],
             },
           ]}
-          className="items-center justify-center shrink shadow-xl mb-8"
+          className="items-center justify-center shrink shadow-xl mb-6"
         >
           <View className="flex-1 items-center justify-center w-full card-base p-6">
-            <Text className="text-textMain font-logo text-6xl text-center tracking-tighter leading-tight">
+            {/* Edition Emoji Indicator */}
+            <Text className="text-5xl mb-2">{currentEdition.emoji}</Text>
+
+            <Text className="text-textMain font-logo text-5xl text-center tracking-tighter leading-tight">
               WALWAL{"\n"}CARDS
             </Text>
 
@@ -139,7 +126,20 @@ export default function WelcomeScreen() {
           </View>
         </AnimatedView>
 
-        <View className="w-full items-center gap-y-3 z-20 shrink-0 mt-6">
+        {/* Edition Selector - Tappable Badge below card */}
+        <TouchableOpacity
+          onPress={() => animateAndNavigate("/editions" as any)}
+          className="flex-row items-center bg-white/15 rounded-full px-5 py-2.5 mb-6"
+          activeOpacity={0.7}
+        >
+          <Text className="text-white font-bold text-base mr-2">
+            {currentEdition.name}
+          </Text>
+          <Ionicons name="chevron-down" size={18} color="white" />
+        </TouchableOpacity>
+
+        {/* Action Buttons */}
+        <View className="w-full items-center gap-y-3 z-20 shrink-0">
           <GameButton
             onPress={() => animateAndNavigate("/game")}
             text="Quick Play"
@@ -153,6 +153,17 @@ export default function WelcomeScreen() {
             className="w-full max-w-[280px] bg-orange-400 border-white shadow-200 shadow-white"
             textStyle={{ color: "white" }}
           />
+        </View>
+
+        {/* Bottom Toolbar */}
+        <View className="absolute bottom-8 right-6">
+          <TouchableOpacity
+            onPress={() => animateAndNavigate("/cards" as any)}
+            className="w-12 h-12 bg-black/20 rounded-full items-center justify-center"
+            activeOpacity={0.7}
+          >
+            <Ionicons name="albums-outline" size={24} color="white" />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
