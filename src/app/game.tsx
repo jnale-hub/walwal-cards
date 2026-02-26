@@ -293,8 +293,8 @@ export default function GameScreen() {
               style={{
                 width: "100%",
                 maxWidth: 480,
-                aspectRatio: 2.5 / 3,
-                maxHeight: "65%",
+                aspectRatio: 2.5 / 3.5,
+                maxHeight: "70%",
                 transform: [
                   { perspective: 1200 },
                   {
