@@ -74,29 +74,6 @@ export default function Layout() {
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
         />
 
-        {/* preload locally served fonts to improve Largest Contentful Paint on web */}
-        <link
-          rel="preload"
-          href="/assets/fonts/Nunito-Regular.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/assets/fonts/Nunito-Bold.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/assets/fonts/LilitaOne-Regular.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-
         {/* --- Open Graph / Facebook / Messenger --- */}
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en_PH" />
@@ -182,6 +159,7 @@ export default function Layout() {
           <Stack.Screen name="game" />
           <Stack.Screen name="setup" />
           <Stack.Screen name="cards" />
+          <Stack.Screen name="editions" />
         </Stack>
       </DeckProvider>
     </>
