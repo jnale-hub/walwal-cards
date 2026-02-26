@@ -27,13 +27,13 @@ export const GameCard: React.FC<any> = ({
         ]}
         className={`${faceClasses}`}
       >
-        <View className="card-base h-full">
+        <View className="card-base w-full h-full">
           {playerName && (
             <Text className="text-textMain font-bodyBold absolute top-8 text-sm opacity-80 uppercase tracking-[4px]">
               {playerName}
             </Text>
           )}
-          <Text className="text-8xl mb-4">{currentCard.emoji}</Text>
+          <Text className="text-8xl mb-4 leading-[120px] pt-2 overflow-visible">{currentCard.emoji}</Text>
           <Text className="text-textMain font-bodyBold text-xs opacity-50 uppercase tracking-[1px] mt-2">
             Tap to reveal
           </Text>
@@ -52,8 +52,8 @@ export const GameCard: React.FC<any> = ({
         ]}
         className={`${faceClasses}`}
       >
-        <View className="card-base h-full">
-          <Text className="text-5xl sm:text-6xl mb-4">{currentCard.emoji}</Text>
+        <View className="card-base w-full h-full">
+          <Text className="text-5xl sm:text-6xl mb-4 leading-[80px] pt-2 overflow-visible">{currentCard.emoji}</Text>
 
           <View
             style={{ backgroundColor: bg }}
@@ -65,9 +65,10 @@ export const GameCard: React.FC<any> = ({
           </View>
 
           <Text
-            className="text-textMain font-bodyBold text-2xl text-center leading-7"
+            className="text-textMain font-bodyBold text-2xl sm:text-3xl text-center leading-8 sm:leading-10 px-2"
             numberOfLines={6}
             adjustsFontSizeToFit
+            minimumFontScale={0.5}
           >
             {currentCard.prompt}
           </Text>
