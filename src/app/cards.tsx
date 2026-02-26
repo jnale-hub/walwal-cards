@@ -6,19 +6,20 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
-  SafeAreaView,
   StatusBar,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { BG_COLORS } from "../constants/theme";
 import { Card, useDeck } from "../context/DeckContext";
 
 export default function CardsScreen() {
   const router = useRouter();
-  const { deck, addCard, updateCard, deleteCard, resetDeck } = useDeck();
+  const { deck, currentEdition, addCard, updateCard, deleteCard, resetDeck } =
+    useDeck();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingCard, setEditingCard] = useState<Card | null>(null);
@@ -88,7 +89,7 @@ export default function CardsScreen() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: BG_COLORS[4] }}>
       <StatusBar barStyle="light-content" />
       <View className="flex-1 px-4 pt-4">
-        <View className="flex-row justify-between items-center mb-6">
+        <View className="flex-row justify-between items-center mb-2">
           <TouchableOpacity
             onPress={() => router.back()}
             className="w-11 h-11 justify-center items-start"
@@ -105,6 +106,18 @@ export default function CardsScreen() {
           </TouchableOpacity>
         </View>
 
+        {/* Current Edition Badge */}
+        <View className="flex-row items-center justify-center mb-4">
+          <View
+            className="flex-row items-center px-4 py-2 rounded-full"
+            style={{ backgroundColor: currentEdition.color }}
+          >
+            <Text className="text-xl mr-2">{currentEdition.emoji}</Text>
+            <Text className="text-white font-bold">{currentEdition.name}</Text>
+            <Text className="text-white/70 ml-2">• {deck.length} cards</Text>
+          </View>
+        </View>
+
         <FlatList
           data={deck}
           keyExtractor={(item) => item.id}
@@ -118,7 +131,7 @@ export default function CardsScreen() {
           className="bg-red-600 p-4 rounded-xl mt-4 mb-8 items-center"
         >
           <Text className="text-white font-bold text-lg">
-            Reset to Default Deck
+            Reset to Default ({currentEdition.name})
           </Text>
         </TouchableOpacity>
       </View>
