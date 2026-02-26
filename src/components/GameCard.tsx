@@ -33,7 +33,9 @@ export const GameCard: React.FC<any> = ({
               {playerName}
             </Text>
           )}
-          <Text className="text-8xl mb-4 leading-[120px] pt-2 overflow-visible">{currentCard.emoji}</Text>
+          <Text className="text-8xl mb-4 leading-[120px] pt-2 overflow-visible">
+            {currentCard.emoji}
+          </Text>
           <Text className="text-textMain font-bodyBold text-xs opacity-50 uppercase tracking-[1px] mt-2">
             Tap to reveal
           </Text>
@@ -53,7 +55,9 @@ export const GameCard: React.FC<any> = ({
         className={`${faceClasses}`}
       >
         <View className="card-base w-full h-full">
-          <Text className="text-5xl sm:text-6xl mb-4 leading-[80px] pt-2 overflow-visible">{currentCard.emoji}</Text>
+          <Text className="text-5xl sm:text-6xl mb-4 leading-[80px] pt-2 overflow-visible">
+            {currentCard.emoji}
+          </Text>
 
           <View
             style={{ backgroundColor: bg }}
