@@ -99,6 +99,9 @@ export default function PlayerSetupScreen() {
           className="w-11 h-11 justify-center items-start"
           onPress={handleBack}
           activeOpacity={0.6}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Returns to the previous screen"
           hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         >
           <Text className="text-textMain font-logo text-[36px] leading-[40px]">
@@ -141,6 +144,8 @@ export default function PlayerSetupScreen() {
             returnKeyType="done"
             maxLength={MAX_NAME_LENGTH}
             autoCorrect={false}
+            accessibilityLabel="Player name"
+            accessibilityHint="Type a player name, then use Add Player"
           />
           <TouchableOpacity
             style={{
@@ -150,6 +155,10 @@ export default function PlayerSetupScreen() {
             onPress={handleAddPlayer}
             activeOpacity={0.8}
             disabled={name.trim().length === 0}
+            accessibilityRole="button"
+            accessibilityLabel="Add player"
+            accessibilityHint="Adds the typed name to the player list"
+            accessibilityState={{ disabled: name.trim().length === 0 }}
           >
             <Text className="font-bodyBold color-white text-3xl mt-[-4px]">
               +
@@ -164,6 +173,10 @@ export default function PlayerSetupScreen() {
             className="flex-row items-center"
             onPress={() => setIsRandomTurn(!isRandomTurn)}
             activeOpacity={0.7}
+            accessibilityRole="switch"
+            accessibilityLabel="Randomize turns"
+            accessibilityHint="When enabled, player turns are shuffled fairly"
+            accessibilityState={{ checked: isRandomTurn }}
           >
             <View
               className={`border-border w-6 h-6 border-4 rounded-md mr-3 items-center justify-center ${isRandomTurn ? "bg-textMain" : "bg-white"}`}
@@ -195,6 +208,9 @@ export default function PlayerSetupScreen() {
                   key={`${player}-${index}`}
                   className="border-border bg-white py-2.5 pl-4 pr-3 rounded-full border-[3px] flex-row items-center m-1.5 shadow-sm"
                   onPress={() => handleRemovePlayer(index)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Remove ${player}`}
+                  accessibilityHint="Removes this player from the list"
                 >
                   <Text className="text-textMain font-bodyBold text-lg mr-2">
                     {player}
@@ -213,10 +229,20 @@ export default function PlayerSetupScreen() {
 
       <View className="p-6 pb-16 w-full max-w-[600px] self-center">
         <GameButton
-          onPress={players.length < 2 ? () => {} : handleStartGame}
+          onPress={handleStartGame}
           text={players.length < 2 ? "Need 2+ Players" : "Let's Play!"}
+          disabled={players.length < 2}
+          accessibilityLabel={
+            players.length < 2
+              ? "Need at least two players to start"
+              : "Let's play"
+          }
+          accessibilityHint={
+            players.length < 2
+              ? "Add at least one more player"
+              : "Starts the game with your current players"
+          }
           style={{
-            opacity: players.length < 2 ? 0.5 : 1,
             width: "100%",
           }}
           className="shadow-200"
