@@ -4,13 +4,16 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      screens: {
+        xs: "360px",
+      },
       colors: {
         textMain: "#18181B",
         cardBg: "#FFFFFF",
         border: "#18181B",
       },
       fontFamily: {
-        logo: ["LilitaOne"],
+        logo: ["RobotoCondensed_900Black"],
         body: ["Nunito-Regular"],
         bodyBold: ["Nunito-Bold"],
       },
