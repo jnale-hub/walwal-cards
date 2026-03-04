@@ -9,6 +9,8 @@ interface GameButtonProps {
   style?: ViewStyle;
   textStyle?: TextStyle;
   disabled?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
 }
 
 export const GameButton: React.FC<GameButtonProps> = ({
@@ -19,6 +21,8 @@ export const GameButton: React.FC<GameButtonProps> = ({
   style,
   textStyle,
   disabled,
+  accessibilityLabel,
+  accessibilityHint,
 }) => {
   const isSecondary = variant === "secondary";
 
@@ -27,6 +31,10 @@ export const GameButton: React.FC<GameButtonProps> = ({
       activeOpacity={0.7}
       disabled={disabled}
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel ?? text}
+      accessibilityHint={accessibilityHint}
+      accessibilityState={{ disabled: !!disabled }}
       className={`
         py-4 px-10 rounded-full border-[6px] items-center justify-center
         ${isSecondary ? "bg-[#18181b] border-white" : "bg-white border-[#18181b]"}

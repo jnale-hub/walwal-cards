@@ -10,6 +10,7 @@ export const GameCard: React.FC<any> = ({
   currentCard,
   bg,
   playerName,
+  isFlipped,
 }) => {
   const faceClasses = "items-center justify-center backface-hidden";
 
@@ -25,6 +26,8 @@ export const GameCard: React.FC<any> = ({
             zIndex: frontOpacity === 0 ? 0 : 1,
           },
         ]}
+        accessibilityElementsHidden={isFlipped}
+        importantForAccessibility={isFlipped ? "no-hide-descendants" : "yes"}
         className={`${faceClasses}`}
       >
         <View className="card-base w-full h-full">
@@ -52,6 +55,8 @@ export const GameCard: React.FC<any> = ({
             zIndex: backOpacity === 0 ? 0 : 1,
           },
         ]}
+        accessibilityElementsHidden={!isFlipped}
+        importantForAccessibility={isFlipped ? "yes" : "no-hide-descendants"}
         className={`${faceClasses}`}
       >
         <View className="card-base w-full h-full">

@@ -12,10 +12,22 @@ export const ConfirmModal: React.FC<any> = ({
   cancelText = "Cancel",
 }) => {
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View className="flex-1 bg-black/70 justify-center items-center px-4">
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onCancel}
+    >
+      <View
+        className="flex-1 bg-black/70 justify-center items-center px-4"
+        accessibilityViewIsModal
+        importantForAccessibility="yes"
+      >
         <View className="card-base w-full max-w-lg items-center shadow-200">
-          <Text className="text-textMain font-logo text-3xl text-center mb-2 uppercase tracking-tighter">
+          <Text
+            accessibilityRole="header"
+            className="text-textMain font-logo text-3xl text-center mb-2 uppercase tracking-tighter"
+          >
             {title}
           </Text>
 
@@ -28,12 +40,14 @@ export const ConfirmModal: React.FC<any> = ({
               onPress={onCancel}
               text={cancelText}
               className="flex-1 border-transparent px-2"
+              accessibilityHint="Closes this dialog without applying changes"
             />
             <GameButton
               onPress={onConfirm}
               text={confirmText}
               variant="secondary"
               className="flex-1 px-2"
+              accessibilityHint="Confirms this action"
             />
           </View>
         </View>

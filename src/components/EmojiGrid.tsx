@@ -39,7 +39,15 @@ export const EmojiGrid: React.FC<EmojiGridProps> = ({
     ));
   }, [emoji, cellSize, margin]);
 
-  return <>{grid}</>;
+  return (
+    <View
+      accessible={false}
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+    >
+      {grid}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
