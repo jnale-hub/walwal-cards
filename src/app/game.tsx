@@ -254,9 +254,15 @@ export default function GameScreen() {
       >
         <View
           pointerEvents="none"
+          accessible={false}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
           className="absolute inset-0 items-center justify-center overflow-hidden z-0"
         >
           <AnimatedView
+            accessible={false}
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
             style={{
               opacity: patternAnim.interpolate({
                 inputRange: [0, 1],
@@ -282,6 +288,9 @@ export default function GameScreen() {
             <TouchableOpacity
               className="w-10 h-10 items-center justify-center bg-black/20 rounded-full"
               onPress={() => setShowExitModal(true)}
+              accessibilityRole="button"
+              accessibilityLabel="Exit game"
+              accessibilityHint="Opens a confirmation dialog to end this game"
               hitSlop={20}
             >
               <Text className="text-white text-sm font-bold">✕</Text>
@@ -334,6 +343,9 @@ export default function GameScreen() {
                 <TouchableOpacity
                   activeOpacity={1}
                   onPress={flipCard}
+                  accessibilityRole="button"
+                  accessibilityLabel="Reveal card"
+                  accessibilityHint="Flips the current card to show the challenge"
                   style={StyleSheet.absoluteFill}
                   className="z-[100]"
                 />
@@ -362,4 +374,4 @@ export default function GameScreen() {
       />
     </View>
   );
-};
+}
