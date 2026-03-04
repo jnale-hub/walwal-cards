@@ -94,7 +94,7 @@ export default function PlayerSetupScreen() {
       />
 
       {/* --- HEADER BAR --- */}
-      <View className="flex-row items-center justify-between px-6 mb-5 h-[50px] w-full max-w-[600px] self-center">
+      <View className="flex-row items-center justify-between px-6 mb-4 h-[50px] w-full max-w-[600px] self-center">
         <TouchableOpacity
           className="w-11 h-11 justify-center items-start"
           onPress={handleBack}
@@ -246,6 +246,7 @@ export default function PlayerSetupScreen() {
             width: "100%",
           }}
           className="shadow-200"
+          textClassName="font-bold text-xl"
         />
       </View>
     </KeyboardAvoidingView>
