@@ -8,7 +8,7 @@ export const ConfirmModal: React.FC<any> = ({
   message,
   onConfirm,
   onCancel,
-  confirmText = "Yes, Exit",
+  confirmText = "Exit",
   cancelText = "Cancel",
 }) => {
   return (
@@ -40,6 +40,8 @@ export const ConfirmModal: React.FC<any> = ({
               onPress={onCancel}
               text={cancelText}
               className="flex-1 border-transparent px-2"
+              textClassName="font-bodyBold text-md sm:text-lg"
+              accessibilityLabel={cancelText}
               accessibilityHint="Closes this dialog without applying changes"
             />
             <GameButton
@@ -47,6 +49,8 @@ export const ConfirmModal: React.FC<any> = ({
               text={confirmText}
               variant="secondary"
               className="flex-1 px-2"
+              textClassName="font-bodyBold text-md sm:text-lg"
+              accessibilityLabel={confirmText}
               accessibilityHint="Confirms this action"
             />
           </View>
