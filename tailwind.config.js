@@ -28,6 +28,7 @@ module.exports = {
         200: "2px 2px 0px 2px rgb(0, 0, 0)",
         300: "2px 2px 0px 2px rgb(238, 43, 105)",
         card: "8px 8px 0px 0px #18181B",
+        "card-sm": "4px 4px 0px 0px #18181B"
       },
     },
   },
