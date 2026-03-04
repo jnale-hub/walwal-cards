@@ -1,8 +1,16 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useRef } from "react";
-import { Animated, Platform, StatusBar, Text, View } from "react-native";
+import {
+  Animated,
+  Image,
+  Platform,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { EmojiGrid } from "../components/EmojiGrid";
-import { GameButton } from "../components/GameButton";
 import { BG_COLORS } from "../constants/theme";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -54,7 +62,6 @@ export default function WelcomeScreen() {
     outputRange: ["0deg", "90deg"],
   });
 
-  // The background is now a simple emoji grid rendered via `EmojiGrid`.
   return (
     <View
       className="flex-1 items-center justify-center overflow-hidden"
@@ -62,11 +69,18 @@ export default function WelcomeScreen() {
     >
       <StatusBar barStyle="light-content" />
 
+      {/* Background Emoji Grid */}
       <View
         pointerEvents="none"
+        accessible={false}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
         className="absolute inset-0 items-center justify-center overflow-hidden z-0"
       >
         <AnimatedView
+          accessible={false}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
           style={{
             opacity: patternAnim.interpolate({
               inputRange: [0, 1],
@@ -89,43 +103,116 @@ export default function WelcomeScreen() {
           paddingBottom: 20,
         }}
       >
+        {/* Main Card */}
         <AnimatedView
           style={[
             {
               width: "100%",
-              maxWidth: 420,
-              aspectRatio: 2.5 / 3,
-              maxHeight: "65%",
+              maxWidth: 360,
               transform: [{ perspective: 1000 }, { rotateY: flipInterpolate }],
             },
           ]}
-          className="items-center justify-center shrink shadow-xl mb-8"
+          className="items-center justify-center shrink mb-8 relative"
         >
-          <View className="flex-1 items-center justify-center w-full card-base p-6">
-            <Text className="text-textMain font-logo text-6xl text-center tracking-tighter leading-tight">
-              WALWAL{"\n"}CARDS
-            </Text>
+          {/* Neo-brutalist Solid Shadow View */}
+          <View className="absolute top-2 left-2 right-[-8px] bottom-[-8px] bg-black rounded-[32px]" />
 
-            <Text className="text-textMain font-bodyBold text-[10px] opacity-40 tracking-[3px] uppercase absolute bottom-8">
+          {/* Card Surface */}
+          <View className="bg-white border-[5px] border-black rounded-[32px] pt-12 xs:pt-16 pb-8 px-6 items-center w-full aspect-[3/4] justify-between relative overflow-visible flex">
+            {/* Title Container */}
+            <View
+              className="items-center w-full"
+              accessible
+              accessibilityRole="header"
+              accessibilityLabel="Walwal Cards"
+            >
+              {/* WALWAL */}
+              <Text className="text-black font-logo font-extrabold text-[5.3rem] text-center tracking-[-5px] uppercase leading-[80px]">
+                WALWAL
+              </Text>
+
+              {/* CARDS */}
+              <Text
+                accessible={true}
+                accessibilityLabel="CARDS"
+                className="text-black font-logo tracking-[-5px] uppercase -mt-2 text-center leading-[96px] items-start flex flex-row"
+              >
+                <Text className="text-[7rem] -mr-0.5">C</Text>
+                <Text className="text-8xl -mr-0.5">ARD</Text>
+                <Text className="text-[7rem]">S</Text>
+              </Text>
+            </View>
+
+            {/* Central Images */}
+            <View className="flex-row items-center justify-center -m-6 w-full">
+              <Image
+                source={require("../../assets/images/beer.png")}
+                className="-mr-12"
+                resizeMode="contain"
+                accessible={false}
+                style={{
+                  width: 160,
+                  height: 160,
+                }}
+              />
+              <Image
+                source={require("../../assets/images/laughing-face.png")}
+                className="z-10"
+                resizeMode="contain"
+                accessible={false}
+                style={{
+                  width: 160,
+                  height: 160,
+                }}
+              />
+            </View>
+
+            {/* Footer Text */}
+            <Text className="text-black font-bodyBold text-xs tracking-[4px] uppercase mt-auto text-center">
               Drink responsibly
             </Text>
           </View>
         </AnimatedView>
 
-        <View className="w-full items-center gap-y-3 z-20 shrink-0 mt-6">
-          <GameButton
-            onPress={() => animateAndNavigate("/game")}
-            text="Quick Play"
-            variant="primary"
-            className="w-full max-w-[280px] shadow-200"
-          />
-          <GameButton
-            onPress={() => animateAndNavigate("/setup")}
-            text="Add Players"
-            variant="secondary"
-            className="w-full max-w-[280px] bg-orange-400 border-white shadow-200 shadow-white"
-            textStyle={{ color: "white" }}
-          />
+        {/* Buttons Row */}
+        <View className="flex-row w-full max-w-[360px] justify-between gap-x-4 z-20 shrink-0 mt-8">
+          {/* Quick Play Button */}
+          <View className="flex-1 relative aspect-square">
+            {/* Button Shadow */}
+            <View className="absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]" />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => animateAndNavigate("/game")}
+              accessibilityRole="button"
+              accessibilityLabel="Quick Play"
+              accessibilityHint="Start a game immediately"
+              className="flex-1 bg-[#FDE047] border-[4px] border-black rounded-[24px] items-center justify-center p-2"
+            >
+              <FontAwesome5 name="play" size={40} color="black" />
+              <Text className="font-logo text-4xl text-black text-center mt-2 uppercase leading-8 tracking-tighter">
+                Quick{"\n"}Play
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Add Players Button */}
+          <View className="flex-1 relative aspect-square">
+            {/* Button Shadow */}
+            <View className="absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]" />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => animateAndNavigate("/setup")}
+              accessibilityRole="button"
+              accessibilityLabel="Add Players"
+              accessibilityHint="Open player setup before starting the game"
+              className="flex-1 bg-[#F97316] border-[4px] border-black rounded-[24px] items-center justify-center p-2"
+            >
+              <FontAwesome5 name="plus" size={40} color="black" />
+              <Text className="font-logo text-4xl text-black text-center mt-2 leading-8 tracking-tighter uppercase">
+                Add{"\n"}Players
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
