@@ -1,3 +1,4 @@
+import { RobotoCondensed_900Black } from "@expo-google-fonts/roboto-condensed";
 import * as Font from "expo-font";
 import { Stack } from "expo-router";
 import Head from "expo-router/head";
@@ -21,7 +22,7 @@ export default function Layout() {
     async function load() {
       try {
         await Font.loadAsync({
-          LilitaOne: require("../../assets/fonts/LilitaOne-Regular.ttf"),
+          RobotoCondensed_900Black,
           "Nunito-Regular": require("../../assets/fonts/Nunito-Regular.ttf"),
           "Nunito-Bold": require("../../assets/fonts/Nunito-Bold.ttf"),
         });
