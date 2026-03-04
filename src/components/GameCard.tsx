@@ -36,7 +36,7 @@ export const GameCard: React.FC<any> = ({
               {playerName}
             </Text>
           )}
-          <Text className="text-8xl mb-4 leading-[120px] pt-2 overflow-visible">
+          <Text className="text-[9rem] mb-4 leading-[120px] pt-2 overflow-visible">
             {currentCard.emoji}
           </Text>
           <Text className="text-textMain font-bodyBold text-xs opacity-50 uppercase tracking-[1px] mt-2">
@@ -60,21 +60,27 @@ export const GameCard: React.FC<any> = ({
         className={`${faceClasses}`}
       >
         <View className="card-base w-full h-full">
-          <Text className="text-5xl sm:text-6xl mb-4 leading-[80px] pt-2 overflow-visible">
+          <Text
+            className="text-8xl mb-4 pt-2 overflow-visible"
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            minimumFontScale={0.4}
+            style={{ includeFontPadding: false }}
+          >
             {currentCard.emoji}
           </Text>
 
           <View
             style={{ backgroundColor: bg }}
-            className="px-4 py-1.5 rounded-full mb-6 border-2 border-black/5"
+            className="px-4 py-1.5 mb-6 border-[3px] border-black shadow-card-sm"
           >
-            <Text className="text-textMain font-bodyBold text-lg sm:text-xl uppercase tracking-widest">
+            <Text className="text-textMain text-xl sm:text-2xl uppercase font-bold">
               {currentCard.type}
             </Text>
           </View>
 
           <Text
-            className="text-textMain font-bodyBold text-2xl sm:text-3xl text-center leading-8 sm:leading-10 px-2"
+            className="text-textMain font-semibold text-2xl sm:text-3xl text-center leading-8 sm:leading-10 text-pretty"
             numberOfLines={6}
             adjustsFontSizeToFit
             minimumFontScale={0.5}
