@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -101,9 +102,7 @@ export default function PlayerSetupScreen() {
           activeOpacity={0.6}
           hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         >
-          <Text className="text-textMain font-logo text-[36px] leading-[40px]">
-            ←
-          </Text>
+          <Ionicons name="chevron-back" size={36} color="#18181B" />
         </TouchableOpacity>
 
         <Text className="text-textMain font-logo text-3xl text-center flex-1">

@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
+import { DeckProvider } from "../context/DeckContext";
 import "../global.css";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -71,29 +72,6 @@ export default function Layout() {
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
-        />
-
-        {/* preload locally served fonts to improve Largest Contentful Paint on web */}
-        <link
-          rel="preload"
-          href="/assets/fonts/Nunito-Regular.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/assets/fonts/Nunito-Bold.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/assets/fonts/LilitaOne-Regular.ttf"
-          as="font"
-          type="font/ttf"
-          crossOrigin="anonymous"
         />
 
         {/* --- Open Graph / Facebook / Messenger --- */}
@@ -169,17 +147,21 @@ export default function Layout() {
 
       <StatusBar style="light" backgroundColor={THEME_COLOR} />
 
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: "fade",
-          contentStyle: { backgroundColor: THEME_COLOR },
-        }}
-      >
-        <Stack.Screen name="index" />
-        <Stack.Screen name="game" />
-        <Stack.Screen name="setup" />
-      </Stack>
+      <DeckProvider>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "fade",
+            contentStyle: { backgroundColor: THEME_COLOR },
+          }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="game" />
+          <Stack.Screen name="setup" />
+          <Stack.Screen name="cards" />
+          <Stack.Screen name="editions" />
+        </Stack>
+      </DeckProvider>
     </>
   );
 }
