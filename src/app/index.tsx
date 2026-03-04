@@ -108,7 +108,7 @@ export default function WelcomeScreen() {
           style={[
             {
               width: "100%",
-              maxWidth: 360,
+              maxWidth: 400,
               transform: [{ perspective: 1000 }, { rotateY: flipInterpolate }],
             },
           ]}
@@ -118,7 +118,7 @@ export default function WelcomeScreen() {
           <View className="absolute top-2 left-2 right-[-8px] bottom-[-8px] bg-black rounded-[32px]" />
 
           {/* Card Surface */}
-          <View className="bg-white border-[5px] border-black rounded-[32px] pt-12 xs:pt-16 pb-8 px-6 items-center w-full aspect-[3/4] justify-between relative overflow-visible flex">
+          <View className="bg-white border-[5px] border-black rounded-[32px] pt-10 xs:pt-16 pb-8 px-6 items-center w-full aspect-[3/4] justify-between relative overflow-visible flex content-center">
             {/* Title Container */}
             <View
               className="items-center w-full"
@@ -175,7 +175,7 @@ export default function WelcomeScreen() {
         </AnimatedView>
 
         {/* Buttons Row */}
-        <View className="flex-row w-full max-w-[360px] justify-between gap-x-4 z-20 shrink-0 mt-8">
+        <View className="flex-row w-full max-w-[400px] justify-between gap-x-4 z-20 shrink-0 mt-8">
           {/* Quick Play Button */}
           <View className="flex-1 relative aspect-square">
             {/* Button Shadow */}
