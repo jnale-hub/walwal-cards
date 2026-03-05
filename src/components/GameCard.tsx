@@ -39,7 +39,7 @@ export const GameCard: React.FC<any> = ({
           <Text className="text-[9rem] mb-4 leading-[120px] pt-2 overflow-visible">
             {currentCard.emoji}
           </Text>
-          <Text className="text-textMain font-bodyBold text-xs opacity-50 uppercase tracking-[1px] mt-2">
+          <Text className="text-textMain font-body text-xs opacity-50 uppercase tracking-[1px] mt-2">
             Tap to reveal
           </Text>
         </View>
