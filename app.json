@@ -49,7 +49,7 @@
         }
       ]
     ],
-    "assetBundlePatterns": ["assets/images/*", "assets/fonts/*"],
+    "assetBundlePatterns": ["assets/images/*"],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
