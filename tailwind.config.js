@@ -14,8 +14,8 @@ module.exports = {
       },
       fontFamily: {
         logo: ["RobotoCondensed_900Black"],
-        body: ["Nunito-Regular"],
-        bodyBold: ["Nunito-Bold"],
+        body: ["RobotoCondensed_400Regular"],
+        bodyBold: ["RobotoCondensed_700Bold"],
       },
       borderRadius: {
         'card': '32px',
