@@ -89,7 +89,7 @@ export const GameCard: React.FC<any> = ({
           </View>
 
           <Text
-            className="text-textMain font-semibold text-2xl sm:text-3xl text-center leading-8 sm:leading-10 text-pretty"
+            className="text-textMain font-semibold text-2xl sm:text-3xl text-center leading-8 sm:leading-10 text-pretty pb-12"
             adjustsFontSizeToFit
             numberOfLines={6}
             minimumFontScale={0.5}
