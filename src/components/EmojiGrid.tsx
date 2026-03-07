@@ -81,6 +81,7 @@ export const EmojiGrid: React.FC<EmojiGridProps> = ({
             backgroundImage: `url("${webData.uri}")`,
             backgroundRepeat: "repeat",
             backgroundSize: `${webData.size}px ${webData.size}px`,
+            backgroundPosition: "center",
           } as any
         }
       />
@@ -92,6 +93,7 @@ export const EmojiGrid: React.FC<EmojiGridProps> = ({
       accessible={false}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
+      style={styles.container}
     >
       {gridContent as React.ReactNode}
     </View>
@@ -99,6 +101,16 @@ export const EmojiGrid: React.FC<EmojiGridProps> = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   row: {
     flexDirection: "row",
   },
