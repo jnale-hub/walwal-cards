@@ -16,19 +16,19 @@ export const EmojiGrid: React.FC<EmojiGridProps> = ({
   const gridContent = useMemo(() => {
     // Highly efficient repeating background for Web
     if (Platform.OS === "web") {
-      const webMargin = 1;
-      const effectiveSize = cellSize + webMargin * 2;
+      const effectiveSize = 60 + margin * 2;
       const innerOffset = effectiveSize / 2;
       const outerOffset = effectiveSize * 1.5;
 
       const svgPattern = `<svg xmlns="http://www.w3.org/2000/svg" width="${effectiveSize * 2}" height="${effectiveSize * 2}">
-        <g font-size="48" fill-opacity="0.9" style="font-family: system-ui, sans-serif;">
-          <text x="${innerOffset - 24}" y="${innerOffset + 16}" transform="rotate(-15 ${innerOffset} ${innerOffset})">${emoji}</text>
-          <text x="${outerOffset - 24}" y="${innerOffset + 16}" transform="rotate(15 ${outerOffset} ${innerOffset})">${emoji}</text>
-          <text x="${innerOffset - 24}" y="${outerOffset + 16}" transform="rotate(15 ${innerOffset} ${outerOffset})">${emoji}</text>
-          <text x="${outerOffset - 24}" y="${outerOffset + 16}" transform="rotate(-15 ${outerOffset} ${outerOffset})">${emoji}</text>
+        <g font-size="48" fill-opacity="0.9" style="font-family: system-ui, sans-serif;" text-anchor="middle">
+          <text x="${innerOffset}" y="${innerOffset + 16}" transform="rotate(-15 ${innerOffset} ${innerOffset})">${emoji}</text>
+          <text x="${outerOffset}" y="${innerOffset + 16}" transform="rotate(15 ${outerOffset} ${innerOffset})">${emoji}</text>
+          <text x="${innerOffset}" y="${outerOffset + 16}" transform="rotate(15 ${innerOffset} ${outerOffset})">${emoji}</text>
+          <text x="${outerOffset}" y="${outerOffset + 16}" transform="rotate(-15 ${outerOffset} ${outerOffset})">${emoji}</text>
         </g>
       </svg>`;
+
       const base64 = btoa(unescape(encodeURIComponent(svgPattern)));
       return {
         uri: `data:image/svg+xml;base64,${base64}`,
