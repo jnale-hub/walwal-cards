@@ -161,9 +161,7 @@ export default function PlayerSetupScreen() {
             accessibilityHint="Adds the typed name to the player list"
             accessibilityState={{ disabled: name.trim().length === 0 }}
           >
-            <Text className="font-bodyBold color-white text-3xl mt-[-4px]">
-              +
-            </Text>
+            <Text className="font-bold color-white text-3xl mt-[-4px]">+</Text>
           </TouchableOpacity>
         </View>
 
@@ -180,18 +178,18 @@ export default function PlayerSetupScreen() {
             accessibilityState={{ checked: isRandomTurn }}
           >
             <View
-              className={`border-border w-6 h-6 border-4 rounded-md mr-3 items-center justify-center ${isRandomTurn ? "bg-textMain" : "bg-white"}`}
+              className={`border-border w-6 h-6 border-4 rounded-md mr-2 items-center justify-center ${isRandomTurn ? "bg-textMain" : "bg-white"}`}
             >
               {isRandomTurn && (
                 <Text className="text-white font-bold text-xs">✓</Text>
               )}
             </View>
-            <Text className="text-textMain font-bodyBold text-sm opacity-80">
+            <Text className="text-textMain text-sm opacity-80">
               Randomize Turns
             </Text>
           </TouchableOpacity>
 
-          <Text className="text-textMain font-bodyBold opacity-60 text-sm mr-1">
+          <Text className="text-textMain opacity-60 text-sm mr-1">
             {players.length} / {MAX_PLAYERS} Players
           </Text>
         </View>
@@ -207,7 +205,7 @@ export default function PlayerSetupScreen() {
               {players.map((player, index) => (
                 <TouchableOpacity
                   key={`${player}-${index}`}
-                  className="border-border bg-white py-2.5 pl-4 pr-3 rounded-full border-[3px] flex-row items-center m-1.5 shadow-sm"
+                  className="border-border bg-white py-1.5 pl-4 pr-2 rounded-full border-[3px] flex-row items-center m-1.5 shadow-sm"
                   onPress={() => handleRemovePlayer(index)}
                   accessibilityRole="button"
                   accessibilityLabel={`Remove ${player}`}
@@ -216,9 +214,9 @@ export default function PlayerSetupScreen() {
                   <Text className="text-textMain font-bodyBold text-lg mr-2">
                     {player}
                   </Text>
-                  <View className="w-6 h-6 rounded-full bg-[#F43F5E] items-center justify-center">
-                    <Text className="font-bodyBold text-white text-base mt-[-2px]">
-                      ×
+                  <View className="w-5 h-5 bg-black/5 rounded-full items-center justify-center">
+                    <Text className="font-body text-textMain/50 text-xs mt-[-2px]">
+                      ✕
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -228,7 +226,7 @@ export default function PlayerSetupScreen() {
         </View>
       </ScrollView>
 
-      <View className="p-6 pb-16 w-full max-w-[600px] self-center">
+      <View className="pb-16 w-full items-center justify-end py-6 min-h-[80px]">
         <GameButton
           onPress={handleStartGame}
           text={players.length < 2 ? "Need 2+ Players" : "Let's Play!"}
@@ -246,8 +244,8 @@ export default function PlayerSetupScreen() {
           style={{
             width: "100%",
           }}
-          className="shadow-200"
-          textClassName="font-bold text-xl"
+          className="w-full max-w-64 shadow-200"
+          textClassName="font-bold text-2xl font-bodyBold"
         />
       </View>
     </KeyboardAvoidingView>
