@@ -1,5 +1,4 @@
 import {
-  RobotoCondensed_400Regular,
   RobotoCondensed_700Bold,
   RobotoCondensed_900Black,
 } from "@expo-google-fonts/roboto-condensed";
@@ -20,7 +19,6 @@ export default function Layout() {
 
   const [fontsLoaded] = Font.useFonts({
     RobotoCondensed_900Black,
-    RobotoCondensed_400Regular,
     RobotoCondensed_700Bold,
   });
 
@@ -29,7 +27,6 @@ export default function Layout() {
       SplashScreen.hideAsync().catch(() => {});
     }
   }, [fontsLoaded]);
-
 
   if (!fontsLoaded && Platform.OS !== "web") {
     return <View style={{ flex: 1, backgroundColor: THEME_COLOR }} />;
