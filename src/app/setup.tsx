@@ -244,7 +244,7 @@ export default function PlayerSetupScreen() {
           style={{
             width: "100%",
           }}
-          className="w-full max-w-64 shadow-200"
+          className="w-full max-w-80 shadow-200"
           textClassName="font-bold text-2xl font-bodyBold"
         />
       </View>
