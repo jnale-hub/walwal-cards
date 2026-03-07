@@ -168,7 +168,7 @@ export default function WelcomeScreen() {
             </View>
 
             {/* Footer Text */}
-            <Text className="text-black font-bodyBold text-xs tracking-[4px] uppercase mt-auto text-center">
+            <Text className="text-black text-xs tracking-[4px] uppercase mt-auto text-center">
               Drink responsibly
             </Text>
           </View>
