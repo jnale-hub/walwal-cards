@@ -8,8 +8,8 @@ import { Stack } from "expo-router";
 import Head from "expo-router/head";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import React, { useEffect } from "react";
+import { Platform, View } from "react-native";
 import "../global.css";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -18,35 +18,20 @@ export default function Layout() {
   const SITE_URL = "https://walwalcards.xyz";
   const THEME_COLOR = "#FB923C";
 
-  const [isReady, setIsReady] = useState(false);
+  const [fontsLoaded] = Font.useFonts({
+    RobotoCondensed_900Black,
+    RobotoCondensed_400Regular,
+    RobotoCondensed_700Bold,
+  });
 
   useEffect(() => {
-    let mounted = true;
-
-    async function load() {
-      try {
-        await Font.loadAsync({
-          RobotoCondensed_900Black,
-          RobotoCondensed_400Regular,
-          RobotoCondensed_700Bold,
-        });
-      } catch (err) {
-        console.warn("Error loading fonts:", err);
-      } finally {
-        if (!mounted) return;
-        setIsReady(true);
-        await SplashScreen.hideAsync().catch(() => {});
-      }
+    if (fontsLoaded) {
+      SplashScreen.hideAsync().catch(() => {});
     }
+  }, [fontsLoaded]);
 
-    load();
 
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  if (!isReady) {
+  if (!fontsLoaded && Platform.OS !== "web") {
     return <View style={{ flex: 1, backgroundColor: THEME_COLOR }} />;
   }
 
