@@ -13,7 +13,6 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmojiGrid } from "../components/EmojiGrid";
 import { BG_COLORS } from "../constants/theme";
-import { getResponsiveLineHeight } from "../constants/util";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -29,15 +28,12 @@ export default function WelcomeScreen() {
   // Reset page transition animations
   useFocusEffect(
     useCallback(() => {
+      // Instantly pop elements into visible state
       flipOutAnim.setValue(0);
+      patternAnim.setValue(1);
+
+      // Quick slide up for the main content
       Animated.timing(entryAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }).start();
-      // Fade in background pattern
-      patternAnim.setValue(0);
-      Animated.timing(patternAnim, {
         toValue: 1,
         duration: 300,
         useNativeDriver: true,
@@ -49,12 +45,12 @@ export default function WelcomeScreen() {
     Animated.parallel([
       Animated.timing(flipOutAnim, {
         toValue: 90,
-        duration: 300,
+        duration: 200,
         useNativeDriver: true,
       }),
       Animated.timing(entryAnim, {
         toValue: 0,
-        duration: 300,
+        duration: 200,
         useNativeDriver: true,
       }),
     ]).start(() => router.push(path));
@@ -97,11 +93,20 @@ export default function WelcomeScreen() {
       </View>
 
       {/* --- FOREGROUND CONTENT --- */}
-      <View
+      <AnimatedView
         className="flex-1 items-center justify-center z-10 w-full px-6"
         style={{
           paddingTop: Math.max(insets.top, 20),
           paddingBottom: Math.max(insets.bottom, 20),
+          opacity: entryAnim,
+          transform: [
+            {
+              translateY: entryAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [20, 0],
+              }),
+            },
+          ],
         }}
       >
         {/* Main Card */}
@@ -190,12 +195,7 @@ export default function WelcomeScreen() {
               className="flex-1 bg-[#FDE047] border-[4px] border-black rounded-[24px] items-center justify-center p-2"
             >
               <FontAwesome5 name="play" size={40} color="black" />
-              <Text
-                className="font-logo text-4xl text-black text-center mt-2 uppercase tracking-tighter"
-                style={{
-                  lineHeight: getResponsiveLineHeight(36),
-                }}
-              >
+              <Text className="font-logo text-4xl text-black text-center mt-2 uppercase tracking-tighter">
                 Quick{"\n"}Play
               </Text>
             </TouchableOpacity>
@@ -214,18 +214,13 @@ export default function WelcomeScreen() {
               className="flex-1 bg-[#F97316] border-[4px] border-black rounded-[24px] items-center justify-center p-2"
             >
               <FontAwesome5 name="plus" size={40} color="black" />
-              <Text
-                className="font-logo text-4xl text-black text-center mt-2 tracking-tighter uppercase"
-                style={{
-                  lineHeight: getResponsiveLineHeight(36),
-                }}
-              >
+              <Text className="font-logo text-4xl text-black text-center mt-2 tracking-tighter uppercase">
                 Add{"\n"}Players
               </Text>
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </AnimatedView>
     </View>
   );
 }
