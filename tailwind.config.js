@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
@@ -13,9 +15,9 @@ module.exports = {
         border: "#18181B",
       },
       fontFamily: {
-        logo: ["RobotoCondensed_900Black"],
-        body: ["RobotoCondensed_400Regular"],
-        bodyBold: ["RobotoCondensed_700Bold"],
+        logo: ["RobotoCondensed_900Black", ...defaultTheme.fontFamily.sans],
+        body: defaultTheme.fontFamily.sans,
+        bodyBold: ["RobotoCondensed_700Bold", ...defaultTheme.fontFamily.sans],
       },
       borderRadius: {
         'card': '32px',
