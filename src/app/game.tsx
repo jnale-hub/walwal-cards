@@ -357,7 +357,7 @@ export default function GameScreen() {
                   onPress={handleNext}
                   text="Next Card"
                   className="w-full max-w-64 shadow-200"
-                  textClassName="font-bold text-2xl"
+                  textClassName="font-bold text-2xl font-bodyBold"
                 />
               )}
             </View>
