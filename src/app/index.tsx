@@ -130,7 +130,7 @@ export default function WelcomeScreen() {
               accessibilityLabel="Walwal Cards"
             >
               {/* WALWAL */}
-              <Text className="text-black font-logo font-extrabold text-[5.3rem] text-center tracking-[-5px] uppercase leading-[80px]">
+              <Text className="text-black font-logo text-[5.3rem] text-center tracking-[-5px] uppercase leading-[80px]">
                 WALWAL
               </Text>
 
