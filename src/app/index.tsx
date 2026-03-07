@@ -118,13 +118,10 @@ export default function WelcomeScreen() {
               transform: [{ perspective: 1000 }, { rotateY: flipInterpolate }],
             },
           ]}
-          className="items-center justify-center shrink mb-8 relative"
+          className="items-center justify-center shrink mb-4 relative"
         >
-          {/* Neo-brutalist Solid Shadow View */}
-          <View className="absolute top-2 left-2 right-[-8px] bottom-[-8px] bg-black rounded-[32px]" />
-
           {/* Card Surface */}
-          <View className="bg-white border-[5px] border-black rounded-[32px] pt-10 xs:pt-16 pb-8 px-6 items-center w-full aspect-[3/4] justify-between relative overflow-visible flex content-center">
+          <View className="card-base bg-white border-[5px] border-black rounded-[32px] pt-10 xs:pt-16 pb-8 px-6 items-center w-full aspect-[3/4] justify-between relative overflow-visible flex content-center">
             {/* Title Container */}
             <View
               className="items-center w-full"
