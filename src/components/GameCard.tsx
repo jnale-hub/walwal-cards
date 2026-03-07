@@ -1,5 +1,6 @@
 import React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
+import { getResponsiveLineHeight } from "../constants/util";
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 export const GameCard: React.FC<any> = ({
@@ -10,6 +11,7 @@ export const GameCard: React.FC<any> = ({
   currentCard,
   bg,
   playerName,
+  isFlipped,
 }) => {
   const faceClasses = "items-center justify-center backface-hidden";
 
@@ -25,16 +27,25 @@ export const GameCard: React.FC<any> = ({
             zIndex: frontOpacity === 0 ? 0 : 1,
           },
         ]}
+        accessibilityElementsHidden={isFlipped}
+        importantForAccessibility={isFlipped ? "no-hide-descendants" : "yes"}
         className={`${faceClasses}`}
       >
-        <View className="card-base h-full">
+        <View className="card-base w-full h-full">
           {playerName && (
             <Text className="text-textMain font-bodyBold absolute top-8 text-sm opacity-80 uppercase tracking-[4px]">
               {playerName}
             </Text>
           )}
-          <Text className="text-8xl mb-4">{currentCard.emoji}</Text>
-          <Text className="text-textMain font-bodyBold text-xs opacity-50 uppercase tracking-[1px] mt-2">
+          <Text
+            className="text-[9rem] mb-4 pt-2 overflow-visible"
+            style={{
+              lineHeight: getResponsiveLineHeight(144), // ~9rem based on standard 16px root
+            }}
+          >
+            {currentCard.emoji}
+          </Text>
+          <Text className="text-textMain font-body text-xs opacity-50 uppercase tracking-[1px] mt-2">
             Tap to reveal
           </Text>
         </View>
@@ -50,24 +61,41 @@ export const GameCard: React.FC<any> = ({
             zIndex: backOpacity === 0 ? 0 : 1,
           },
         ]}
+        accessibilityElementsHidden={!isFlipped}
+        importantForAccessibility={isFlipped ? "yes" : "no-hide-descendants"}
         className={`${faceClasses}`}
       >
-        <View className="card-base h-full">
-          <Text className="text-5xl sm:text-6xl mb-4">{currentCard.emoji}</Text>
+        <View className="card-base w-full h-full">
+          <Text
+            className="text-8xl mb-4 pt-2 overflow-visible"
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            minimumFontScale={0.4}
+            style={{
+              includeFontPadding: false,
+              lineHeight: getResponsiveLineHeight(96),
+            }}
+          >
+            {currentCard.emoji}
+          </Text>
 
           <View
             style={{ backgroundColor: bg }}
-            className="px-4 py-1.5 rounded-full mb-6 border-2 border-black/5"
+            className="px-4 py-1.5 mb-6 border-[3px] border-black shadow-card-sm"
           >
-            <Text className="text-textMain font-bodyBold text-lg sm:text-xl uppercase tracking-widest">
+            <Text className="text-textMain text-xl sm:text-2xl uppercase font-bold">
               {currentCard.type}
             </Text>
           </View>
 
           <Text
-            className="text-textMain font-bodyBold text-2xl text-center leading-7"
-            numberOfLines={6}
+            className="text-textMain font-semibold text-2xl sm:text-3xl text-center leading-8 sm:leading-10 text-pretty pb-12"
             adjustsFontSizeToFit
+            numberOfLines={6}
+            minimumFontScale={0.5}
+            style={{
+              lineHeight: getResponsiveLineHeight(36),
+            }}
           >
             {currentCard.prompt}
           </Text>

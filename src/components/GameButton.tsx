@@ -1,42 +1,66 @@
 import React from "react";
-import { Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
+import {
+  StyleProp,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  ViewStyle,
+} from "react-native";
 
-interface GameButtonProps {
-  onPress: () => void;
+interface GameButtonProps extends Omit<
+  TouchableOpacityProps,
+  "style" | "onPress"
+> {
+  onPress: NonNullable<TouchableOpacityProps["onPress"]>;
   text: string;
   variant?: "primary" | "secondary";
-  className?: string; // Support for parent NativeWind classes
-  style?: ViewStyle;
-  textStyle?: TextStyle;
-  disabled?: boolean;
+  className?: string;
+  textClassName?: string;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 }
 
-export const GameButton: React.FC<GameButtonProps> = ({
+const joinClasses = (...classes: (string | undefined | false)[]) =>
+  classes.filter(Boolean).join(" ");
+
+const GameButtonBase: React.FC<GameButtonProps> = ({
   onPress,
   text,
   variant = "primary",
   className = "",
+  textClassName = "",
   style,
   textStyle,
   disabled,
+  accessibilityLabel,
+  ...touchableProps
 }) => {
   const isSecondary = variant === "secondary";
 
   return (
     <TouchableOpacity
+      {...touchableProps}
       activeOpacity={0.7}
       disabled={disabled}
       onPress={onPress}
-      className={`
-        py-4 px-10 rounded-full border-[6px] items-center justify-center
-        ${isSecondary ? "bg-[#18181b] border-white" : "bg-white border-[#18181b]"}
-        ${disabled ? "opacity-50" : "opacity-100"}
-        ${className}
-      `}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel ?? text}
+      accessibilityState={{ disabled: !!disabled }}
+      className={joinClasses(
+        "py-2 px-8 rounded-full border-[6px] items-center justify-center",
+        isSecondary ? "bg-[#18181b] border-white" : "bg-white border-[#18181b]",
+        disabled ? "opacity-50" : "opacity-100",
+        className,
+      )}
       style={style}
     >
       <Text
-        className={`font-bodyBold text-md sm:text-lg uppercase ${isSecondary ? "text-white" : "text-[#18181b]"}`}
+        className={joinClasses(
+          "uppercase",
+          isSecondary ? "text-white" : "text-[#18181b]",
+          textClassName,
+        )}
         style={textStyle}
       >
         {text}
@@ -44,3 +68,6 @@ export const GameButton: React.FC<GameButtonProps> = ({
     </TouchableOpacity>
   );
 };
+
+export const GameButton = React.memo(GameButtonBase);
+GameButton.displayName = "GameButton";

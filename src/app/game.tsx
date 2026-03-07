@@ -9,13 +9,13 @@ import React, {
 import {
   Animated,
   Easing,
-  Platform,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
@@ -37,6 +37,7 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 
 export default function GameScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   // --- PARAMS & SETUP ---
   const { playerList, isRandomTurn } = useLocalSearchParams();
@@ -254,10 +255,17 @@ export default function GameScreen() {
       >
         <View
           pointerEvents="none"
+          accessible={false}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
           className="absolute inset-0 items-center justify-center overflow-hidden z-0"
         >
           <AnimatedView
+            accessible={false}
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
             style={{
+              ...StyleSheet.absoluteFillObject,
               opacity: patternAnim.interpolate({
                 inputRange: [0, 1],
                 outputRange: [0.0, 0.45],
@@ -272,16 +280,16 @@ export default function GameScreen() {
           {/* Header */}
           <View
             style={{
-              paddingTop:
-                Platform.OS === "android"
-                  ? (StatusBar.currentHeight || 0) + 10
-                  : 60,
+              paddingTop: Math.max(insets.top, 20),
             }}
             className="w-full px-6 flex-row justify-between items-center z-50 pb-2"
           >
             <TouchableOpacity
               className="w-10 h-10 items-center justify-center bg-black/20 rounded-full"
               onPress={() => setShowExitModal(true)}
+              accessibilityRole="button"
+              accessibilityLabel="Exit game"
+              accessibilityHint="Opens a confirmation dialog to end this game"
               hitSlop={20}
             >
               <Text className="text-white text-sm font-bold">✕</Text>
@@ -293,8 +301,8 @@ export default function GameScreen() {
               style={{
                 width: "100%",
                 maxWidth: 480,
-                aspectRatio: 2.5 / 3,
-                maxHeight: "65%",
+                aspectRatio: 2.5 / 3.5,
+                maxHeight: "70%",
                 transform: [
                   { perspective: 1200 },
                   {
@@ -334,6 +342,9 @@ export default function GameScreen() {
                 <TouchableOpacity
                   activeOpacity={1}
                   onPress={flipCard}
+                  accessibilityRole="button"
+                  accessibilityLabel="Reveal card"
+                  accessibilityHint="Flips the current card to show the challenge"
                   style={StyleSheet.absoluteFill}
                   className="z-[100]"
                 />
@@ -346,6 +357,7 @@ export default function GameScreen() {
                   onPress={handleNext}
                   text="Next Card"
                   className="w-full max-w-64 shadow-200"
+                  textClassName="font-bold text-2xl font-bodyBold"
                 />
               )}
             </View>
@@ -362,4 +374,4 @@ export default function GameScreen() {
       />
     </View>
   );
-};
+}

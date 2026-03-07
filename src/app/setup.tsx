@@ -4,19 +4,20 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  StatusBar as RNStatusBar,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { GameButton } from "../components/GameButton";
 import { BG_COLORS } from "../constants/theme";
 
 export default function PlayerSetupScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [name, setName] = useState("");
   const [players, setPlayers] = useState<string[]>([]);
 
@@ -77,7 +78,7 @@ export default function PlayerSetupScreen() {
       className="flex-1"
       style={{
         backgroundColor: BG_COLORS[4],
-        paddingTop: Platform.OS === "android" ? RNStatusBar.currentHeight : 60,
+        paddingTop: Math.max(insets.top, 20),
       }}
     >
       <ConfirmModal
@@ -94,11 +95,14 @@ export default function PlayerSetupScreen() {
       />
 
       {/* --- HEADER BAR --- */}
-      <View className="flex-row items-center justify-between px-6 mb-5 h-[50px] w-full max-w-[600px] self-center">
+      <View className="flex-row items-center justify-between px-6 mb-4 h-[50px] w-full max-w-[600px] self-center">
         <TouchableOpacity
           className="w-11 h-11 justify-center items-start"
           onPress={handleBack}
           activeOpacity={0.6}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Returns to the previous screen"
           hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         >
           <Text className="text-textMain font-logo text-[36px] leading-[40px]">
@@ -141,6 +145,8 @@ export default function PlayerSetupScreen() {
             returnKeyType="done"
             maxLength={MAX_NAME_LENGTH}
             autoCorrect={false}
+            accessibilityLabel="Player name"
+            accessibilityHint="Type a player name, then use Add Player"
           />
           <TouchableOpacity
             style={{
@@ -150,10 +156,12 @@ export default function PlayerSetupScreen() {
             onPress={handleAddPlayer}
             activeOpacity={0.8}
             disabled={name.trim().length === 0}
+            accessibilityRole="button"
+            accessibilityLabel="Add player"
+            accessibilityHint="Adds the typed name to the player list"
+            accessibilityState={{ disabled: name.trim().length === 0 }}
           >
-            <Text className="font-bodyBold color-white text-3xl mt-[-4px]">
-              +
-            </Text>
+            <Text className="font-bold color-white text-3xl mt-[-4px]">+</Text>
           </TouchableOpacity>
         </View>
 
@@ -164,20 +172,24 @@ export default function PlayerSetupScreen() {
             className="flex-row items-center"
             onPress={() => setIsRandomTurn(!isRandomTurn)}
             activeOpacity={0.7}
+            accessibilityRole="switch"
+            accessibilityLabel="Randomize turns"
+            accessibilityHint="When enabled, player turns are shuffled fairly"
+            accessibilityState={{ checked: isRandomTurn }}
           >
             <View
-              className={`border-border w-6 h-6 border-4 rounded-md mr-3 items-center justify-center ${isRandomTurn ? "bg-textMain" : "bg-white"}`}
+              className={`border-border w-6 h-6 border-4 rounded-md mr-2 items-center justify-center ${isRandomTurn ? "bg-textMain" : "bg-white"}`}
             >
               {isRandomTurn && (
                 <Text className="text-white font-bold text-xs">✓</Text>
               )}
             </View>
-            <Text className="text-textMain font-bodyBold text-sm opacity-80">
+            <Text className="text-textMain text-sm opacity-80">
               Randomize Turns
             </Text>
           </TouchableOpacity>
 
-          <Text className="text-textMain font-bodyBold opacity-60 text-sm mr-1">
+          <Text className="text-textMain opacity-60 text-sm mr-1">
             {players.length} / {MAX_PLAYERS} Players
           </Text>
         </View>
@@ -193,15 +205,18 @@ export default function PlayerSetupScreen() {
               {players.map((player, index) => (
                 <TouchableOpacity
                   key={`${player}-${index}`}
-                  className="border-border bg-white py-2.5 pl-4 pr-3 rounded-full border-[3px] flex-row items-center m-1.5 shadow-sm"
+                  className="border-border bg-white py-1.5 pl-4 pr-2 rounded-full border-[3px] flex-row items-center m-1.5 shadow-sm"
                   onPress={() => handleRemovePlayer(index)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Remove ${player}`}
+                  accessibilityHint="Removes this player from the list"
                 >
                   <Text className="text-textMain font-bodyBold text-lg mr-2">
                     {player}
                   </Text>
-                  <View className="w-6 h-6 rounded-full bg-[#F43F5E] items-center justify-center">
-                    <Text className="font-bodyBold text-white text-base mt-[-2px]">
-                      ×
+                  <View className="w-5 h-5 bg-black/5 rounded-full items-center justify-center">
+                    <Text className="font-body text-textMain/50 text-xs mt-[-2px]">
+                      ✕
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -211,15 +226,26 @@ export default function PlayerSetupScreen() {
         </View>
       </ScrollView>
 
-      <View className="p-6 pb-16 w-full max-w-[600px] self-center">
+      <View className="pb-16 w-full items-center justify-end py-6 min-h-[80px]">
         <GameButton
-          onPress={players.length < 2 ? () => {} : handleStartGame}
+          onPress={handleStartGame}
           text={players.length < 2 ? "Need 2+ Players" : "Let's Play!"}
+          disabled={players.length < 2}
+          accessibilityLabel={
+            players.length < 2
+              ? "Need at least two players to start"
+              : "Let's play"
+          }
+          accessibilityHint={
+            players.length < 2
+              ? "Add at least one more player"
+              : "Starts the game with your current players"
+          }
           style={{
-            opacity: players.length < 2 ? 0.5 : 1,
             width: "100%",
           }}
-          className="shadow-200"
+          className="w-full max-w-64 shadow-200"
+          textClassName="font-bold text-2xl font-bodyBold"
         />
       </View>
     </KeyboardAvoidingView>
