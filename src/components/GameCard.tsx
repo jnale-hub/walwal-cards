@@ -1,5 +1,5 @@
 import React from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import { Animated, Platform, StyleSheet, Text, View } from "react-native";
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 export const GameCard: React.FC<any> = ({
@@ -81,9 +81,14 @@ export const GameCard: React.FC<any> = ({
 
           <Text
             className="text-textMain font-semibold text-2xl sm:text-3xl text-center leading-8 sm:leading-10 text-pretty"
-            numberOfLines={6}
             adjustsFontSizeToFit
+            numberOfLines={6}
             minimumFontScale={0.5}
+            style={
+              Platform.OS === "web"
+                ? ({ lineHeight: "1.2" } as any)
+                : { lineHeight: 36 }
+            }
           >
             {currentCard.prompt}
           </Text>
