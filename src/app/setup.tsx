@@ -4,19 +4,20 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  StatusBar as RNStatusBar,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { GameButton } from "../components/GameButton";
 import { BG_COLORS } from "../constants/theme";
 
 export default function PlayerSetupScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [name, setName] = useState("");
   const [players, setPlayers] = useState<string[]>([]);
 
@@ -77,7 +78,7 @@ export default function PlayerSetupScreen() {
       className="flex-1"
       style={{
         backgroundColor: BG_COLORS[4],
-        paddingTop: Platform.OS === "android" ? RNStatusBar.currentHeight : 60,
+        paddingTop: Math.max(insets.top, 20),
       }}
     >
       <ConfirmModal

@@ -9,13 +9,13 @@ import React, {
 import {
   Animated,
   Easing,
-  Platform,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
@@ -37,6 +37,7 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 
 export default function GameScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   // --- PARAMS & SETUP ---
   const { playerList, isRandomTurn } = useLocalSearchParams();
@@ -264,6 +265,7 @@ export default function GameScreen() {
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
             style={{
+              ...StyleSheet.absoluteFillObject,
               opacity: patternAnim.interpolate({
                 inputRange: [0, 1],
                 outputRange: [0.0, 0.45],
@@ -278,10 +280,7 @@ export default function GameScreen() {
           {/* Header */}
           <View
             style={{
-              paddingTop:
-                Platform.OS === "android"
-                  ? (StatusBar.currentHeight || 0) + 10
-                  : 60,
+              paddingTop: Math.max(insets.top, 20),
             }}
             className="w-full px-6 flex-row justify-between items-center z-50 pb-2"
           >

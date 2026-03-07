@@ -4,12 +4,13 @@ import React, { useCallback, useRef } from "react";
 import {
   Animated,
   Image,
-  Platform,
   StatusBar,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmojiGrid } from "../components/EmojiGrid";
 import { BG_COLORS } from "../constants/theme";
 
@@ -17,6 +18,7 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   // Animation Refs
   const flipOutAnim = useRef(new Animated.Value(0)).current;
@@ -82,6 +84,7 @@ export default function WelcomeScreen() {
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
           style={{
+            ...StyleSheet.absoluteFillObject,
             opacity: patternAnim.interpolate({
               inputRange: [0, 1],
               outputRange: [0.0, 0.45],
@@ -96,11 +99,8 @@ export default function WelcomeScreen() {
       <View
         className="flex-1 items-center justify-center z-10 w-full px-6"
         style={{
-          paddingTop:
-            Platform.OS === "android"
-              ? (StatusBar.currentHeight || 0) + 10
-              : 20,
-          paddingBottom: 20,
+          paddingTop: Math.max(insets.top, 20),
+          paddingBottom: Math.max(insets.bottom, 20),
         }}
       >
         {/* Main Card */}
