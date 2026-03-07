@@ -8,11 +8,12 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmojiGrid } from "../components/EmojiGrid";
 import { BG_COLORS } from "../constants/theme";
+import { getResponsiveLineHeight } from "../constants/util";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -189,7 +190,12 @@ export default function WelcomeScreen() {
               className="flex-1 bg-[#FDE047] border-[4px] border-black rounded-[24px] items-center justify-center p-2"
             >
               <FontAwesome5 name="play" size={40} color="black" />
-              <Text className="font-logo text-4xl text-black text-center mt-2 uppercase leading-8 tracking-tighter">
+              <Text
+                className="font-logo text-4xl text-black text-center mt-2 uppercase tracking-tighter"
+                style={{
+                  lineHeight: getResponsiveLineHeight(36),
+                }}
+              >
                 Quick{"\n"}Play
               </Text>
             </TouchableOpacity>
@@ -208,7 +214,12 @@ export default function WelcomeScreen() {
               className="flex-1 bg-[#F97316] border-[4px] border-black rounded-[24px] items-center justify-center p-2"
             >
               <FontAwesome5 name="plus" size={40} color="black" />
-              <Text className="font-logo text-4xl text-black text-center mt-2 leading-8 tracking-tighter uppercase">
+              <Text
+                className="font-logo text-4xl text-black text-center mt-2 tracking-tighter uppercase"
+                style={{
+                  lineHeight: getResponsiveLineHeight(36),
+                }}
+              >
                 Add{"\n"}Players
               </Text>
             </TouchableOpacity>
