@@ -145,17 +145,6 @@ export default function GameScreen() {
   }, [isFlipped, currentCard]);
 
   // Smooth Background Color Transition
-  useEffect(() => {
-    bgAnim.setValue(0);
-    Animated.timing(bgAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: false,
-    }).start(() => {
-      prevBgRef.current = bg;
-    });
-  }, [bg, bgAnim]);
-
   const backgroundColor = bgAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [prevBgRef.current, bg],
@@ -207,7 +196,15 @@ export default function GameScreen() {
           nextBg = BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)];
         } while (nextBg === bg);
       }
+
+      prevBgRef.current = bg;
       setBg(nextBg);
+      bgAnim.setValue(0);
+      Animated.timing(bgAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: false,
+      }).start();
 
       if (hasPlayers) {
         if (randomTurnEnabled) {
@@ -240,6 +237,7 @@ export default function GameScreen() {
     hasPlayers,
     players,
     flipAnim,
+    bgAnim,
     randomTurnEnabled,
     turnQueue,
     turnIndex,
