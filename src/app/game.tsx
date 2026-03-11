@@ -13,15 +13,15 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
 import { GameCard } from "../components/GameCard";
-import { DECK } from "../constants/data";
 import { BG_COLORS } from "../constants/theme";
+import { useCards } from "../lib/CardsContext";
 
 // Generic Fisher-Yates shuffle
 const shuffleArray = (array: number[]) => {
@@ -38,6 +38,7 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 export default function GameScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { deck: DECK, loading } = useCards();
 
   // --- PARAMS & SETUP ---
   const { playerList, isRandomTurn } = useLocalSearchParams();
@@ -70,7 +71,11 @@ export default function GameScreen() {
   // Background State
   const [bg, setBg] = useState(BG_COLORS[4]);
   const activeCardIndex = deckOrder.length > 0 ? deckOrder[dealIndex] : 0;
-  const currentCard = useMemo(() => DECK[activeCardIndex], [activeCardIndex]);
+  const currentCard = useMemo(() => {
+    if (DECK && DECK.length > 0) return DECK[activeCardIndex];
+    return { type: "", prompt: "", emoji: "" };
+  }, [DECK, activeCardIndex]);
+
   const [bgEmoji, setBgEmoji] = useState(currentCard.emoji);
 
   // --- ANIMATION REFS ---
@@ -125,6 +130,7 @@ export default function GameScreen() {
     players.length,
     randomTurnEnabled,
     startDriftAnimation,
+    DECK.length,
   ]);
 
   // Helper to generate a shuffled list of player indices
@@ -239,7 +245,42 @@ export default function GameScreen() {
     turnIndex,
   ]);
 
-  // Emoji grid moved to a reusable component `EmojiGrid`.
+  if (loading) {
+    return (
+      <View
+        style={{ backgroundColor: BG_COLORS[4] }}
+        className="flex-1 items-center justify-center p-6"
+      >
+        <Text className="text-white text-3xl font-bodyBold text-center">
+          Loading cards... 🍻
+        </Text>
+      </View>
+    );
+  }
+
+  if (!DECK || DECK.length === 0) {
+    return (
+      <View
+        style={{ backgroundColor: BG_COLORS[4] }}
+        className="flex-1 items-center justify-center px-8"
+      >
+        <Text className="text-8xl mb-4 pt-2 overflow-visible">😢</Text>
+        <Text className="text-white text-4xl font-bodyBold text-center mb-3">
+          Walang Cards?!
+        </Text>
+        <Text className="text-white font-body text-base text-center mb-8 opacity-70 leading-5 text-pretty">
+          We couldn&apos;t fetch the deck. Please check your connection and try
+          again.
+        </Text>
+        <GameButton
+          onPress={() => router.replace("/")}
+          text="Go Back"
+          className="w-full max-w-64 shadow-200"
+          textClassName="font-bold text-2xl font-bodyBold"
+        />
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-black">
