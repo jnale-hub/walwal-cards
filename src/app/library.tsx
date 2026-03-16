@@ -21,6 +21,15 @@ export default function LibraryScreen() {
   const insets = useSafeAreaInsets();
   const { allCards, editions, currentEdition, setEdition } = useCards();
 
+  const navigateBackToHome = () => {
+    if (router.canGoBack()) {
+      router.back();
+      return;
+    }
+
+    router.replace("/");
+  };
+
   const cardCountByEdition = useMemo(() => {
     return allCards.reduce<Record<string, number>>((accumulator, card) => {
       if (!card.edition_id) return accumulator;
@@ -35,9 +44,9 @@ export default function LibraryScreen() {
     return sortEditionsByCardCount(editions, cardCountByEdition);
   }, [editions, cardCountByEdition]);
 
-  const handleSelectEdition = (editionId: string) => {
-    setEdition(editionId);
-    router.back();
+  const handleSelectEdition = async (editionId: string) => {
+    await setEdition(editionId);
+    navigateBackToHome();
   };
 
   return (
@@ -53,7 +62,7 @@ export default function LibraryScreen() {
       <View className="flex-row items-center justify-between px-6 mb-4 h-[50px] w-full max-w-[600px] self-center">
         <TouchableOpacity
           className="w-11 h-11 justify-center items-start"
-          onPress={() => router.back()}
+          onPress={navigateBackToHome}
           activeOpacity={0.6}
           accessibilityRole="button"
           accessibilityLabel="Go back"
