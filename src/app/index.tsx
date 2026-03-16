@@ -124,7 +124,7 @@ export default function WelcomeScreen() {
               transform: [{ perspective: 1000 }, { rotateY: flipInterpolate }],
             },
           ]}
-          className="items-center justify-center shrink mb-4  aspect-[3/4]"
+          className="items-center justify-center shrink mb-4"
         >
           {/* Card Surface */}
           <View className="card-base bg-white border-[5px] border-black rounded-[32px] pt-[16%] pb-8 px-6 items-center w-full justify-between relative overflow-visible flex content-center">
