@@ -35,6 +35,8 @@ const shuffleArray = (array: number[]) => {
 };
 
 const AnimatedView = Animated.createAnimatedComponent(View);
+const ORANGE_BG = "#FB923C";
+const GAME_BG_COLORS = BG_COLORS.filter((color) => color !== ORANGE_BG);
 
 export default function GameScreen() {
   const router = useRouter();
@@ -78,6 +80,7 @@ export default function GameScreen() {
 
   // Background State
   const [bg, setBg] = useState(editionDisplay.bgColor);
+  const [previousBg, setPreviousBg] = useState(editionDisplay.bgColor);
   const activeCardIndex = deckOrder.length > 0 ? deckOrder[dealIndex] : 0;
   const currentCard = useMemo(() => {
     if (DECK && DECK.length > 0) return DECK[activeCardIndex];
@@ -87,12 +90,11 @@ export default function GameScreen() {
   const [bgEmoji, setBgEmoji] = useState(currentCard.emoji);
 
   // --- ANIMATION REFS ---
-  const bgAnim = useRef(new Animated.Value(0)).current;
+  const bgAnim = useRef(new Animated.Value(1)).current;
   const flipAnim = useRef(new Animated.Value(0)).current;
   const entryAnim = useRef(new Animated.Value(-90)).current;
   const patternAnim = useRef(new Animated.Value(0)).current;
   const driftAnim = useRef(new Animated.Value(0)).current; // New: For background movement
-  const prevBgRef = useRef(bg);
 
   useEffect(() => {
     // Keep the initial game background aligned with the selected edition color
@@ -100,7 +102,7 @@ export default function GameScreen() {
     if (dealIndex !== 0 || isFlipped) return;
 
     setBg(editionDisplay.bgColor);
-    prevBgRef.current = editionDisplay.bgColor;
+    setPreviousBg(editionDisplay.bgColor);
   }, [editionDisplay.bgColor, dealIndex, isFlipped]);
 
   const startDriftAnimation = useCallback(() => {
@@ -161,12 +163,6 @@ export default function GameScreen() {
     if (isFlipped) setBgEmoji(currentCard.emoji);
   }, [isFlipped, currentCard]);
 
-  // Smooth Background Color Transition
-  const backgroundColor = bgAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [prevBgRef.current, bg],
-  });
-
   // Fade in pattern when card is flipped
   useEffect(() => {
     Animated.timing(patternAnim, {
@@ -208,19 +204,25 @@ export default function GameScreen() {
 
       // Randomize Background Color
       let nextBg = bg;
-      if (BG_COLORS.length > 1) {
+      const transitionPalette =
+        GAME_BG_COLORS.length > 0 ? GAME_BG_COLORS : BG_COLORS;
+
+      if (transitionPalette.length > 1) {
         do {
-          nextBg = BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)];
+          nextBg =
+            transitionPalette[
+              Math.floor(Math.random() * transitionPalette.length)
+            ];
         } while (nextBg === bg);
       }
 
-      prevBgRef.current = bg;
+      setPreviousBg(bg);
       setBg(nextBg);
       bgAnim.setValue(0);
       Animated.timing(bgAnim, {
         toValue: 1,
         duration: 600,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }).start();
 
       if (hasPlayers) {
@@ -298,39 +300,48 @@ export default function GameScreen() {
   }
 
   return (
-    <View className="flex-1 bg-black">
+    <View style={{ backgroundColor: bg }} className="flex-1">
       <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle="light-content"
       />
 
+      <View
+        style={[StyleSheet.absoluteFillObject, { backgroundColor: previousBg }]}
+      />
+
       <AnimatedView
-        style={[StyleSheet.absoluteFillObject, { backgroundColor }]}
-        className="flex-1"
-      >
+        style={[
+          StyleSheet.absoluteFillObject,
+          {
+            backgroundColor: bg,
+            opacity: bgAnim,
+          },
+        ]}
+      />
+
+      <View className="flex-1 z-10">
         <GamePatternBackground patternAnim={patternAnim} emoji={bgEmoji} />
 
-        <View className="flex-1 z-10">
-          <GameHeader
-            topInset={insets.top}
-            onExit={() => setShowExitModal(true)}
-            editionLabel={currentEditionLabel}
-            editionIcon={currentEditionIcon}
-          />
+        <GameHeader
+          topInset={insets.top}
+          onExit={() => setShowExitModal(true)}
+          editionLabel={currentEditionLabel}
+          editionIcon={currentEditionIcon}
+        />
 
-          <GameCardStage
-            entryAnim={entryAnim}
-            flipAnim={flipAnim}
-            currentCard={currentCard}
-            bg={bg}
-            playerName={hasPlayers ? players[turnIndex] : undefined}
-            isFlipped={isFlipped}
-            onFlipCard={flipCard}
-            onNext={handleNext}
-          />
-        </View>
-      </AnimatedView>
+        <GameCardStage
+          entryAnim={entryAnim}
+          flipAnim={flipAnim}
+          currentCard={currentCard}
+          bg={bg}
+          playerName={hasPlayers ? players[turnIndex] : undefined}
+          isFlipped={isFlipped}
+          onFlipCard={flipCard}
+          onNext={handleNext}
+        />
+      </View>
 
       <ConfirmModal
         visible={showExitModal}
