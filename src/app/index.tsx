@@ -9,11 +9,13 @@ import { resolveEditionDisplay } from "../constants/edition";
 import { useCards } from "../lib/CardsContext";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
+const THEME_COLOR = "#FB923C";
+const DEFAULT_PATTERN_EMOJI = "🍺";
 
 export default function WelcomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { currentEdition, editions } = useCards();
+  const { currentEdition, editions, loading } = useCards();
 
   const editionDetails = useMemo(() => {
     return resolveEditionDisplay(currentEdition, editions);
@@ -73,17 +75,19 @@ export default function WelcomeScreen() {
     outputRange: ["0deg", "90deg"],
   });
 
+  const backgroundColor = loading ? THEME_COLOR : editionDetails.bgColor;
+  const patternEmoji = loading
+    ? DEFAULT_PATTERN_EMOJI
+    : editionDetails.gridEmoji;
+
   return (
     <View
       className="flex-1 items-center justify-center overflow-hidden transition-colors duration-300"
-      style={{ backgroundColor: editionDetails.bgColor }}
+      style={{ backgroundColor }}
     >
       <StatusBar barStyle="light-content" />
 
-      <HomePatternBackground
-        patternAnim={patternAnim}
-        emoji={editionDetails.gridEmoji}
-      />
+      <HomePatternBackground patternAnim={patternAnim} emoji={patternEmoji} />
 
       {/* --- FOREGROUND CONTENT --- */}
       <AnimatedView

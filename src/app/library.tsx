@@ -15,7 +15,6 @@ import {
   resolveEditionDisplay,
   sortEditionsByCardCount,
 } from "../constants/edition";
-import { BG_COLORS } from "../constants/theme";
 import { useCards } from "../lib/CardsContext";
 
 export default function LibraryScreen() {
@@ -54,9 +53,8 @@ export default function LibraryScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1"
+      className="flex-1 bg-indigo-300"
       style={{
-        backgroundColor: BG_COLORS[3] || "#A855F7",
         paddingTop: Math.max(insets.top, 20),
       }}
     >
