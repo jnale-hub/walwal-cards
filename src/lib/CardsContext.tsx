@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
   useContext,
@@ -6,6 +5,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { appStorage } from "./storage";
 import { supabase } from "./supabase";
 
 export interface Card {
@@ -77,12 +77,8 @@ export const CardsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const loadEdition = async () => {
-      try {
-        const cachedEdition = await AsyncStorage.getItem(EDITION_CACHE_KEY);
-        if (cachedEdition) setCurrentEdition(cachedEdition);
-      } catch (error) {
-        console.error("Error loading selected edition:", error);
-      }
+      const cachedEdition = await appStorage.getItem(EDITION_CACHE_KEY);
+      if (cachedEdition) setCurrentEdition(cachedEdition);
     };
 
     loadEdition();
@@ -90,12 +86,7 @@ export const CardsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const setEdition = async (editionId: string) => {
     setCurrentEdition(editionId);
-
-    try {
-      await AsyncStorage.setItem(EDITION_CACHE_KEY, editionId);
-    } catch (error) {
-      console.error("Error saving selected edition:", error);
-    }
+    await appStorage.setItem(EDITION_CACHE_KEY, editionId);
   };
 
   useEffect(() => {
@@ -107,8 +98,8 @@ export const CardsProvider: React.FC<{ children: React.ReactNode }> = ({
 
       try {
         const [cachedCardsRaw, cachedEditionsRaw] = await Promise.all([
-          AsyncStorage.getItem(CARDS_CACHE_KEY),
-          AsyncStorage.getItem(EDITIONS_CACHE_KEY),
+          appStorage.getItem(CARDS_CACHE_KEY),
+          appStorage.getItem(EDITIONS_CACHE_KEY),
         ]);
 
         cachedCards = parseCachedArray<Card>(cachedCardsRaw);
@@ -140,10 +131,7 @@ export const CardsProvider: React.FC<{ children: React.ReactNode }> = ({
 
         if (nextCards.length > 0) {
           setAllCards(nextCards);
-          await AsyncStorage.setItem(
-            CARDS_CACHE_KEY,
-            JSON.stringify(nextCards),
-          );
+          await appStorage.setItem(CARDS_CACHE_KEY, JSON.stringify(nextCards));
         } else if (!hasCachedCards) {
           setAllCards([]);
         }
@@ -186,7 +174,7 @@ export const CardsProvider: React.FC<{ children: React.ReactNode }> = ({
 
         if (nextEditions.length > 0) {
           setEditions(nextEditions);
-          await AsyncStorage.setItem(
+          await appStorage.setItem(
             EDITIONS_CACHE_KEY,
             JSON.stringify(nextEditions),
           );
@@ -209,11 +197,7 @@ export const CardsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const fallbackEditionId = editions[0].id;
     setCurrentEdition(fallbackEditionId);
-    AsyncStorage.setItem(EDITION_CACHE_KEY, fallbackEditionId).catch(
-      (error) => {
-        console.error("Error updating fallback edition:", error);
-      },
-    );
+    void appStorage.setItem(EDITION_CACHE_KEY, fallbackEditionId);
   }, [editions, currentEdition]);
 
   const activeDeck = useMemo(() => {
