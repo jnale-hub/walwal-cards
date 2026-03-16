@@ -10,6 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import { Platform, View } from "react-native";
 import "../global.css";
+import { CardsProvider } from "../lib/CardsContext";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -133,17 +134,19 @@ export default function Layout() {
 
       <StatusBar style="light" backgroundColor={THEME_COLOR} />
 
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: "fade",
-          contentStyle: { backgroundColor: THEME_COLOR },
-        }}
-      >
-        <Stack.Screen name="index" />
-        <Stack.Screen name="game" />
-        <Stack.Screen name="setup" />
-      </Stack>
+      <CardsProvider>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "fade",
+            contentStyle: { backgroundColor: THEME_COLOR },
+          }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="game" />
+          <Stack.Screen name="setup" />
+        </Stack>
+      </CardsProvider>
     </>
   );
 }
