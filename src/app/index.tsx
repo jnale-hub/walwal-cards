@@ -12,16 +12,10 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmojiGrid } from "../components/EmojiGrid";
-import { BG_COLORS } from "../constants/theme";
+import { resolveEditionDisplay } from "../constants/edition";
 import { useCards } from "../lib/CardsContext";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
-
-const prettifyEditionId = (editionId: string) => {
-  return editionId
-    .replace(/[-_]+/g, " ")
-    .replace(/\b\w/g, (character) => character.toUpperCase());
-};
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -29,33 +23,7 @@ export default function WelcomeScreen() {
   const { currentEdition, editions } = useCards();
 
   const editionDetails = useMemo(() => {
-    const selectedEdition = editions.find(
-      (edition) => edition.id === currentEdition,
-    );
-
-    const fallbackName = currentEdition
-      ? prettifyEditionId(currentEdition)
-      : "Classic";
-
-    const colorFromEdition = selectedEdition?.color;
-    const resolvedColor =
-      typeof colorFromEdition === "string" && colorFromEdition.trim().length > 0
-        ? colorFromEdition
-        : BG_COLORS[4];
-
-    const iconFromEdition = selectedEdition?.icon;
-    const resolvedIcon =
-      typeof iconFromEdition === "string" && iconFromEdition.trim().length > 0
-        ? iconFromEdition
-        : "🍺";
-
-    return {
-      name: selectedEdition?.name ?? fallbackName,
-      icon: resolvedIcon,
-      color: resolvedColor,
-      bgColor: resolvedColor,
-      gridEmoji: resolvedIcon,
-    };
+    return resolveEditionDisplay(currentEdition, editions);
   }, [editions, currentEdition]);
 
   // Animation Refs

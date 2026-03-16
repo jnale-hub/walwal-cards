@@ -9,6 +9,10 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  resolveEditionDisplay,
+  sortEditionsByCardCount,
+} from "../constants/edition";
 import { BG_COLORS } from "../constants/theme";
 import { useCards } from "../lib/CardsContext";
 
@@ -28,16 +32,7 @@ export default function LibraryScreen() {
   }, [allCards]);
 
   const sortedEditions = useMemo(() => {
-    return [...editions].sort((firstEdition, secondEdition) => {
-      const firstCount = cardCountByEdition[firstEdition.id] ?? 0;
-      const secondCount = cardCountByEdition[secondEdition.id] ?? 0;
-
-      if (firstCount !== secondCount) {
-        return secondCount - firstCount;
-      }
-
-      return firstEdition.name.localeCompare(secondEdition.name);
-    });
+    return sortEditionsByCardCount(editions, cardCountByEdition);
   }, [editions, cardCountByEdition]);
 
   const handleSelectEdition = (editionId: string) => {
@@ -103,11 +98,15 @@ export default function LibraryScreen() {
         ) : (
           <View className="gap-y-6">
             {sortedEditions.map((edition) => {
+              const editionDisplay = resolveEditionDisplay(
+                edition.id,
+                editions,
+              );
               const isSelected = currentEdition === edition.id;
               const cardCount = cardCountByEdition[edition.id] ?? 0;
-              const cardColor = edition.color ?? "#FDE047";
-              const cardIcon = edition.icon ?? "🃏";
-              const cardName = edition.name;
+              const cardColor = editionDisplay.color;
+              const cardIcon = editionDisplay.icon;
+              const cardName = editionDisplay.name;
               const cardDescription =
                 edition.description ??
                 "A custom deck from your Supabase edition library.";

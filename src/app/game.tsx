@@ -20,6 +20,7 @@ import { ConfirmModal } from "../components/ConfirmModal";
 import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
 import { GameCard } from "../components/GameCard";
+import { resolveEditionDisplay } from "../constants/edition";
 import { BG_COLORS } from "../constants/theme";
 import { useCards } from "../lib/CardsContext";
 
@@ -58,14 +59,11 @@ export default function GameScreen() {
   const hasPlayers = players.length > 0;
 
   const { currentEditionLabel, currentEditionIcon } = useMemo(() => {
-    const matchedEdition = editions.find(
-      (edition) => edition.id === currentEdition,
-    );
+    const editionDisplay = resolveEditionDisplay(currentEdition, editions);
 
     return {
-      currentEditionLabel:
-        matchedEdition?.name ?? currentEdition.replace(/[-_]+/g, " "),
-      currentEditionIcon: matchedEdition?.icon ?? "🃏",
+      currentEditionLabel: editionDisplay.name,
+      currentEditionIcon: editionDisplay.icon,
     };
   }, [editions, currentEdition]);
 
@@ -347,7 +345,7 @@ export default function GameScreen() {
             </TouchableOpacity>
             <View className="bg-black/20 px-3 py-1 rounded-full items-center justify-center border-0 border-white/20">
               <Text className="text-white font-logo text-sm tracking-widest uppercase">
-                {`${currentEditionIcon} ${currentEditionLabel || "Classic"}${currentEditionIcon}`}
+                {`${currentEditionIcon} ${currentEditionLabel}`}
               </Text>
             </View>
             <View className="w-10 h-10" />
