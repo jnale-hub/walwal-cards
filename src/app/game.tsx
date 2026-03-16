@@ -345,7 +345,7 @@ export default function GameScreen() {
             </TouchableOpacity>
             <View className="bg-black/20 px-3 py-1 rounded-full items-center justify-center border-0 border-white/20">
               <Text className="text-white font-logo text-sm tracking-widest uppercase">
-                {`${currentEditionIcon} ${currentEditionLabel}`}
+                {`${currentEditionIcon} ${currentEditionLabel} ${currentEditionIcon}`}
               </Text>
             </View>
             <View className="w-10 h-10" />
