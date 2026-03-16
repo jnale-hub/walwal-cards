@@ -38,7 +38,7 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 export default function GameScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { deck: DECK, loading } = useCards();
+  const { activeDeck: DECK, loading, currentEdition, editions } = useCards();
 
   // --- PARAMS & SETUP ---
   const { playerList, isRandomTurn } = useLocalSearchParams();
@@ -56,6 +56,18 @@ export default function GameScreen() {
   }, [playerList]);
 
   const hasPlayers = players.length > 0;
+
+  const { currentEditionLabel, currentEditionIcon } = useMemo(() => {
+    const matchedEdition = editions.find(
+      (edition) => edition.id === currentEdition,
+    );
+
+    return {
+      currentEditionLabel:
+        matchedEdition?.name ?? currentEdition.replace(/[-_]+/g, " "),
+      currentEditionIcon: matchedEdition?.icon ?? "🃏",
+    };
+  }, [editions, currentEdition]);
 
   // --- GAME STATE ---
   const [deckOrder, setDeckOrder] = useState<number[]>([]);
@@ -333,6 +345,12 @@ export default function GameScreen() {
             >
               <Text className="text-white text-sm font-bold">✕</Text>
             </TouchableOpacity>
+            <View className="bg-black/20 px-3 py-1 rounded-full items-center justify-center border-0 border-white/20">
+              <Text className="text-white font-logo text-sm tracking-widest uppercase">
+                {`${currentEditionIcon} ${currentEditionLabel || "Classic"}${currentEditionIcon}`}
+              </Text>
+            </View>
+            <View className="w-10 h-10" />
           </View>
 
           <View className="flex-1 items-center justify-center px-6 w-full max-w-md self-center">
