@@ -59,7 +59,6 @@ export default function PlayerSetupScreen() {
         pathname: "/game",
         params: {
           playerList: JSON.stringify(players),
-          // Pass the random preference to the next screen
           isRandomTurn: isRandomTurn ? "true" : "false",
         },
       });
