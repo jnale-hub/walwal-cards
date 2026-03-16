@@ -143,6 +143,7 @@ export default function Layout() {
           }}
         >
           <Stack.Screen name="index" />
+          <Stack.Screen name="library" />
           <Stack.Screen name="game" />
           <Stack.Screen name="setup" />
         </Stack>
