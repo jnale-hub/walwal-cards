@@ -47,7 +47,7 @@ export default function WelcomeScreen() {
     }, [flipOutAnim, entryAnim, patternAnim]),
   );
 
-  const animateAndNavigate = (path: Parameters<typeof router.push>[0]) => {
+  const animateAndNavigateToGame = () => {
     Animated.parallel([
       Animated.timing(flipOutAnim, {
         toValue: 90,
@@ -59,7 +59,7 @@ export default function WelcomeScreen() {
         duration: 200,
         useNativeDriver: true,
       }),
-    ]).start(() => router.push(path));
+    ]).start(() => router.push("/game"));
   };
 
   const flipInterpolate = flipOutAnim.interpolate({
@@ -131,7 +131,7 @@ export default function WelcomeScreen() {
             {/* Edition indicator badge */}
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => animateAndNavigate("/library")}
+              onPress={() => router.push("/library")}
               className="absolute -top-4 right-4 flex-row items-center border-[3px] border-black rounded-full px-3 py-1.5 z-50"
               style={{ backgroundColor: editionDetails.color }}
             >
@@ -203,7 +203,7 @@ export default function WelcomeScreen() {
             <View className="absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]" />
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => animateAndNavigate("/game")}
+              onPress={animateAndNavigateToGame}
               accessibilityRole="button"
               accessibilityLabel="Quick Play"
               accessibilityHint="Start a game immediately"
@@ -229,7 +229,7 @@ export default function WelcomeScreen() {
               <View className="absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]" />
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => animateAndNavigate("/library")}
+                onPress={() => router.push("/library")}
                 accessibilityRole="button"
                 accessibilityLabel="Library"
                 accessibilityHint="Choose a card edition"
@@ -253,7 +253,7 @@ export default function WelcomeScreen() {
               <View className="absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]" />
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => animateAndNavigate("/setup")}
+                onPress={() => router.push("/setup")}
                 accessibilityRole="button"
                 accessibilityLabel="Add Players"
                 accessibilityHint="Open player setup before starting the game"
