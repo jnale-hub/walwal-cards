@@ -59,7 +59,20 @@ export default function WelcomeScreen() {
         duration: 200,
         useNativeDriver: true,
       }),
+      Animated.timing(patternAnim, {
+        toValue: 0,
+        duration: 180,
+        useNativeDriver: true,
+      }),
     ]).start(() => router.push("/game"));
+  };
+
+  const fadePatternAndNavigate = (path: Parameters<typeof router.push>[0]) => {
+    Animated.timing(patternAnim, {
+      toValue: 0,
+      duration: 180,
+      useNativeDriver: true,
+    }).start(() => router.push(path));
   };
 
   const flipInterpolate = flipOutAnim.interpolate({
@@ -131,7 +144,7 @@ export default function WelcomeScreen() {
             {/* Edition indicator badge */}
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => router.push("/library")}
+              onPress={() => fadePatternAndNavigate("/library")}
               className="absolute -top-4 right-4 flex-row items-center border-[3px] border-black rounded-full px-3 py-1.5 z-50"
               style={{ backgroundColor: editionDetails.color }}
             >
@@ -229,7 +242,7 @@ export default function WelcomeScreen() {
               <View className="absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]" />
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => router.push("/library")}
+                onPress={() => fadePatternAndNavigate("/library")}
                 accessibilityRole="button"
                 accessibilityLabel="Library"
                 accessibilityHint="Choose a card edition"
@@ -253,7 +266,7 @@ export default function WelcomeScreen() {
               <View className="absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]" />
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => router.push("/setup")}
+                onPress={() => fadePatternAndNavigate("/setup")}
                 accessibilityRole="button"
                 accessibilityLabel="Add Players"
                 accessibilityHint="Open player setup before starting the game"
