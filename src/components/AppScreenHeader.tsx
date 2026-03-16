@@ -1,5 +1,5 @@
 import React from "react";
-import { Insets, Text, TouchableOpacity, View } from "react-native";
+import { Insets, Pressable, Text, View } from "react-native";
 
 interface AppScreenHeaderProps {
   title: string;
@@ -20,10 +20,9 @@ export const AppScreenHeader: React.FC<AppScreenHeaderProps> = ({
 }) => {
   return (
     <View className="flex-row items-center justify-between px-6 mb-4 h-[50px] w-full max-w-[600px] self-center">
-      <TouchableOpacity
-        className="w-11 h-11 justify-center items-start"
+      <Pressable
+        className="w-11 h-11 justify-center items-start press-motion"
         onPress={onBack}
-        activeOpacity={0.6}
         accessibilityRole="button"
         accessibilityLabel={backLabel}
         accessibilityHint={backHint}
@@ -32,7 +31,7 @@ export const AppScreenHeader: React.FC<AppScreenHeaderProps> = ({
         <Text className="text-textMain font-logo text-[36px] leading-[40px]">
           ←
         </Text>
-      </TouchableOpacity>
+      </Pressable>
 
       <Text className="text-textMain font-logo text-3xl text-center flex-1">
         {title}

@@ -1,6 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 interface HomeActionButtonsProps {
   onQuickPlay: () => void;
@@ -13,17 +13,19 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
   onOpenLibrary,
   onOpenSetup,
 }) => {
+  const shadowClassName =
+    "absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-black rounded-[24px]";
+
   return (
     <View className="w-full max-w-[400px] z-20 shrink-0 mt-6 gap-y-4">
       <View className="w-full relative h-[72px]">
-        <View className="absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]" />
-        <TouchableOpacity
-          activeOpacity={0.8}
+        <View className={shadowClassName} />
+        <Pressable
           onPress={onQuickPlay}
           accessibilityRole="button"
           accessibilityLabel="Quick Play"
           accessibilityHint="Start a game immediately"
-          className="flex-1 flex-row bg-[#FDE047] border-[4px] border-black rounded-[24px] items-center justify-center pt-2"
+          className="h-full flex-row bg-[#FDE047] border-[4px] border-black rounded-[24px] items-center justify-center pt-2 press-motion"
         >
           <FontAwesome5
             name="play"
@@ -34,19 +36,18 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
           <Text className="font-logo text-4xl text-black uppercase tracking-tighter ml-3">
             QUICK PLAY
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       <View className="flex-row w-full justify-between gap-x-4">
         <View className="flex-1 relative h-[64px]">
-          <View className="absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]" />
-          <TouchableOpacity
-            activeOpacity={0.8}
+          <View className={shadowClassName} />
+          <Pressable
             onPress={onOpenLibrary}
             accessibilityRole="button"
             accessibilityLabel="Library"
             accessibilityHint="Choose a card edition"
-            className="flex-1 flex-row bg-[#A855F7] border-[4px] border-black rounded-[24px] items-center justify-center pt-1"
+            className="h-full flex-row bg-[#A855F7] border-[4px] border-black rounded-[24px] items-center justify-center pt-1 press-motion"
           >
             <FontAwesome5
               name="layer-group"
@@ -57,18 +58,17 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
             <Text className="font-logo text-[28px] text-black tracking-tighter uppercase ml-2">
               LIBRARY
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         <View className="flex-1 relative h-[64px]">
-          <View className="absolute top-1.5 left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]" />
-          <TouchableOpacity
-            activeOpacity={0.8}
+          <View className={shadowClassName} />
+          <Pressable
             onPress={onOpenSetup}
             accessibilityRole="button"
             accessibilityLabel="Add Players"
             accessibilityHint="Open player setup before starting the game"
-            className="flex-1 flex-row bg-[#F97316] border-[4px] border-black rounded-[24px] items-center justify-center pt-1"
+            className="h-full flex-row bg-[#F97316] border-[4px] border-black rounded-[24px] items-center justify-center pt-1 press-motion"
           >
             <FontAwesome5
               name="users"
@@ -79,7 +79,7 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
             <Text className="font-logo text-[28px] text-black tracking-tighter uppercase ml-2">
               PLAYERS
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </View>

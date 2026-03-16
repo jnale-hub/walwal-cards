@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 interface LibraryEditionCardProps {
   icon: string;
@@ -22,16 +22,11 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
 }) => {
   return (
     <View className="w-full relative justify-center">
-      {/* Button Shadow Base */}
-      <View
-        className="absolute left-1.5 right-[-6px] bottom-[-6px] bg-black rounded-[24px]"
-        style={{ top: 6 }}
-      />
+      <View className="absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-black rounded-[24px]" />
 
-      <TouchableOpacity
+      <Pressable
         onPress={onPress}
-        activeOpacity={0.8}
-        className="w-full rounded-[24px] border-[4px] border-black p-5 flex-col z-10"
+        className="w-full rounded-[24px] border-[4px] border-black p-5 flex-col z-10 press-motion"
         style={{
           backgroundColor: color,
         }}
@@ -67,7 +62,7 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
         <Text className="font-body text-black text-base opacity-90 mt-2">
           {description}
         </Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };

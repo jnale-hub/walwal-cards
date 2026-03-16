@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 interface SetupPlayersListProps {
   players: string[];
@@ -19,23 +19,25 @@ export const SetupPlayersList: React.FC<SetupPlayersListProps> = ({
       ) : (
         <View className="flex-row flex-wrap justify-center">
           {players.map((player, index) => (
-            <TouchableOpacity
-              key={`${player}-${index}`}
-              className="border-border bg-white py-1.5 pl-4 pr-2 rounded-full border-[3px] flex-row items-center m-1.5 shadow-sm"
-              onPress={() => onRemovePlayer(index)}
-              accessibilityRole="button"
-              accessibilityLabel={`Remove ${player}`}
-              accessibilityHint="Removes this player from the list"
-            >
-              <Text className="text-textMain font-bodyBold text-lg mr-2">
-                {player}
-              </Text>
-              <View className="w-5 h-5 bg-black/5 rounded-full items-center justify-center">
-                <Text className="font-body text-textMain/50 text-xs mt-[-2px]">
-                  ✕
+            <View key={`${player}-${index}`} className="relative m-1.5">
+              <View className="absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-black rounded-full" />
+              <Pressable
+                className="border-border bg-white py-1.5 pl-4 pr-2 rounded-full border-[3px] flex-row items-center press-motion"
+                onPress={() => onRemovePlayer(index)}
+                accessibilityRole="button"
+                accessibilityLabel={`Remove ${player}`}
+                accessibilityHint="Removes this player from the list"
+              >
+                <Text className="text-textMain font-bodyBold text-lg mr-2">
+                  {player}
                 </Text>
-              </View>
-            </TouchableOpacity>
+                <View className="w-5 h-5 bg-black/5 rounded-full items-center justify-center">
+                  <Text className="font-body text-textMain/50 text-xs mt-[-2px]">
+                    ✕
+                  </Text>
+                </View>
+              </Pressable>
+            </View>
           ))}
         </View>
       )}

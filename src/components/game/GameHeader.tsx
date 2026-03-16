@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 interface GameHeaderProps {
   topInset: number;
@@ -21,7 +21,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
       }}
       className="w-full px-6 flex-row justify-between items-center z-50 pb-2"
     >
-      <TouchableOpacity
+      <Pressable
         className="w-10 h-10 items-center justify-center bg-black/20 rounded-full"
         onPress={onExit}
         accessibilityRole="button"
@@ -30,7 +30,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         hitSlop={20}
       >
         <Text className="text-white text-sm font-bold">✕</Text>
-      </TouchableOpacity>
+      </Pressable>
 
       <View className="bg-black/20 px-3 py-1 rounded-full items-center justify-center border-0 border-white/20">
         <Text className="text-white font-logo text-sm tracking-widest uppercase">

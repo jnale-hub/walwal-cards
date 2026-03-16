@@ -4,21 +4,20 @@ import {
   Text,
   TextStyle,
   TouchableOpacity,
-  TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
 
-interface GameButtonProps extends Omit<
-  TouchableOpacityProps,
-  "style" | "onPress"
-> {
-  onPress: NonNullable<TouchableOpacityProps["onPress"]>;
+interface GameButtonProps {
+  onPress: () => void;
   text: string;
   variant?: "primary" | "secondary";
   className?: string;
   textClassName?: string;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  disabled?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
 }
 
 const joinClasses = (...classes: (string | undefined | false)[]) =>
@@ -34,18 +33,18 @@ const GameButtonBase: React.FC<GameButtonProps> = ({
   textStyle,
   disabled,
   accessibilityLabel,
-  ...touchableProps
+  accessibilityHint,
 }) => {
   const isSecondary = variant === "secondary";
 
   return (
     <TouchableOpacity
-      {...touchableProps}
-      activeOpacity={0.7}
+      activeOpacity={0.9}
       disabled={disabled}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? text}
+      accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: !!disabled }}
       className={joinClasses(
         "py-2 px-8 rounded-full border-[6px] items-center justify-center",

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 interface SetupControlsRowProps {
   isRandomTurn: boolean;
@@ -16,10 +16,9 @@ export const SetupControlsRow: React.FC<SetupControlsRowProps> = ({
 }) => {
   return (
     <View className="flex-row justify-between items-center mb-4 pl-1">
-      <TouchableOpacity
-        className="flex-row items-center"
+      <Pressable
+        className="flex-row items-center press-motion"
         onPress={onToggleRandomTurn}
-        activeOpacity={0.7}
         accessibilityRole="switch"
         accessibilityLabel="Randomize turns"
         accessibilityHint="When enabled, player turns are shuffled fairly"
@@ -35,7 +34,7 @@ export const SetupControlsRow: React.FC<SetupControlsRowProps> = ({
         <Text className="text-textMain text-sm opacity-80">
           Randomize Turns
         </Text>
-      </TouchableOpacity>
+      </Pressable>
 
       <Text className="text-textMain opacity-60 text-sm mr-1">
         {playerCount} / {maxPlayers} Players

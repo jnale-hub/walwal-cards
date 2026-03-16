@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 
 interface SetupInputRowProps {
   name: string;
@@ -31,21 +31,26 @@ export const SetupInputRow: React.FC<SetupInputRowProps> = ({
         accessibilityLabel="Player name"
         accessibilityHint="Type a player name, then use Add Player"
       />
-      <TouchableOpacity
-        style={{
-          opacity: isDisabled ? 0.5 : 1,
-        }}
-        className="bg-textMain border-border w-[60px] h-[60px] rounded-2xl items-center justify-center border-4"
-        onPress={onAddPlayer}
-        activeOpacity={0.8}
-        disabled={isDisabled}
-        accessibilityRole="button"
-        accessibilityLabel="Add player"
-        accessibilityHint="Adds the typed name to the player list"
-        accessibilityState={{ disabled: isDisabled }}
-      >
-        <Text className="font-bold color-white text-3xl mt-[-4px]">+</Text>
-      </TouchableOpacity>
+      <View className="relative w-[60px] h-[60px]">
+        <View
+          className={`absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-textMain rounded-2xl ${isDisabled ? "opacity-30" : "opacity-100"}`}
+        />
+
+        <Pressable
+          style={{
+            opacity: isDisabled ? 0.5 : 1,
+          }}
+          className="w-full h-full bg-textMain border-border rounded-2xl items-center justify-center border-4 press-motion"
+          onPress={onAddPlayer}
+          disabled={isDisabled}
+          accessibilityRole="button"
+          accessibilityLabel="Add player"
+          accessibilityHint="Adds the typed name to the player list"
+          accessibilityState={{ disabled: isDisabled }}
+        >
+          <Text className="font-bold color-white text-3xl mt-[-4px]">+</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };

@@ -7,3 +7,9 @@
     @apply bg-cardBg rounded-3xl border-6 border-textMain items-center justify-center p-6 shadow-card;
   }
 }
+
+@layer utilities {
+  .press-motion {
+    @apply transition-transform duration-150 ease-out hover:-translate-y-0.5 hover:-translate-x-1 hover:scale-[1.01] active:translate-x-[1px] active:translate-y-[1px] active:scale-[0.99];
+  }
+}
