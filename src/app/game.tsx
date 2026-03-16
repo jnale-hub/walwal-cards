@@ -58,14 +58,12 @@ export default function GameScreen() {
 
   const hasPlayers = players.length > 0;
 
-  const { currentEditionLabel, currentEditionIcon } = useMemo(() => {
-    const editionDisplay = resolveEditionDisplay(currentEdition, editions);
-
-    return {
-      currentEditionLabel: editionDisplay.name,
-      currentEditionIcon: editionDisplay.icon,
-    };
+  const editionDisplay = useMemo(() => {
+    return resolveEditionDisplay(currentEdition, editions);
   }, [editions, currentEdition]);
+
+  const currentEditionLabel = editionDisplay.name;
+  const currentEditionIcon = editionDisplay.icon;
 
   // --- GAME STATE ---
   const [deckOrder, setDeckOrder] = useState<number[]>([]);
@@ -79,7 +77,7 @@ export default function GameScreen() {
   const [turnQueue, setTurnQueue] = useState<number[]>([]);
 
   // Background State
-  const [bg, setBg] = useState(BG_COLORS[4]);
+  const [bg, setBg] = useState(editionDisplay.bgColor);
   const activeCardIndex = deckOrder.length > 0 ? deckOrder[dealIndex] : 0;
   const currentCard = useMemo(() => {
     if (DECK && DECK.length > 0) return DECK[activeCardIndex];
@@ -95,6 +93,15 @@ export default function GameScreen() {
   const patternAnim = useRef(new Animated.Value(0)).current;
   const driftAnim = useRef(new Animated.Value(0)).current; // New: For background movement
   const prevBgRef = useRef(bg);
+
+  useEffect(() => {
+    // Keep the initial game background aligned with the selected edition color
+    // before the random per-card colors begin.
+    if (dealIndex !== 0 || isFlipped) return;
+
+    setBg(editionDisplay.bgColor);
+    prevBgRef.current = editionDisplay.bgColor;
+  }, [editionDisplay.bgColor, dealIndex, isFlipped]);
 
   const startDriftAnimation = useCallback(() => {
     Animated.loop(
@@ -256,7 +263,7 @@ export default function GameScreen() {
   if (loading) {
     return (
       <View
-        style={{ backgroundColor: BG_COLORS[4] }}
+        style={{ backgroundColor: editionDisplay.bgColor }}
         className="flex-1 items-center justify-center p-6"
       >
         <Text className="text-white text-3xl font-bodyBold text-center">
@@ -269,7 +276,7 @@ export default function GameScreen() {
   if (!DECK || DECK.length === 0) {
     return (
       <View
-        style={{ backgroundColor: BG_COLORS[4] }}
+        style={{ backgroundColor: editionDisplay.bgColor }}
         className="flex-1 items-center justify-center px-8"
       >
         <Text className="text-8xl mb-4 pt-2 overflow-visible">😢</Text>
