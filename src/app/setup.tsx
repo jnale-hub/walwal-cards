@@ -6,13 +6,15 @@ import {
   Platform,
   ScrollView,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AppScreenHeader } from "../components/AppScreenHeader";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { GameButton } from "../components/GameButton";
+import { SetupControlsRow } from "../components/setup/SetupControlsRow";
+import { SetupInputRow } from "../components/setup/SetupInputRow";
+import { SetupPlayersList } from "../components/setup/SetupPlayersList";
 import { BG_COLORS } from "../constants/theme";
 
 export default function PlayerSetupScreen() {
@@ -57,7 +59,6 @@ export default function PlayerSetupScreen() {
         pathname: "/game",
         params: {
           playerList: JSON.stringify(players),
-          // Pass the random preference to the next screen
           isRandomTurn: isRandomTurn ? "true" : "false",
         },
       });
@@ -94,28 +95,12 @@ export default function PlayerSetupScreen() {
         }}
       />
 
-      {/* --- HEADER BAR --- */}
-      <View className="flex-row items-center justify-between px-6 mb-4 h-[50px] w-full max-w-[600px] self-center">
-        <TouchableOpacity
-          className="w-11 h-11 justify-center items-start"
-          onPress={handleBack}
-          activeOpacity={0.6}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-          accessibilityHint="Returns to the previous screen"
-          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-        >
-          <Text className="text-textMain font-logo text-[36px] leading-[40px]">
-            ←
-          </Text>
-        </TouchableOpacity>
-
-        <Text className="text-textMain font-logo text-3xl text-center flex-1">
-          ADD PLAYERS
-        </Text>
-
-        <View className="w-11" />
-      </View>
+      <AppScreenHeader
+        title="ADD PLAYERS"
+        onBack={handleBack}
+        backHint="Returns to the previous screen"
+        backHitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+      />
 
       <ScrollView
         className="flex-1"
@@ -133,97 +118,24 @@ export default function PlayerSetupScreen() {
           Who are we drinking with today?
         </Text>
 
-        {/* INPUT ROW */}
-        <View className="flex-row mb-4">
-          <TextInput
-            className="text-textMain border-border font-bodyBold flex-1 bg-white h-[60px] rounded-2xl px-5 text-xl border-4 mr-3"
-            placeholder={`Enter Name`}
-            placeholderTextColor="rgba(24, 24, 27, 0.4)"
-            value={name}
-            onChangeText={setName}
-            onSubmitEditing={handleAddPlayer}
-            returnKeyType="done"
-            maxLength={MAX_NAME_LENGTH}
-            autoCorrect={false}
-            accessibilityLabel="Player name"
-            accessibilityHint="Type a player name, then use Add Player"
-          />
-          <TouchableOpacity
-            style={{
-              opacity: name.trim().length === 0 ? 0.5 : 1,
-            }}
-            className="bg-textMain border-border w-[60px] h-[60px] rounded-2xl items-center justify-center border-4"
-            onPress={handleAddPlayer}
-            activeOpacity={0.8}
-            disabled={name.trim().length === 0}
-            accessibilityRole="button"
-            accessibilityLabel="Add player"
-            accessibilityHint="Adds the typed name to the player list"
-            accessibilityState={{ disabled: name.trim().length === 0 }}
-          >
-            <Text className="font-bold color-white text-3xl mt-[-4px]">+</Text>
-          </TouchableOpacity>
-        </View>
+        <SetupInputRow
+          name={name}
+          maxNameLength={MAX_NAME_LENGTH}
+          onChangeName={setName}
+          onAddPlayer={handleAddPlayer}
+        />
 
-        {/* CONTROLS ROW: Random Toggle (Left) & Count (Right) */}
-        <View className="flex-row justify-between items-center mb-4 pl-1">
-          {/* Custom Checkbox */}
-          <TouchableOpacity
-            className="flex-row items-center"
-            onPress={() => setIsRandomTurn(!isRandomTurn)}
-            activeOpacity={0.7}
-            accessibilityRole="switch"
-            accessibilityLabel="Randomize turns"
-            accessibilityHint="When enabled, player turns are shuffled fairly"
-            accessibilityState={{ checked: isRandomTurn }}
-          >
-            <View
-              className={`border-border w-6 h-6 border-4 rounded-md mr-2 items-center justify-center ${isRandomTurn ? "bg-textMain" : "bg-white"}`}
-            >
-              {isRandomTurn && (
-                <Text className="text-white font-bold text-xs">✓</Text>
-              )}
-            </View>
-            <Text className="text-textMain text-sm opacity-80">
-              Randomize Turns
-            </Text>
-          </TouchableOpacity>
+        <SetupControlsRow
+          isRandomTurn={isRandomTurn}
+          playerCount={players.length}
+          maxPlayers={MAX_PLAYERS}
+          onToggleRandomTurn={() => setIsRandomTurn(!isRandomTurn)}
+        />
 
-          <Text className="text-textMain opacity-60 text-sm mr-1">
-            {players.length} / {MAX_PLAYERS} Players
-          </Text>
-        </View>
-
-        {/* PLAYER LIST */}
-        <View className="bg-white/20 rounded-[24px] p-4 border-4 border-black/10 min-h-[150px]">
-          {players.length === 0 ? (
-            <Text className="text-textMain text-center text-lg opacity-50 mt-10">
-              No players added yet.
-            </Text>
-          ) : (
-            <View className="flex-row flex-wrap justify-center">
-              {players.map((player, index) => (
-                <TouchableOpacity
-                  key={`${player}-${index}`}
-                  className="border-border bg-white py-1.5 pl-4 pr-2 rounded-full border-[3px] flex-row items-center m-1.5 shadow-sm"
-                  onPress={() => handleRemovePlayer(index)}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Remove ${player}`}
-                  accessibilityHint="Removes this player from the list"
-                >
-                  <Text className="text-textMain font-bodyBold text-lg mr-2">
-                    {player}
-                  </Text>
-                  <View className="w-5 h-5 bg-black/5 rounded-full items-center justify-center">
-                    <Text className="font-body text-textMain/50 text-xs mt-[-2px]">
-                      ✕
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-        </View>
+        <SetupPlayersList
+          players={players}
+          onRemovePlayer={handleRemovePlayer}
+        />
       </ScrollView>
 
       <View className="pb-16 w-full items-center justify-end py-6 min-h-[80px]">

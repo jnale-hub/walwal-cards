@@ -12,14 +12,15 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ConfirmModal } from "../components/ConfirmModal";
-import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
-import { GameCard } from "../components/GameCard";
+import { GameCardStage } from "../components/game/GameCardStage";
+import { GameHeader } from "../components/game/GameHeader";
+import { GamePatternBackground } from "../components/game/GamePatternBackground";
+import { resolveEditionDisplay } from "../constants/edition";
 import { BG_COLORS } from "../constants/theme";
 import { useCards } from "../lib/CardsContext";
 
@@ -34,11 +35,13 @@ const shuffleArray = (array: number[]) => {
 };
 
 const AnimatedView = Animated.createAnimatedComponent(View);
+const ORANGE_BG = "#FB923C";
+const GAME_BG_COLORS = BG_COLORS.filter((color) => color !== ORANGE_BG);
 
 export default function GameScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { deck: DECK, loading } = useCards();
+  const { activeDeck: DECK, loading, currentEdition, editions } = useCards();
 
   // --- PARAMS & SETUP ---
   const { playerList, isRandomTurn } = useLocalSearchParams();
@@ -57,6 +60,13 @@ export default function GameScreen() {
 
   const hasPlayers = players.length > 0;
 
+  const editionDisplay = useMemo(() => {
+    return resolveEditionDisplay(currentEdition, editions);
+  }, [editions, currentEdition]);
+
+  const currentEditionLabel = editionDisplay.name;
+  const currentEditionIcon = editionDisplay.icon;
+
   // --- GAME STATE ---
   const [deckOrder, setDeckOrder] = useState<number[]>([]);
   const [dealIndex, setDealIndex] = useState(0);
@@ -69,7 +79,8 @@ export default function GameScreen() {
   const [turnQueue, setTurnQueue] = useState<number[]>([]);
 
   // Background State
-  const [bg, setBg] = useState(BG_COLORS[4]);
+  const [bg, setBg] = useState(editionDisplay.bgColor);
+  const [previousBg, setPreviousBg] = useState(editionDisplay.bgColor);
   const activeCardIndex = deckOrder.length > 0 ? deckOrder[dealIndex] : 0;
   const currentCard = useMemo(() => {
     if (DECK && DECK.length > 0) return DECK[activeCardIndex];
@@ -79,12 +90,20 @@ export default function GameScreen() {
   const [bgEmoji, setBgEmoji] = useState(currentCard.emoji);
 
   // --- ANIMATION REFS ---
-  const bgAnim = useRef(new Animated.Value(0)).current;
+  const bgAnim = useRef(new Animated.Value(1)).current;
   const flipAnim = useRef(new Animated.Value(0)).current;
   const entryAnim = useRef(new Animated.Value(-90)).current;
   const patternAnim = useRef(new Animated.Value(0)).current;
   const driftAnim = useRef(new Animated.Value(0)).current; // New: For background movement
-  const prevBgRef = useRef(bg);
+
+  useEffect(() => {
+    // Keep the initial game background aligned with the selected edition color
+    // before the random per-card colors begin.
+    if (dealIndex !== 0 || isFlipped) return;
+
+    setBg(editionDisplay.bgColor);
+    setPreviousBg(editionDisplay.bgColor);
+  }, [editionDisplay.bgColor, dealIndex, isFlipped]);
 
   const startDriftAnimation = useCallback(() => {
     Animated.loop(
@@ -144,12 +163,6 @@ export default function GameScreen() {
     if (isFlipped) setBgEmoji(currentCard.emoji);
   }, [isFlipped, currentCard]);
 
-  // Smooth Background Color Transition
-  const backgroundColor = bgAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [prevBgRef.current, bg],
-  });
-
   // Fade in pattern when card is flipped
   useEffect(() => {
     Animated.timing(patternAnim, {
@@ -191,19 +204,25 @@ export default function GameScreen() {
 
       // Randomize Background Color
       let nextBg = bg;
-      if (BG_COLORS.length > 1) {
+      const transitionPalette =
+        GAME_BG_COLORS.length > 0 ? GAME_BG_COLORS : BG_COLORS;
+
+      if (transitionPalette.length > 1) {
         do {
-          nextBg = BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)];
+          nextBg =
+            transitionPalette[
+              Math.floor(Math.random() * transitionPalette.length)
+            ];
         } while (nextBg === bg);
       }
 
-      prevBgRef.current = bg;
+      setPreviousBg(bg);
       setBg(nextBg);
       bgAnim.setValue(0);
       Animated.timing(bgAnim, {
         toValue: 1,
         duration: 600,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }).start();
 
       if (hasPlayers) {
@@ -246,7 +265,7 @@ export default function GameScreen() {
   if (loading) {
     return (
       <View
-        style={{ backgroundColor: BG_COLORS[4] }}
+        style={{ backgroundColor: editionDisplay.bgColor }}
         className="flex-1 items-center justify-center p-6"
       >
         <Text className="text-white text-3xl font-bodyBold text-center">
@@ -259,7 +278,7 @@ export default function GameScreen() {
   if (!DECK || DECK.length === 0) {
     return (
       <View
-        style={{ backgroundColor: BG_COLORS[4] }}
+        style={{ backgroundColor: editionDisplay.bgColor }}
         className="flex-1 items-center justify-center px-8"
       >
         <Text className="text-8xl mb-4 pt-2 overflow-visible">😢</Text>
@@ -281,128 +300,48 @@ export default function GameScreen() {
   }
 
   return (
-    <View className="flex-1 bg-black">
+    <View style={{ backgroundColor: bg }} className="flex-1">
       <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle="light-content"
       />
 
+      <View
+        style={[StyleSheet.absoluteFillObject, { backgroundColor: previousBg }]}
+      />
+
       <AnimatedView
-        style={[StyleSheet.absoluteFillObject, { backgroundColor }]}
-        className="flex-1"
-      >
-        <View
-          pointerEvents="none"
-          accessible={false}
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          className="absolute inset-0 items-center justify-center overflow-hidden z-0"
-        >
-          <AnimatedView
-            accessible={false}
-            accessibilityElementsHidden
-            importantForAccessibility="no-hide-descendants"
-            style={{
-              ...StyleSheet.absoluteFillObject,
-              opacity: patternAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.0, 0.45],
-              }),
-            }}
-          >
-            <EmojiGrid emoji={bgEmoji} />
-          </AnimatedView>
-        </View>
+        style={[
+          StyleSheet.absoluteFillObject,
+          {
+            backgroundColor: bg,
+            opacity: bgAnim,
+          },
+        ]}
+      />
 
-        <View className="flex-1 z-10">
-          {/* Header */}
-          <View
-            style={{
-              paddingTop: Math.max(insets.top, 20),
-            }}
-            className="w-full px-6 flex-row justify-between items-center z-50 pb-2"
-          >
-            <TouchableOpacity
-              className="w-10 h-10 items-center justify-center bg-black/20 rounded-full"
-              onPress={() => setShowExitModal(true)}
-              accessibilityRole="button"
-              accessibilityLabel="Exit game"
-              accessibilityHint="Opens a confirmation dialog to end this game"
-              hitSlop={20}
-            >
-              <Text className="text-white text-sm font-bold">✕</Text>
-            </TouchableOpacity>
-          </View>
+      <View className="flex-1 z-10">
+        <GamePatternBackground patternAnim={patternAnim} emoji={bgEmoji} />
 
-          <View className="flex-1 items-center justify-center px-6 w-full max-w-md self-center">
-            <AnimatedView
-              style={{
-                width: "100%",
-                maxWidth: 480,
-                aspectRatio: 2.5 / 3.5,
-                maxHeight: "70%",
-                transform: [
-                  { perspective: 1200 },
-                  {
-                    rotateY: entryAnim.interpolate({
-                      inputRange: [-90, 0],
-                      outputRange: ["-90deg", "0deg"],
-                    }),
-                  },
-                ],
-              }}
-              className="z-10 shrink"
-            >
-              <GameCard
-                frontInterpolate={flipAnim.interpolate({
-                  inputRange: [0, 180],
-                  outputRange: ["0deg", "180deg"],
-                })}
-                backInterpolate={flipAnim.interpolate({
-                  inputRange: [0, 180],
-                  outputRange: ["180deg", "360deg"],
-                })}
-                frontOpacity={flipAnim.interpolate({
-                  inputRange: [89, 90],
-                  outputRange: [1, 0],
-                })}
-                backOpacity={flipAnim.interpolate({
-                  inputRange: [89, 90],
-                  outputRange: [0, 1],
-                })}
-                currentCard={currentCard}
-                bg={bg}
-                playerName={hasPlayers ? players[turnIndex] : undefined}
-                isFlipped={isFlipped}
-              />
+        <GameHeader
+          topInset={insets.top}
+          onExit={() => setShowExitModal(true)}
+          editionLabel={currentEditionLabel}
+          editionIcon={currentEditionIcon}
+        />
 
-              {!isFlipped && (
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={flipCard}
-                  accessibilityRole="button"
-                  accessibilityLabel="Reveal card"
-                  accessibilityHint="Flips the current card to show the challenge"
-                  style={StyleSheet.absoluteFill}
-                  className="z-[100]"
-                />
-              )}
-            </AnimatedView>
-
-            <View className="w-full items-center justify-end py-6 min-h-[80px]">
-              {isFlipped && (
-                <GameButton
-                  onPress={handleNext}
-                  text="Next Card"
-                  className="w-full max-w-64 shadow-200"
-                  textClassName="font-bold text-2xl font-bodyBold"
-                />
-              )}
-            </View>
-          </View>
-        </View>
-      </AnimatedView>
+        <GameCardStage
+          entryAnim={entryAnim}
+          flipAnim={flipAnim}
+          currentCard={currentCard}
+          bg={bg}
+          playerName={hasPlayers ? players[turnIndex] : undefined}
+          isFlipped={isFlipped}
+          onFlipCard={flipCard}
+          onNext={handleNext}
+        />
+      </View>
 
       <ConfirmModal
         visible={showExitModal}

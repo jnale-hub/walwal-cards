@@ -142,9 +142,16 @@ export default function Layout() {
             contentStyle: { backgroundColor: THEME_COLOR },
           }}
         >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="game" />
-          <Stack.Screen name="setup" />
+          <Stack.Screen name="index" options={{ animation: "fade" }} />
+          <Stack.Screen
+            name="library"
+            options={{ animation: "slide_from_right" }}
+          />
+          <Stack.Screen name="game" options={{ animation: "fade" }} />
+          <Stack.Screen
+            name="setup"
+            options={{ animation: "slide_from_right" }}
+          />
         </Stack>
       </CardsProvider>
     </>
