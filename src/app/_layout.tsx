@@ -17,7 +17,6 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 export default function Layout() {
   const SITE_URL = "https://walwalcards.xyz";
   const THEME_COLOR = "#FB923C";
-  const STACK_FALLBACK_BG = "#111827";
 
   const [fontsLoaded] = Font.useFonts({
     RobotoCondensed_900Black,
@@ -140,7 +139,7 @@ export default function Layout() {
           screenOptions={{
             headerShown: false,
             animation: "fade",
-            contentStyle: { backgroundColor: STACK_FALLBACK_BG },
+            contentStyle: { backgroundColor: THEME_COLOR },
           }}
         >
           <Stack.Screen name="index" options={{ animation: "fade" }} />
