@@ -12,14 +12,14 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ConfirmModal } from "../components/ConfirmModal";
-import { EmojiGrid } from "../components/EmojiGrid";
 import { GameButton } from "../components/GameButton";
-import { GameCard } from "../components/GameCard";
+import { GameCardStage } from "../components/game/GameCardStage";
+import { GameHeader } from "../components/game/GameHeader";
+import { GamePatternBackground } from "../components/game/GamePatternBackground";
 import { resolveEditionDisplay } from "../constants/edition";
 import { BG_COLORS } from "../constants/theme";
 import { useCards } from "../lib/CardsContext";
@@ -309,121 +309,26 @@ export default function GameScreen() {
         style={[StyleSheet.absoluteFillObject, { backgroundColor }]}
         className="flex-1"
       >
-        <View
-          pointerEvents="none"
-          accessible={false}
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          className="absolute inset-0 items-center justify-center overflow-hidden z-0"
-        >
-          <AnimatedView
-            accessible={false}
-            accessibilityElementsHidden
-            importantForAccessibility="no-hide-descendants"
-            style={{
-              ...StyleSheet.absoluteFillObject,
-              opacity: patternAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.0, 0.45],
-              }),
-            }}
-          >
-            <EmojiGrid emoji={bgEmoji} />
-          </AnimatedView>
-        </View>
+        <GamePatternBackground patternAnim={patternAnim} emoji={bgEmoji} />
 
         <View className="flex-1 z-10">
-          {/* Header */}
-          <View
-            style={{
-              paddingTop: Math.max(insets.top, 20),
-            }}
-            className="w-full px-6 flex-row justify-between items-center z-50 pb-2"
-          >
-            <TouchableOpacity
-              className="w-10 h-10 items-center justify-center bg-black/20 rounded-full"
-              onPress={() => setShowExitModal(true)}
-              accessibilityRole="button"
-              accessibilityLabel="Exit game"
-              accessibilityHint="Opens a confirmation dialog to end this game"
-              hitSlop={20}
-            >
-              <Text className="text-white text-sm font-bold">✕</Text>
-            </TouchableOpacity>
-            <View className="bg-black/20 px-3 py-1 rounded-full items-center justify-center border-0 border-white/20">
-              <Text className="text-white font-logo text-sm tracking-widest uppercase">
-                {`${currentEditionIcon} ${currentEditionLabel} ${currentEditionIcon}`}
-              </Text>
-            </View>
-            <View className="w-10 h-10" />
-          </View>
+          <GameHeader
+            topInset={insets.top}
+            onExit={() => setShowExitModal(true)}
+            editionLabel={currentEditionLabel}
+            editionIcon={currentEditionIcon}
+          />
 
-          <View className="flex-1 items-center justify-center px-6 w-full max-w-md self-center">
-            <AnimatedView
-              style={{
-                width: "100%",
-                maxWidth: 480,
-                aspectRatio: 2.5 / 3.5,
-                maxHeight: "70%",
-                transform: [
-                  { perspective: 1200 },
-                  {
-                    rotateY: entryAnim.interpolate({
-                      inputRange: [-90, 0],
-                      outputRange: ["-90deg", "0deg"],
-                    }),
-                  },
-                ],
-              }}
-              className="z-10 shrink"
-            >
-              <GameCard
-                frontInterpolate={flipAnim.interpolate({
-                  inputRange: [0, 180],
-                  outputRange: ["0deg", "180deg"],
-                })}
-                backInterpolate={flipAnim.interpolate({
-                  inputRange: [0, 180],
-                  outputRange: ["180deg", "360deg"],
-                })}
-                frontOpacity={flipAnim.interpolate({
-                  inputRange: [89, 90],
-                  outputRange: [1, 0],
-                })}
-                backOpacity={flipAnim.interpolate({
-                  inputRange: [89, 90],
-                  outputRange: [0, 1],
-                })}
-                currentCard={currentCard}
-                bg={bg}
-                playerName={hasPlayers ? players[turnIndex] : undefined}
-                isFlipped={isFlipped}
-              />
-
-              {!isFlipped && (
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={flipCard}
-                  accessibilityRole="button"
-                  accessibilityLabel="Reveal card"
-                  accessibilityHint="Flips the current card to show the challenge"
-                  style={StyleSheet.absoluteFill}
-                  className="z-[100]"
-                />
-              )}
-            </AnimatedView>
-
-            <View className="w-full items-center justify-end py-6 min-h-[80px]">
-              {isFlipped && (
-                <GameButton
-                  onPress={handleNext}
-                  text="Next Card"
-                  className="w-full max-w-64 shadow-200"
-                  textClassName="font-bold text-2xl font-bodyBold"
-                />
-              )}
-            </View>
-          </View>
+          <GameCardStage
+            entryAnim={entryAnim}
+            flipAnim={flipAnim}
+            currentCard={currentCard}
+            bg={bg}
+            playerName={hasPlayers ? players[turnIndex] : undefined}
+            isFlipped={isFlipped}
+            onFlipCard={flipCard}
+            onNext={handleNext}
+          />
         </View>
       </AnimatedView>
 
