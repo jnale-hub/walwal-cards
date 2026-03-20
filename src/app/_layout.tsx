@@ -10,6 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import { Platform, View } from "react-native";
 import "../global.css";
+import { AuthProvider } from "../lib/AuthContext";
 import { CardsProvider } from "../lib/CardsContext";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -134,26 +135,28 @@ export default function Layout() {
 
       <StatusBar style="light" backgroundColor={THEME_COLOR} />
 
-      <CardsProvider>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            animation: "fade",
-            contentStyle: { backgroundColor: THEME_COLOR },
-          }}
-        >
-          <Stack.Screen name="index" options={{ animation: "fade" }} />
-          <Stack.Screen
-            name="library"
-            options={{ animation: "slide_from_right" }}
-          />
-          <Stack.Screen name="game" options={{ animation: "fade" }} />
-          <Stack.Screen
-            name="setup"
-            options={{ animation: "slide_from_right" }}
-          />
-        </Stack>
-      </CardsProvider>
+      <AuthProvider>
+        <CardsProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: "fade",
+              contentStyle: { backgroundColor: THEME_COLOR },
+            }}
+          >
+            <Stack.Screen name="index" options={{ animation: "fade" }} />
+            <Stack.Screen
+              name="library"
+              options={{ animation: "slide_from_right" }}
+            />
+            <Stack.Screen name="game" options={{ animation: "fade" }} />
+            <Stack.Screen
+              name="setup"
+              options={{ animation: "slide_from_right" }}
+            />
+          </Stack>
+        </CardsProvider>
+      </AuthProvider>
     </>
   );
 }
