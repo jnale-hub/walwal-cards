@@ -17,6 +17,11 @@ export interface EditionDisplay {
 
 const DEFAULT_ICON = "🍺";
 const DEFAULT_BG_COLOR = BG_COLORS[4] ?? "#FB923C";
+const PUBLIC_EDITION_IDS = new Set(["classic"]);
+
+const normalizeEditionId = (editionId: string): string => {
+  return editionId.trim().toLowerCase();
+};
 
 const hasText = (value: string | null | undefined): value is string => {
   return typeof value === "string" && value.trim().length > 0;
@@ -26,6 +31,17 @@ export const prettifyEditionId = (editionId: string): string => {
   return editionId
     .replace(/[-_]+/g, " ")
     .replace(/\b\w/g, (character) => character.toUpperCase());
+};
+
+export const isPublicEdition = (editionId: string): boolean => {
+  return PUBLIC_EDITION_IDS.has(normalizeEditionId(editionId));
+};
+
+export const canAccessEdition = (
+  editionId: string,
+  isAuthenticated: boolean,
+): boolean => {
+  return isAuthenticated || isPublicEdition(editionId);
 };
 
 const hashString = (value: string): number => {
