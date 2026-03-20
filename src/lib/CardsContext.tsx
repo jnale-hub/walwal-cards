@@ -5,6 +5,8 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { canAccessEdition, isPublicEdition } from "../constants/edition";
+import { useAuth } from "./AuthContext";
 import { appStorage } from "./storage";
 import { supabase } from "./supabase";
 
@@ -67,9 +69,18 @@ const deriveEditionsFromCards = (cards: Card[]): Edition[] => {
   }));
 };
 
+const getDefaultEditionId = (editionList: Edition[]): string => {
+  const firstPublicEdition = editionList.find((edition) =>
+    isPublicEdition(edition.id),
+  );
+
+  return firstPublicEdition?.id ?? editionList[0]?.id ?? "classic";
+};
+
 export const CardsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { isAuthenticated } = useAuth();
   const [allCards, setAllCards] = useState<Card[]>([]);
   const [editions, setEditions] = useState<Edition[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,8 +96,18 @@ export const CardsProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const setEdition = async (editionId: string) => {
-    setCurrentEdition(editionId);
-    await appStorage.setItem(EDITION_CACHE_KEY, editionId);
+    const { data: sessionData } = await supabase.auth.getSession();
+    const hasLiveSession = !!sessionData.session?.user;
+
+    const nextEditionId = canAccessEdition(
+      editionId,
+      isAuthenticated || hasLiveSession,
+    )
+      ? editionId
+      : getDefaultEditionId(editions);
+
+    setCurrentEdition(nextEditionId);
+    await appStorage.setItem(EDITION_CACHE_KEY, nextEditionId);
   };
 
   useEffect(() => {
@@ -193,16 +214,32 @@ export const CardsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (editions.length === 0) return;
-    if (editions.some((edition) => edition.id === currentEdition)) return;
 
-    const fallbackEditionId = editions[0].id;
-    setCurrentEdition(fallbackEditionId);
-    void appStorage.setItem(EDITION_CACHE_KEY, fallbackEditionId);
-  }, [editions, currentEdition]);
+    const editionExists = editions.some(
+      (edition) => edition.id === currentEdition,
+    );
+    const candidateEditionId = editionExists ? currentEdition : editions[0].id;
+    const nextEditionId = canAccessEdition(candidateEditionId, isAuthenticated)
+      ? candidateEditionId
+      : getDefaultEditionId(editions);
+
+    if (nextEditionId === currentEdition) return;
+
+    setCurrentEdition(nextEditionId);
+    void appStorage.setItem(EDITION_CACHE_KEY, nextEditionId);
+  }, [editions, currentEdition, isAuthenticated]);
+
+  const playableEdition = useMemo(() => {
+    if (canAccessEdition(currentEdition, isAuthenticated)) {
+      return currentEdition;
+    }
+
+    return getDefaultEditionId(editions);
+  }, [currentEdition, editions, isAuthenticated]);
 
   const activeDeck = useMemo(() => {
-    return allCards.filter((card) => card.edition_id === currentEdition);
-  }, [allCards, currentEdition]);
+    return allCards.filter((card) => card.edition_id === playableEdition);
+  }, [allCards, playableEdition]);
 
   return (
     <CardsContext.Provider
