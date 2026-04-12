@@ -59,7 +59,7 @@ const LibraryAuthModalBase: React.FC<LibraryAuthModalProps> = ({
       onRequestClose={onCancel}
     >
       <View
-        className="flex-1 bg-black/70 justify-center items-center px-4"
+        className="flex-1 bg-neutral-950/70 justify-center items-center px-4"
         accessibilityViewIsModal
         importantForAccessibility="yes"
       >
@@ -70,17 +70,17 @@ const LibraryAuthModalBase: React.FC<LibraryAuthModalProps> = ({
           <View className="card-base w-full items-stretch shadow-200">
             <Text
               accessibilityRole="header"
-              className="text-textMain font-logo text-3xl text-center uppercase tracking-tighter"
+              className="text-neutral-950 font-logo text-3xl text-center uppercase tracking-tighter"
             >
               {title}
             </Text>
 
-            <Text className="text-textMain font-body text-sm text-center opacity-75 mb-4">
+            <Text className="text-neutral-950 font-body text-sm text-center opacity-75 mb-4">
               {infoText}
             </Text>
 
             <TextInput
-              className="text-textMain border-border font-bodyBold bg-white h-[56px] rounded-2xl px-4 text-lg border-4 mb-3"
+              className="text-neutral-950 border-neutral-950 font-bodyBold bg-neutral-50 h-[56px] rounded-2xl px-4 text-lg border-4 mb-3"
               placeholder="Email address"
               placeholderTextColor="rgba(24, 24, 27, 0.4)"
               value={emailInput}
@@ -96,7 +96,7 @@ const LibraryAuthModalBase: React.FC<LibraryAuthModalProps> = ({
             />
 
             <TextInput
-              className="text-textMain border-border font-bodyBold bg-white h-[56px] rounded-2xl px-4 text-lg border-4 mb-3"
+              className="text-neutral-950 border-neutral-950 font-bodyBold bg-neutral-50 h-[56px] rounded-2xl px-4 text-lg border-4 mb-3"
               placeholder="Password"
               placeholderTextColor="rgba(24, 24, 27, 0.4)"
               value={passwordInput}
@@ -115,7 +115,7 @@ const LibraryAuthModalBase: React.FC<LibraryAuthModalProps> = ({
 
             {authMode === "signUp" && (
               <TextInput
-                className="text-textMain border-border font-bodyBold bg-white h-[56px] rounded-2xl px-4 text-lg border-4 mb-3"
+                className="text-neutral-950 border-neutral-950 font-bodyBold bg-neutral-50 h-[56px] rounded-2xl px-4 text-lg border-4 mb-3"
                 placeholder="Confirm password"
                 placeholderTextColor="rgba(24, 24, 27, 0.4)"
                 value={confirmPasswordInput}
@@ -149,7 +149,7 @@ const LibraryAuthModalBase: React.FC<LibraryAuthModalProps> = ({
               }
               accessibilityState={{ disabled: submitting }}
             >
-              <Text className="text-textMain font-bodyBold text-sm uppercase opacity-75">
+              <Text className="text-neutral-950 font-bodyBold text-sm uppercase opacity-75">
                 {authMode === "signUp"
                   ? "Already have an account? Sign In"
                   : "Need an account? Create one"}
