@@ -9,7 +9,6 @@ import { resolveEditionDisplay } from "../constants/edition";
 import { useCards } from "../lib/CardsContext";
 
 const AnimatedView = Animated.createAnimatedComponent(View);
-const THEME_COLOR = "#FB923C";
 const DEFAULT_PATTERN_EMOJI = "🍺";
 
 export default function WelcomeScreen() {
@@ -75,15 +74,14 @@ export default function WelcomeScreen() {
     outputRange: ["0deg", "90deg"],
   });
 
-  const backgroundColor = loading ? THEME_COLOR : editionDetails.bgColor;
+  const backgroundClass = loading ? "bg-orange-400" : editionDetails.bgClass;
   const patternEmoji = loading
     ? DEFAULT_PATTERN_EMOJI
     : editionDetails.gridEmoji;
 
   return (
     <View
-      className="flex-1 items-center justify-center overflow-hidden transition-colors duration-300"
-      style={{ backgroundColor }}
+      className={`flex-1 items-center justify-center overflow-hidden transition-colors duration-300 ${backgroundClass}`}
     >
       <StatusBar barStyle="light-content" />
 

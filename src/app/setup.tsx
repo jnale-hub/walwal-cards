@@ -15,7 +15,6 @@ import { GameButton } from "../components/GameButton";
 import { SetupControlsRow } from "../components/setup/SetupControlsRow";
 import { SetupInputRow } from "../components/setup/SetupInputRow";
 import { SetupPlayersList } from "../components/setup/SetupPlayersList";
-import { BG_COLORS } from "../constants/theme";
 
 export default function PlayerSetupScreen() {
   const router = useRouter();
@@ -76,9 +75,8 @@ export default function PlayerSetupScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1"
+      className="flex-1 bg-green-400/50"
       style={{
-        backgroundColor: BG_COLORS[4],
         paddingTop: Math.max(insets.top, 20),
       }}
     >
