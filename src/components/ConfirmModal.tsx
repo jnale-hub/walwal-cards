@@ -19,19 +19,19 @@ export const ConfirmModal: React.FC<any> = ({
       onRequestClose={onCancel}
     >
       <View
-        className="flex-1 bg-black/70 justify-center items-center px-4"
+        className="flex-1 bg-neutral-950/70 justify-center items-center px-4"
         accessibilityViewIsModal
         importantForAccessibility="yes"
       >
         <View className="card-base w-full max-w-lg items-center shadow-200">
           <Text
             accessibilityRole="header"
-            className="text-textMain font-logo text-3xl text-center mb-2 uppercase tracking-tighter"
+            className="text-neutral-950 font-logo text-3xl text-center mb-2 uppercase tracking-tighter"
           >
             {title}
           </Text>
 
-          <Text className="text-textMain font-body text-base text-center mb-8 opacity-70 leading-5 text-pretty">
+          <Text className="text-neutral-950 font-body text-base text-center mb-8 opacity-70 leading-5 text-pretty">
             {message}
           </Text>
 

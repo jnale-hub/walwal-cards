@@ -29,13 +29,13 @@ export const AppScreenHeader: React.FC<AppScreenHeaderProps> = ({
           accessibilityHint={backHint}
           hitSlop={backHitSlop}
         >
-          <Text className="text-textMain font-logo text-[36px] leading-[40px]">
+          <Text className="text-neutral-950 font-logo text-[36px] leading-[40px]">
             ←
           </Text>
         </Pressable>
       </View>
 
-      <Text className="text-textMain font-logo text-3xl text-center absolute left-20 right-20">
+      <Text className="text-neutral-950 font-logo text-3xl text-center absolute left-20 right-20">
         {title}
       </Text>
 
