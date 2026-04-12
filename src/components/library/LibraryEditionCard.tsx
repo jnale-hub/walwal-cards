@@ -1,5 +1,6 @@
 import React from "react";
 import { Pressable, Text, View } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 interface LibraryEditionCardProps {
   icon: string;
@@ -53,8 +54,8 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
               }`}
             >
               {isSelected && (
-                <Text className="text-neutral-50 font-bodyBold text-base mt-[-2px]">
-                  ✓
+                <Text className="text-neutral-50 font-bodyBold text-base">
+                  <FontAwesome5 name="check" size={16} color="white" />
                 </Text>
               )}
             </View>
@@ -63,13 +64,13 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
 
         <View className="gap-y-1 py-2">
           <View className="flex-wrap">
-          <View
-            className={`${bgClass} px-2 py-1 border-2 border-neutral-950 shadow-card-sm mb-2`}
-          >
-            <Text className="font-logo text-xl sm:text-2xl text-neutral-950 uppercase tracking-normal leading-tight text-wrap">
-              {name}
-            </Text>
-          </View>
+            <View
+              className={`${bgClass} px-2 py-1 border-2 border-neutral-950 shadow-card-sm mb-2`}
+            >
+              <Text className="font-logo text-xl sm:text-2xl text-neutral-950 uppercase tracking-normal leading-tight text-wrap">
+                {name}
+              </Text>
+            </View>
           </View>
           <Text className="font-body text-neutral-950 opacity-90 leading-snug mb-auto line-clamp-5 sm:text-lg">
             {description}
