@@ -21,14 +21,14 @@ const LibraryAccessPanelBase: React.FC<LibraryAccessPanelProps> = ({
       <View className="flex-row items-center justify-center gap-x-1">
         {isAuthenticated && userEmail ? (
           <Text
-            className="text-textMain font-body text-sm text-center opacity-70 shrink max-w-[72%]"
+            className="text-neutral-950 font-body text-sm text-center opacity-70 shrink max-w-[72%]"
             numberOfLines={1}
             ellipsizeMode="middle"
           >
             {userEmail}
           </Text>
         ) : (
-          <Text className="text-textMain font-body text-sm text-center opacity-75">
+          <Text className="text-neutral-950 font-body text-sm text-center opacity-75">
             All cards are free.
           </Text>
         )}
@@ -48,7 +48,7 @@ const LibraryAccessPanelBase: React.FC<LibraryAccessPanelProps> = ({
         >
           <Text
             className={`font-semibold text-sm underline ${
-              disabled ? "text-textMain/45" : "text-textMain"
+              disabled ? "text-neutral-950/45" : "text-neutral-950"
             }`}
           >
             {actionText}

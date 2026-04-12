@@ -24,11 +24,11 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
 }) => {
   return (
     <View className="w-full relative justify-center">
-      <View className="absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-black rounded-2xl" />
+      <View className="absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-neutral-950 rounded-2xl" />
 
       <Pressable
         onPress={onPress}
-        className={`w-full rounded-2xl border-[4px] border-black p-5 flex-col z-10 press-motion ${bgClass}`}
+        className={`w-full rounded-2xl border-[4px] border-neutral-950 p-5 flex-col z-10 press-motion ${bgClass}`}
         accessibilityRole="button"
         accessibilityLabel={`${name} edition`}
         accessibilityHint={
@@ -41,25 +41,25 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
 
           {/* Selection Indicator */}
           <View className="flex-row gap-x-2 items-center">
-            <View className="bg-gray-950/15 px-3 py-1 rounded-full items-center justify-center border-0 border-white/20">
-              <Text className="text-black font-logo text-sm leading-5 uppercase">
+            <View className="bg-gray-950/15 px-3 py-1 rounded-full items-center justify-center border-0 border-neutral-50/20">
+              <Text className="text-neutral-950 font-logo text-sm leading-5 uppercase">
                 {cardCount} Cards
               </Text>
             </View>
             {isLocked ? (
-              <View className="bg-black px-3 py-1 rounded-full items-center justify-center">
-                <Text className="text-white font-logo text-sm leading-5 uppercase">
+              <View className="bg-neutral-950 px-3 py-1 rounded-full items-center justify-center">
+                <Text className="text-neutral-50 font-logo text-sm leading-5 uppercase">
                   Unlock
                 </Text>
               </View>
             ) : (
               <View
-                className={`w-9 h-9 rounded-full border-4 border-black items-center justify-center ${
-                  isSelected ? "bg-black" : "bg-white/50"
+                className={`w-9 h-9 rounded-full border-4 border-neutral-950 items-center justify-center ${
+                  isSelected ? "bg-neutral-950" : "bg-neutral-50/50"
                 }`}
               >
                 {isSelected && (
-                  <Text className="text-white font-bodyBold text-lg mt-[-2px]">
+                  <Text className="text-neutral-50 font-bodyBold text-lg mt-[-2px]">
                     ✓
                   </Text>
                 )}
@@ -68,11 +68,11 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
           </View>
         </View>
 
-        <Text className="font-logo text-3xl text-black uppercase tracking-tighter mt-1">
+        <Text className="font-logo text-3xl text-neutral-950 uppercase tracking-tighter mt-1">
           {name}
         </Text>
 
-        <Text className="font-body text-black text-base opacity-90 mt-2 text-pretty">
+        <Text className="font-body text-neutral-950 text-base opacity-90 mt-2 text-pretty">
           {description}
         </Text>
       </Pressable>
