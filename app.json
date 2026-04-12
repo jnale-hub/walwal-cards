@@ -16,7 +16,8 @@
       }
     },
     "android": {
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.delimajohnmark.walwalcards"
     },
     "web": {
       "output": "static",
