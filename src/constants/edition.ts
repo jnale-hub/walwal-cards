@@ -1,4 +1,4 @@
-import { BG_COLORS } from "./theme";
+import { BG_COLOR_CLASSES } from "./theme";
 
 export interface EditionLike {
   id: string;
@@ -10,13 +10,12 @@ export interface EditionLike {
 export interface EditionDisplay {
   name: string;
   icon: string;
-  color: string;
-  bgColor: string;
+  bgClass: string;
   gridEmoji: string;
 }
 
 const DEFAULT_ICON = "🍺";
-const DEFAULT_BG_COLOR = BG_COLORS[4] ?? "#FB923C";
+const DEFAULT_BG_CLASS = BG_COLOR_CLASSES[0];
 const PUBLIC_EDITION_IDS = new Set(["classic"]);
 
 const normalizeEditionId = (editionId: string): string => {
@@ -44,21 +43,11 @@ export const canAccessEdition = (
   return isAuthenticated || isPublicEdition(editionId);
 };
 
-const hashString = (value: string): number => {
-  let hash = 0;
+const normalizeBgClass = (value?: string | null): string | null => {
+  if (!value) return null;
 
-  for (let index = 0; index < value.length; index += 1) {
-    hash = (hash * 31 + value.charCodeAt(index)) >>> 0;
-  }
-
-  return hash;
-};
-
-const getFallbackColor = (editionId: string): string => {
-  if (!editionId) return DEFAULT_BG_COLOR;
-
-  const palette = BG_COLORS.length > 0 ? BG_COLORS : [DEFAULT_BG_COLOR];
-  return palette[hashString(editionId) % palette.length] ?? DEFAULT_BG_COLOR;
+  const normalized = value.trim().toLowerCase();
+  return normalized.startsWith("bg-") ? normalized : `bg-${normalized}`;
 };
 
 export const resolveEditionDisplay = (
@@ -75,15 +64,12 @@ export const resolveEditionDisplay = (
     ? matchedEdition.icon
     : DEFAULT_ICON;
 
-  const color = hasText(matchedEdition?.color)
-    ? matchedEdition.color
-    : getFallbackColor(editionId);
+  const bgClass = normalizeBgClass(matchedEdition?.color) ?? DEFAULT_BG_CLASS;
 
   return {
     name,
     icon,
-    color,
-    bgColor: color,
+    bgClass,
     gridEmoji: icon,
   };
 };
