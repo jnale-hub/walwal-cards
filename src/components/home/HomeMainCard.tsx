@@ -28,15 +28,15 @@ export const HomeMainCard: React.FC<HomeMainCardProps> = ({
     >
       <View className="card-base pt-[16%] pb-8 px-6 items-center w-full justify-between relative overflow-visible flex content-center">
         <View className="absolute -top-6 -right-6 z-50 rotate-12">
-          <View className="absolute top-1 left-1 right-[-2px] bottom-[-2px] bg-black" />
+          <View className="absolute top-1 left-1 right-[-2px] bottom-[-2px] bg-neutral-950" />
           <Pressable
             onPress={onPressEdition}
             accessibilityRole="button"
             accessibilityLabel={`${editionDetails.name} edition`}
             accessibilityHint="Open library to change card edition"
-            className={`relative flex-row items-center border-[3px] border-black px-3 py-1.5 press-motion ${editionDetails.bgClass}`}
+            className={`relative flex-row items-center border-[3px] border-neutral-950 px-3 py-1.5 press-motion ${editionDetails.bgClass}`}
           >
-            <Text className="font-logo text-lg text-black uppercase tracking-tighter mt-1">
+            <Text className="font-logo text-lg text-neutral-950 uppercase tracking-tighter mt-1">
               {editionDetails.name}
             </Text>
             <Text className="text-xl ml-1">{editionDetails.icon}</Text>
@@ -49,14 +49,14 @@ export const HomeMainCard: React.FC<HomeMainCardProps> = ({
           accessibilityRole="header"
           accessibilityLabel="Walwal Cards"
         >
-          <Text className="text-black font-logo text-[5.3rem] text-center tracking-[-5px] uppercase leading-[80px]">
+          <Text className="text-neutral-950 font-logo text-[5.3rem] text-center tracking-[-5px] uppercase leading-[80px]">
             WALWAL
           </Text>
 
           <Text
             accessible
             accessibilityLabel="CARDS"
-            className="text-black font-logo tracking-[-5px] uppercase -mt-2 text-center leading-[96px] items-start flex flex-row"
+            className="text-neutral-950 font-logo tracking-[-5px] uppercase -mt-2 text-center leading-[96px] items-start flex flex-row"
           >
             <Text className="text-[7rem] -mr-0.5">C</Text>
             <Text className="text-8xl -mr-0.5">ARD</Text>
@@ -87,7 +87,7 @@ export const HomeMainCard: React.FC<HomeMainCardProps> = ({
           />
         </View>
 
-        <Text className="text-black text-xs tracking-[4px] uppercase mt-auto text-center">
+        <Text className="text-neutral-950 text-xs tracking-[4px] uppercase mt-auto text-center">
           Drink responsibly
         </Text>
       </View>
