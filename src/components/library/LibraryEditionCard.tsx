@@ -5,7 +5,7 @@ interface LibraryEditionCardProps {
   icon: string;
   name: string;
   description: string;
-  color: string;
+  bgClass: string;
   cardCount: number;
   isSelected: boolean;
   isLocked?: boolean;
@@ -16,7 +16,7 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
   icon,
   name,
   description,
-  color,
+  bgClass,
   cardCount,
   isSelected,
   isLocked = false,
@@ -24,14 +24,11 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
 }) => {
   return (
     <View className="w-full relative justify-center">
-      <View className="absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-black rounded-[24px]" />
+      <View className="absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-black rounded-2xl" />
 
       <Pressable
         onPress={onPress}
-        className="w-full rounded-[24px] border-[4px] border-black p-5 flex-col z-10 press-motion"
-        style={{
-          backgroundColor: color,
-        }}
+        className={`w-full rounded-2xl border-[4px] border-black p-5 flex-col z-10 press-motion ${bgClass}`}
         accessibilityRole="button"
         accessibilityLabel={`${name} edition`}
         accessibilityHint={

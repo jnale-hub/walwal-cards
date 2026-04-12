@@ -1,10 +1,10 @@
 import React from "react";
 import {
-  StyleProp,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  ViewStyle,
+    StyleProp,
+    Text,
+    TextStyle,
+    TouchableOpacity,
+    ViewStyle,
 } from "react-native";
 
 interface GameButtonProps {
@@ -47,8 +47,8 @@ const GameButtonBase: React.FC<GameButtonProps> = ({
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: !!disabled }}
       className={joinClasses(
-        "py-2 px-8 rounded-full border-[6px] items-center justify-center",
-        isSecondary ? "bg-[#18181b] border-white" : "bg-white border-[#18181b]",
+        "py-2 px-8 rounded-full border-[4px] items-center justify-center",
+        isSecondary ? "bg-textMain border-white" : "bg-white border-textMain",
         disabled ? "opacity-50" : "opacity-100",
         className,
       )}
@@ -57,7 +57,7 @@ const GameButtonBase: React.FC<GameButtonProps> = ({
       <Text
         className={joinClasses(
           "uppercase",
-          isSecondary ? "text-white" : "text-[#18181b]",
+          isSecondary ? "text-white" : "text-textMain",
           textClassName,
         )}
         style={textStyle}

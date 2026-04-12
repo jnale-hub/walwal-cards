@@ -11,7 +11,7 @@ interface GameCardStageProps {
     prompt: string;
     emoji: string;
   };
-  bg: string;
+  bgClass: string;
   playerName?: string;
   isFlipped: boolean;
   onFlipCard: () => void;
@@ -24,7 +24,7 @@ export const GameCardStage: React.FC<GameCardStageProps> = ({
   entryAnim,
   flipAnim,
   currentCard,
-  bg,
+  bgClass,
   playerName,
   isFlipped,
   onFlipCard,
@@ -68,7 +68,7 @@ export const GameCardStage: React.FC<GameCardStageProps> = ({
             outputRange: [0, 1],
           })}
           currentCard={currentCard}
-          bg={bg}
+          bgClass={bgClass}
           playerName={playerName}
           isFlipped={isFlipped}
         />

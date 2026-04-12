@@ -26,7 +26,7 @@ export const HomeMainCard: React.FC<HomeMainCardProps> = ({
       ]}
       className="items-center justify-center shrink mb-4"
     >
-      <View className="card-base bg-white border-[5px] border-black rounded-[32px] pt-[16%] pb-8 px-6 items-center w-full justify-between relative overflow-visible flex content-center">
+      <View className="card-base pt-[16%] pb-8 px-6 items-center w-full justify-between relative overflow-visible flex content-center">
         <View className="absolute -top-6 -right-6 z-50 rotate-12">
           <View className="absolute top-1 left-1 right-[-2px] bottom-[-2px] bg-black" />
           <Pressable
@@ -34,8 +34,7 @@ export const HomeMainCard: React.FC<HomeMainCardProps> = ({
             accessibilityRole="button"
             accessibilityLabel={`${editionDetails.name} edition`}
             accessibilityHint="Open library to change card edition"
-            className="relative flex-row items-center border-[3px] border-black px-3 py-1.5 press-motion"
-            style={{ backgroundColor: editionDetails.color }}
+            className={`relative flex-row items-center border-[3px] border-black px-3 py-1.5 press-motion ${editionDetails.bgClass}`}
           >
             <Text className="font-logo text-lg text-black uppercase tracking-tighter mt-1">
               {editionDetails.name}
