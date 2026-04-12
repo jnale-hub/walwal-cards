@@ -21,7 +21,7 @@ import { GameCardStage } from "../components/game/GameCardStage";
 import { GameHeader } from "../components/game/GameHeader";
 import { GamePatternBackground } from "../components/game/GamePatternBackground";
 import { resolveEditionDisplay } from "../constants/edition";
-import { BG_COLORS } from "../constants/theme";
+import { BG_COLOR_CLASSES } from "../constants/theme";
 import { useCards } from "../lib/CardsContext";
 
 // Generic Fisher-Yates shuffle
@@ -35,8 +35,10 @@ const shuffleArray = (array: number[]) => {
 };
 
 const AnimatedView = Animated.createAnimatedComponent(View);
-const ORANGE_BG = "#FB923C";
-const GAME_BG_COLORS = BG_COLORS.filter((color) => color !== ORANGE_BG);
+const PRIMARY_BG_CLASS = BG_COLOR_CLASSES[0];
+const GAME_BG_CLASSES = BG_COLOR_CLASSES.filter(
+  (className) => className !== PRIMARY_BG_CLASS,
+);
 
 export default function GameScreen() {
   const router = useRouter();
@@ -79,8 +81,10 @@ export default function GameScreen() {
   const [turnQueue, setTurnQueue] = useState<number[]>([]);
 
   // Background State
-  const [bg, setBg] = useState(editionDisplay.bgColor);
-  const [previousBg, setPreviousBg] = useState(editionDisplay.bgColor);
+  const [bgClass, setBgClass] = useState(editionDisplay.bgClass);
+  const [previousBgClass, setPreviousBgClass] = useState(
+    editionDisplay.bgClass,
+  );
   const activeCardIndex = deckOrder.length > 0 ? deckOrder[dealIndex] : 0;
   const currentCard = useMemo(() => {
     if (DECK && DECK.length > 0) return DECK[activeCardIndex];
@@ -99,11 +103,11 @@ export default function GameScreen() {
   useEffect(() => {
     // Keep the initial game background aligned with the selected edition color
     // before the random per-card colors begin.
-    if (dealIndex !== 0 || isFlipped) return;
 
-    setBg(editionDisplay.bgColor);
-    setPreviousBg(editionDisplay.bgColor);
-  }, [editionDisplay.bgColor, dealIndex, isFlipped]);
+    const initialBgClass = editionDisplay.bgClass;
+    setBgClass(initialBgClass);
+    setPreviousBgClass(initialBgClass);
+  }, [editionDisplay.bgClass]);
 
   const startDriftAnimation = useCallback(() => {
     Animated.loop(
@@ -203,21 +207,21 @@ export default function GameScreen() {
       setDealIndex(nextIdx);
 
       // Randomize Background Color
-      let nextBg = bg;
+      let nextBgClass = bgClass;
       const transitionPalette =
-        GAME_BG_COLORS.length > 0 ? GAME_BG_COLORS : BG_COLORS;
+        GAME_BG_CLASSES.length > 0 ? GAME_BG_CLASSES : BG_COLOR_CLASSES;
 
       if (transitionPalette.length > 1) {
         do {
-          nextBg =
+          nextBgClass =
             transitionPalette[
               Math.floor(Math.random() * transitionPalette.length)
             ];
-        } while (nextBg === bg);
+        } while (nextBgClass === bgClass);
       }
 
-      setPreviousBg(bg);
-      setBg(nextBg);
+      setPreviousBgClass(bgClass);
+      setBgClass(nextBgClass);
       bgAnim.setValue(0);
       Animated.timing(bgAnim, {
         toValue: 1,
@@ -252,7 +256,7 @@ export default function GameScreen() {
   }, [
     dealIndex,
     deckOrder,
-    bg,
+    bgClass,
     hasPlayers,
     players,
     flipAnim,
@@ -263,10 +267,11 @@ export default function GameScreen() {
   ]);
 
   if (loading) {
+    const editionBgClass = editionDisplay.bgClass;
+
     return (
       <View
-        style={{ backgroundColor: editionDisplay.bgColor }}
-        className="flex-1 items-center justify-center p-6"
+        className={`flex-1 items-center justify-center p-6 ${editionBgClass}`}
       >
         <Text className="text-white text-3xl font-bodyBold text-center">
           Loading cards... 🍻
@@ -276,10 +281,11 @@ export default function GameScreen() {
   }
 
   if (!DECK || DECK.length === 0) {
+    const editionBgClass = editionDisplay.bgClass;
+
     return (
       <View
-        style={{ backgroundColor: editionDisplay.bgColor }}
-        className="flex-1 items-center justify-center px-8"
+        className={`flex-1 items-center justify-center px-8 ${editionBgClass}`}
       >
         <Text className="text-8xl mb-4 pt-2 overflow-visible">😢</Text>
         <Text className="text-white text-4xl font-bodyBold text-center mb-3">
@@ -300,26 +306,25 @@ export default function GameScreen() {
   }
 
   return (
-    <View style={{ backgroundColor: bg }} className="flex-1">
+    <View className={`flex-1 ${bgClass}`}>
       <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle="light-content"
       />
 
-      <View
-        style={[StyleSheet.absoluteFillObject, { backgroundColor: previousBg }]}
-      />
+      <View style={StyleSheet.absoluteFillObject} className={previousBgClass} />
 
       <AnimatedView
         style={[
           StyleSheet.absoluteFillObject,
           {
-            backgroundColor: bg,
             opacity: bgAnim,
           },
         ]}
-      />
+      >
+        <View style={StyleSheet.absoluteFillObject} className={bgClass} />
+      </AnimatedView>
 
       <View className="flex-1 z-10">
         <GamePatternBackground patternAnim={patternAnim} emoji={bgEmoji} />
@@ -335,7 +340,7 @@ export default function GameScreen() {
           entryAnim={entryAnim}
           flipAnim={flipAnim}
           currentCard={currentCard}
-          bg={bg}
+          bgClass={bgClass}
           playerName={hasPlayers ? players[turnIndex] : undefined}
           isFlipped={isFlipped}
           onFlipCard={flipCard}
