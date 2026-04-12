@@ -1,6 +1,5 @@
 import React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
-import { getResponsiveLineHeight } from "../constants/util";
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 export const GameCard: React.FC<any> = ({
@@ -38,10 +37,7 @@ export const GameCard: React.FC<any> = ({
             </Text>
           )}
           <Text
-            className="text-[9rem] mb-4 pt-2 overflow-visible"
-            style={{
-              lineHeight: getResponsiveLineHeight(144), // ~9rem based on standard 16px root
-            }}
+            className="text-[9rem] pt-2 overflow-visible leading-relaxed"
           >
             {currentCard.emoji}
           </Text>
@@ -67,13 +63,9 @@ export const GameCard: React.FC<any> = ({
       >
         <View className="card-base w-full h-full">
           <Text
-            className="text-8xl mb-4 pt-2 overflow-visible"
-            adjustsFontSizeToFit
-            numberOfLines={1}
-            minimumFontScale={0.4}
+            className="text-8xl pt-2 overflow-visible leading-relaxed"
             style={{
               includeFontPadding: false,
-              lineHeight: getResponsiveLineHeight(96),
             }}
           >
             {currentCard.emoji}
@@ -88,13 +80,7 @@ export const GameCard: React.FC<any> = ({
           </View>
 
           <Text
-            className="text-neutral-950 font-semibold text-2xl sm:text-3xl text-center leading-8 sm:leading-10 text-pretty pb-12"
-            adjustsFontSizeToFit
-            numberOfLines={6}
-            minimumFontScale={0.5}
-            style={{
-              lineHeight: getResponsiveLineHeight(36),
-            }}
+            className="text-neutral-950 font-semibold text-2xl sm:text-3xl text-center text-pretty pb-12"
           >
             {currentCard.prompt}
           </Text>
