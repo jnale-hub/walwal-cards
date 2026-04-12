@@ -273,7 +273,7 @@ export default function GameScreen() {
       <View
         className={`flex-1 items-center justify-center p-6 ${editionBgClass}`}
       >
-        <Text className="text-white text-3xl font-bodyBold text-center">
+        <Text className="text-neutral-50 text-3xl font-bodyBold text-center">
           Loading cards... 🍻
         </Text>
       </View>
@@ -288,10 +288,10 @@ export default function GameScreen() {
         className={`flex-1 items-center justify-center px-8 ${editionBgClass}`}
       >
         <Text className="text-8xl mb-4 pt-2 overflow-visible">😢</Text>
-        <Text className="text-white text-4xl font-bodyBold text-center mb-3">
+        <Text className="text-neutral-50 text-4xl font-bodyBold text-center mb-3">
           Walang Cards?!
         </Text>
-        <Text className="text-white font-body text-base text-center mb-8 opacity-70 leading-5 text-pretty">
+        <Text className="text-neutral-50 font-body text-base text-center mb-8 opacity-70 leading-5 text-pretty">
           We couldn&apos;t fetch the deck. Please check your connection and try
           again.
         </Text>
@@ -332,6 +332,7 @@ export default function GameScreen() {
         <GameHeader
           topInset={insets.top}
           onExit={() => setShowExitModal(true)}
+          onOpenLibrary={() => router.push("/library")}
           editionLabel={currentEditionLabel}
           editionIcon={currentEditionIcon}
         />
