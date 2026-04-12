@@ -1,7 +1,3 @@
-import {
-  RobotoCondensed_700Bold,
-  RobotoCondensed_900Black,
-} from "@expo-google-fonts/roboto-condensed";
 import * as Font from "expo-font";
 import { Stack } from "expo-router";
 import Head from "expo-router/head";
@@ -20,8 +16,8 @@ export default function Layout() {
   const SITE_URL = "https://walwalcards.xyz";
 
   const [fontsLoaded] = Font.useFonts({
-    RobotoCondensed_900Black,
-    RobotoCondensed_700Bold,
+    RobotoCondensed_900Black: require("../../assets/fonts/Roboto_Condensed-Black.ttf"),
+    RobotoCondensed_700Bold: require("../../assets/fonts/Roboto_Condensed-Bold.ttf"),
   });
 
   useEffect(() => {
