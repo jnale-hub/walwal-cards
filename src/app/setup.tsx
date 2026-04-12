@@ -112,7 +112,7 @@ export default function PlayerSetupScreen() {
         showsVerticalScrollIndicator={false}
         bounces={true}
       >
-        <Text className="text-textMain font-body text-lg text-center opacity-80 mb-6">
+        <Text className="text-neutral-950 font-body text-lg text-center opacity-80 mb-6">
           Who are we drinking with today?
         </Text>
 
