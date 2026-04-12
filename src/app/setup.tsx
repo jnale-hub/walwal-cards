@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import Head from "expo-router/head";
 import React, { useState } from "react";
 import {
   Alert,
@@ -80,6 +81,14 @@ export default function PlayerSetupScreen() {
         paddingTop: Math.max(insets.top, 20),
       }}
     >
+      <Head>
+        <title>Player Setup | Walwal Cards</title>
+        <meta
+          name="description"
+          content="Add your players, choose turn mode, and prepare your Walwal Cards game before the first round starts."
+        />
+      </Head>
+
       <ConfirmModal
         visible={showBackModal}
         title="Go Back?"

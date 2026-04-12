@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import Head from "expo-router/head";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
@@ -305,6 +306,14 @@ export default function LibraryScreen() {
         paddingTop: Math.max(insets.top, 20),
       }}
     >
+      <Head>
+        <title>Card Library | Walwal Cards</title>
+        <meta
+          name="description"
+          content="Browse Walwal Cards editions, pick your deck, and unlock more party prompts for your next inuman session."
+        />
+      </Head>
+
       <AppScreenHeader title="CARD LIBRARY" onBack={navigateBackToHome} />
 
       <ScrollView
