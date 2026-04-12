@@ -33,7 +33,7 @@ export const GameCard: React.FC<any> = ({
       >
         <View className="card-base w-full h-full">
           {playerName && (
-            <Text className="text-textMain font-bodyBold absolute top-8 text-sm opacity-80 uppercase tracking-[4px]">
+            <Text className="text-neutral-950 font-bodyBold absolute top-8 text-sm opacity-80 uppercase tracking-[4px]">
               {playerName}
             </Text>
           )}
@@ -45,7 +45,7 @@ export const GameCard: React.FC<any> = ({
           >
             {currentCard.emoji}
           </Text>
-          <Text className="text-textMain font-body text-xs opacity-50 uppercase tracking-[1px] mt-2">
+          <Text className="text-neutral-950 font-body text-xs opacity-50 uppercase tracking-[1px] mt-2">
             Tap to reveal
           </Text>
         </View>
@@ -80,15 +80,15 @@ export const GameCard: React.FC<any> = ({
           </Text>
 
           <View
-            className={`${bgClass} px-4 py-1.5 mb-6 border-[3px] border-black shadow-card-sm`}
+            className={`${bgClass} px-4 py-1.5 mb-6 border-[3px] border-neutral-950 shadow-card-sm`}
           >
-            <Text className="text-textMain text-xl sm:text-2xl uppercase font-bold">
+            <Text className="text-neutral-950 text-xl sm:text-2xl uppercase font-bold">
               {currentCard.type}
             </Text>
           </View>
 
           <Text
-            className="text-textMain font-semibold text-2xl sm:text-3xl text-center leading-8 sm:leading-10 text-pretty pb-12"
+            className="text-neutral-950 font-semibold text-2xl sm:text-3xl text-center leading-8 sm:leading-10 text-pretty pb-12"
             adjustsFontSizeToFit
             numberOfLines={6}
             minimumFontScale={0.5}
