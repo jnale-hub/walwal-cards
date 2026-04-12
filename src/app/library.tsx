@@ -310,7 +310,7 @@ export default function LibraryScreen() {
       <ScrollView
         className="flex-1"
         contentContainerStyle={{
-          paddingHorizontal: 24,
+          paddingHorizontal: 8,
           paddingBottom: 40,
           width: "100%",
           maxWidth: 600,
@@ -329,7 +329,7 @@ export default function LibraryScreen() {
         {editions.length === 0 ? (
           <LibraryEmptyState />
         ) : (
-          <View className="grid xs:grid-cols-2 gap-4 sm:gap-6">
+          <View className="flex-row flex-wrap items-stretch">
             {sortedEditions.map((edition) => {
               const isLocked = !canAccessEdition(edition.id, isAuthenticated);
               const editionDisplay =
