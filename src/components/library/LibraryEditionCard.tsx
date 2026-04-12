@@ -24,11 +24,12 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
 }) => {
   return (
     <View className="w-full relative justify-center">
-      <View className="absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-neutral-950 rounded-2xl" />
+      {/* Neobrutalist Shadow */}
+      <View className="absolute top-1 left-1 right-[-2px] bottom-[-2px] bg-neutral-950 rounded-2xl" />
 
       <Pressable
         onPress={onPress}
-        className={`w-full rounded-2xl border-[4px] border-neutral-950 p-5 flex-col z-10 press-motion ${bgClass}`}
+        className={`w-full rounded-2xl border-[4px] border-neutral-950 p-4 flex-col gap-2 z-10 press-motion h-full bg-neutral-50`}
         accessibilityRole="button"
         accessibilityLabel={`${name} edition`}
         accessibilityHint={
@@ -36,45 +37,47 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
         }
         accessibilityState={{ selected: isSelected }}
       >
-        <View className="flex-row justify-between items-start mb-2">
-          <Text className="text-5xl">{icon}</Text>
+        <View className="flex-row justify-between items-start">
+          <Text className="sm:text-[4rem] text-5xl leading-none">{icon}</Text>
 
-          {/* Selection Indicator */}
-          <View className="flex-row gap-x-2 items-center">
-            <View className="bg-gray-950/15 px-3 py-1 rounded-full items-center justify-center border-0 border-neutral-50/20">
-              <Text className="text-neutral-950 font-logo text-sm leading-5 uppercase">
-                {cardCount} Cards
+          {isLocked ? (
+            <View className="bg-neutral-950 px-2 py-1 rounded-md items-center justify-center">
+              <Text className="text-neutral-50 font-logo text-xs leading-4 uppercase tracking-wider">
+                Unlock
               </Text>
             </View>
-            {isLocked ? (
-              <View className="bg-neutral-950 px-3 py-1 rounded-full items-center justify-center">
-                <Text className="text-neutral-50 font-logo text-sm leading-5 uppercase">
-                  Unlock
+          ) : (
+            <View
+              className={`w-8 h-8 rounded-full border-[3px] border-neutral-950 items-center justify-center ${
+                isSelected ? "bg-neutral-950" : "bg-neutral-50/50"
+              }`}
+            >
+              {isSelected && (
+                <Text className="text-neutral-50 font-bodyBold text-base mt-[-2px]">
+                  ✓
                 </Text>
-              </View>
-            ) : (
-              <View
-                className={`w-9 h-9 rounded-full border-4 border-neutral-950 items-center justify-center ${
-                  isSelected ? "bg-neutral-950" : "bg-neutral-50/50"
-                }`}
-              >
-                {isSelected && (
-                  <Text className="text-neutral-50 font-bodyBold text-lg mt-[-2px]">
-                    ✓
-                  </Text>
-                )}
-              </View>
-            )}
-          </View>
+              )}
+            </View>
+          )}
         </View>
 
-        <Text className="font-logo text-3xl text-neutral-950 uppercase tracking-tighter mt-1">
-          {name}
-        </Text>
-
-        <Text className="font-body text-neutral-950 text-base opacity-90 mt-2 text-pretty">
-          {description}
-        </Text>
+        <View className="flex-col gap-y-1 py-2">
+          <View
+            className={`${bgClass} px-2 py-1 border-2 border-neutral-950 shadow-card-sm w-max mb-2`}
+          >
+            <Text className="font-logo text-xl sm:text-2xl text-neutral-950 uppercase tracking-normal leading-tight text-wrap">
+              {name}
+            </Text>
+          </View>
+          <Text className="font-body text-neutral-950 opacity-90 leading-snug mb-auto line-clamp-5 sm:text-lg">
+            {description}
+          </Text>
+        </View>
+        <View className="bg-neutral-950/10 px-2 py-1 rounded-md self-start mt-auto">
+          <Text className="text-neutral-950 font-logo text-xs leading-4 uppercase">
+            {cardCount} Cards
+          </Text>
+        </View>
       </Pressable>
     </View>
   );
