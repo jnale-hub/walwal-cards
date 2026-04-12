@@ -14,7 +14,7 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
   onOpenSetup,
 }) => {
   const shadowClassName =
-    "absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-black rounded-[24px]";
+    "absolute top-0.5 left-0.5 right-[-2px] bottom-[-2px] bg-black rounded-full";
 
   return (
     <View className="w-full max-w-[400px] z-20 shrink-0 mt-6 gap-y-4">
@@ -25,7 +25,7 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
           accessibilityRole="button"
           accessibilityLabel="Quick Play"
           accessibilityHint="Start a game immediately"
-          className="h-full flex-row bg-[#FDE047] border-[4px] border-black rounded-[24px] items-center justify-center pt-2 press-motion"
+          className="h-full flex-row bg-amber-400 border-[4px] border-black rounded-full items-center justify-center pt-2 press-motion"
         >
           <FontAwesome5
             name="play"
@@ -39,7 +39,7 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
         </Pressable>
       </View>
 
-      <View className="flex-row w-full justify-between gap-x-4">
+      <View className="flex-row w-full justify-between gap-x-3">
         <View className="flex-1 relative h-[64px]">
           <View className={shadowClassName} />
           <Pressable
@@ -47,7 +47,7 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
             accessibilityRole="button"
             accessibilityLabel="Library"
             accessibilityHint="Choose a card edition"
-            className="h-full flex-row bg-[#A855F7] border-[4px] border-black rounded-[24px] items-center justify-center pt-1 press-motion"
+            className="h-full flex-row bg-violet-400 border-[4px] border-black rounded-full items-center justify-center pt-1 press-motion gap-2"
           >
             <FontAwesome5
               name="layer-group"
@@ -55,7 +55,7 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
               color="black"
               style={{ marginBottom: 2 }}
             />
-            <Text className="font-logo text-[28px] text-black tracking-tighter uppercase ml-2">
+            <Text className="font-logo text-[28px] text-black tracking-tighter uppercase">
               LIBRARY
             </Text>
           </Pressable>
@@ -68,7 +68,7 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
             accessibilityRole="button"
             accessibilityLabel="Add Players"
             accessibilityHint="Open player setup before starting the game"
-            className="h-full flex-row bg-[#F97316] border-[4px] border-black rounded-[24px] items-center justify-center pt-1 press-motion"
+            className="h-full flex-row bg-green-400 border-[4px] border-black rounded-full items-center justify-center pt-1 press-motion gap-2"
           >
             <FontAwesome5
               name="users"
@@ -76,7 +76,7 @@ export const HomeActionButtons: React.FC<HomeActionButtonsProps> = ({
               color="black"
               style={{ marginBottom: 2 }}
             />
-            <Text className="font-logo text-[28px] text-black tracking-tighter uppercase ml-2">
+            <Text className="font-logo text-[28px] text-black tracking-tighter uppercase">
               PLAYERS
             </Text>
           </Pressable>

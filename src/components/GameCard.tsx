@@ -9,7 +9,7 @@ export const GameCard: React.FC<any> = ({
   frontOpacity,
   backOpacity,
   currentCard,
-  bg,
+  bgClass,
   playerName,
   isFlipped,
 }) => {
@@ -80,8 +80,7 @@ export const GameCard: React.FC<any> = ({
           </Text>
 
           <View
-            style={{ backgroundColor: bg }}
-            className="px-4 py-1.5 mb-6 border-[3px] border-black shadow-card-sm"
+            className={`${bgClass} px-4 py-1.5 mb-6 border-[3px] border-black shadow-card-sm`}
           >
             <Text className="text-textMain text-xl sm:text-2xl uppercase font-bold">
               {currentCard.type}
