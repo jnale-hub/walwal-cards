@@ -1,4 +1,5 @@
 import { useFocusEffect, useRouter } from "expo-router";
+import Head from "expo-router/head";
 import React, { useCallback, useMemo, useRef } from "react";
 import { Animated, StatusBar, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -83,6 +84,14 @@ export default function WelcomeScreen() {
     <View
       className={`flex-1 items-center justify-center overflow-hidden transition-colors duration-300 ${backgroundClass}`}
     >
+      <Head>
+        <title>Walwal Cards: Inuman Na! 🍻</title>
+        <meta
+          name="description"
+          content="Ang pambansang laro ng barkada! Truth, Dare, Laglagan at iba pa. Perfect for inuman sessions. Play it for free!"
+        />
+      </Head>
+
       <StatusBar barStyle="light-content" />
 
       <HomePatternBackground patternAnim={patternAnim} emoji={patternEmoji} />

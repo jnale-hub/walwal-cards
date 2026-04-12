@@ -1,4 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
+import Head from "expo-router/head";
 import React, {
   useCallback,
   useEffect,
@@ -307,6 +308,14 @@ export default function GameScreen() {
 
   return (
     <View className={`flex-1 ${bgClass}`}>
+      <Head>
+        <title>Play Game | Walwal Cards</title>
+        <meta
+          name="description"
+          content="Start a Walwal Cards round with your barkada. Flip cards, take turns, and keep the inuman fun going."
+        />
+      </Head>
+
       <StatusBar
         translucent
         backgroundColor="transparent"
