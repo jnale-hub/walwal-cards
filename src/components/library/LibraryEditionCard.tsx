@@ -29,7 +29,7 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
 
       <Pressable
         onPress={onPress}
-        className={`w-full rounded-2xl border-[4px] border-neutral-950 p-4 flex-col gap-2 z-10 press-motion h-full bg-neutral-50`}
+        className={`w-full rounded-2xl border-[4px] border-neutral-950 p-4 xs:p-2 sm:p-4 flex-col gap-2 z-10 press-motion h-full bg-neutral-50`}
         accessibilityRole="button"
         accessibilityLabel={`${name} edition`}
         accessibilityHint={
@@ -61,13 +61,15 @@ export const LibraryEditionCard: React.FC<LibraryEditionCardProps> = ({
           )}
         </View>
 
-        <View className="flex-col gap-y-1 py-2">
+        <View className="gap-y-1 py-2">
+          <View className="flex-wrap">
           <View
-            className={`${bgClass} px-2 py-1 border-2 border-neutral-950 shadow-card-sm w-max mb-2`}
+            className={`${bgClass} px-2 py-1 border-2 border-neutral-950 shadow-card-sm mb-2`}
           >
             <Text className="font-logo text-xl sm:text-2xl text-neutral-950 uppercase tracking-normal leading-tight text-wrap">
               {name}
             </Text>
+          </View>
           </View>
           <Text className="font-body text-neutral-950 opacity-90 leading-snug mb-auto line-clamp-5 sm:text-lg">
             {description}
