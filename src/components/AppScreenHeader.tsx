@@ -1,5 +1,6 @@
 import React from "react";
 import { Insets, Pressable, Text, View } from "react-native";
+import { FontAwesome5 } from '@expo/vector-icons';
 
 interface AppScreenHeaderProps {
   title: string;
@@ -30,7 +31,11 @@ export const AppScreenHeader: React.FC<AppScreenHeaderProps> = ({
           hitSlop={backHitSlop}
         >
           <Text className="text-neutral-950 font-logo text-[36px] leading-[40px]">
-            ←
+            <FontAwesome5
+            name="arrow-left"
+            size={24}
+            color="black"
+          />
           </Text>
         </Pressable>
       </View>
