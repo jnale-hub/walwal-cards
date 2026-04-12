@@ -9,6 +9,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import { Platform, View } from "react-native";
+import { PRIMARY_THEME_HEX } from "../constants/theme";
 import "../global.css";
 import { AuthProvider } from "../lib/AuthContext";
 import { CardsProvider } from "../lib/CardsContext";
@@ -17,7 +18,6 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function Layout() {
   const SITE_URL = "https://walwalcards.xyz";
-  const THEME_COLOR = "#FB923C";
 
   const [fontsLoaded] = Font.useFonts({
     RobotoCondensed_900Black,
@@ -31,7 +31,7 @@ export default function Layout() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded && Platform.OS !== "web") {
-    return <View style={{ flex: 1, backgroundColor: THEME_COLOR }} />;
+    return <View className="flex-1 bg-orange-400" />;
   }
 
   return (
@@ -51,7 +51,7 @@ export default function Layout() {
         <meta httpEquiv="Content-Language" content="en" />
         <link rel="canonical" href={SITE_URL} />
 
-        <meta name="theme-color" content={THEME_COLOR} />
+        <meta name="theme-color" content={PRIMARY_THEME_HEX} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
@@ -133,7 +133,7 @@ export default function Layout() {
         />
       </Head>
 
-      <StatusBar style="light" backgroundColor={THEME_COLOR} />
+      <StatusBar style="light" backgroundColor={PRIMARY_THEME_HEX} />
 
       <AuthProvider>
         <CardsProvider>
@@ -141,7 +141,7 @@ export default function Layout() {
             screenOptions={{
               headerShown: false,
               animation: "fade",
-              contentStyle: { backgroundColor: THEME_COLOR },
+              contentStyle: { backgroundColor: "transparent" },
             }}
           >
             <Stack.Screen name="index" options={{ animation: "fade" }} />

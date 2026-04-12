@@ -300,7 +300,7 @@ export default function LibraryScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 bg-indigo-300"
+      className="flex-1 bg-violet-400/50"
       style={{
         paddingTop: Math.max(insets.top, 20),
       }}
@@ -337,7 +337,7 @@ export default function LibraryScreen() {
                 resolveEditionDisplay(edition.id, editions);
               const isSelected = currentEdition === edition.id;
               const cardCount = cardCountByEdition[edition.id] ?? 0;
-              const cardColor = editionDisplay.color;
+              const cardBgClass = editionDisplay.bgClass;
               const cardIcon = editionDisplay.icon;
               const cardName = editionDisplay.name;
               const cardDescription =
@@ -350,7 +350,7 @@ export default function LibraryScreen() {
                   icon={cardIcon}
                   name={cardName}
                   description={cardDescription}
-                  color={cardColor}
+                  bgClass={cardBgClass}
                   cardCount={cardCount}
                   isSelected={isSelected}
                   isLocked={isLocked}
