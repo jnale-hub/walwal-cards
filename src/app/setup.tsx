@@ -75,7 +75,7 @@ export default function PlayerSetupScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 bg-green-400/50"
+      className="flex-1 bg-green-400/80"
       style={{
         paddingTop: Math.max(insets.top, 20),
       }}

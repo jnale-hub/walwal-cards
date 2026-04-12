@@ -300,7 +300,7 @@ export default function LibraryScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 bg-violet-400/50"
+      className="flex-1 bg-violet-400"
       style={{
         paddingTop: Math.max(insets.top, 20),
       }}
@@ -329,7 +329,7 @@ export default function LibraryScreen() {
         {editions.length === 0 ? (
           <LibraryEmptyState />
         ) : (
-          <View className="gap-y-4 sm:gap-y-6">
+          <View className="grid xs:grid-cols-2 gap-4 sm:gap-6">
             {sortedEditions.map((edition) => {
               const isLocked = !canAccessEdition(edition.id, isAuthenticated);
               const editionDisplay =
