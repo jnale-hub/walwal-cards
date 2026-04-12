@@ -4,7 +4,7 @@
 
 @layer components {
   .card-base {
-    @apply bg-cardBg rounded-2xl border-[5px] border-textMain items-center justify-center p-6 shadow-card-sm;
+    @apply bg-neutral-50 rounded-2xl border-[5px] border-neutral-950 items-center justify-center p-6 shadow-card-sm;
   }
 }
 
