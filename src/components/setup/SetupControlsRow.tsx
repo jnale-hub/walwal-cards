@@ -25,18 +25,18 @@ export const SetupControlsRow: React.FC<SetupControlsRowProps> = ({
         accessibilityState={{ checked: isRandomTurn }}
       >
         <View
-          className={`border-border w-6 h-6 border-4 rounded-md mr-2 items-center justify-center ${isRandomTurn ? "bg-textMain" : "bg-white"}`}
+          className={`border-neutral-950 w-6 h-6 border-4 rounded-md mr-2 items-center justify-center ${isRandomTurn ? "bg-neutral-950" : "bg-neutral-50"}`}
         >
           {isRandomTurn && (
-            <Text className="text-white font-bold text-xs">✓</Text>
+            <Text className="text-neutral-50 font-bold text-xs">✓</Text>
           )}
         </View>
-        <Text className="text-textMain text-sm opacity-80">
+        <Text className="text-neutral-950 text-sm opacity-80">
           Randomize Turns
         </Text>
       </Pressable>
 
-      <Text className="text-textMain opacity-60 text-sm mr-1">
+      <Text className="text-neutral-950 opacity-60 text-sm mr-1">
         {playerCount} / {maxPlayers} Players
       </Text>
     </View>
